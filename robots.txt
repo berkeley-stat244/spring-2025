@@ -1,1 +1,1 @@
-Sitemap: https://stat244.berkeley.edu/spring-2025/sitemap.xml
+Sitemap: https://berkeley-stat244.github.io/spring-2025/sitemap.xml
