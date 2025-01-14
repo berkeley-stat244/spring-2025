@@ -2,27 +2,225 @@
 title: "Syllabus"
 ---
 
-[UNDER CONSTRUCTION]
-
-Jump to:
-
-- [About {{< var department >}} {{< var number >}}](#about)
-  - [Goals](#goals)
-  - [Prerequisites](#prerequisites)
-
-
-## About {{< var department >}} {{< var number >}}
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus lectus dui, euismod vel tellus sit amet, maximus fringilla risus. Cras nec maximus leo. Fusce sit amet tortor pellentesque, hendrerit odio vitae, dictum lorem. Nunc sed nunc nisl. Cras augue tortor, ultrices ut luctus non, dictum nec magna. Cras vel ex purus. In blandit est non finibus dignissim. Donec vehicula, nisi quis rutrum faucibus, est turpis ultrices nibh, quis rutrum diam nibh tempus nulla. Vestibulum malesuada consectetur ex in vestibulum. 
-
-
-### Goals
-
-
-- Goal 1
-- Goal 2
-- Goal 3
+**UNDER CONSTRUCTION - PROVIDE FOR INFORMATION BUT NOT FINAL/DEFINITIVE**
 
 ### Prerequisites
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus lectus dui, euismod vel tellus sit amet, maximus fringilla risus. Cras nec maximus leo. Fusce sit amet tortor pellentesque, hendrerit odio vitae, dictum lorem. Nunc sed nunc nisl. Cras augue tortor, ultrices ut luctus non, dictum nec magna. Cras vel ex purus. In blandit est non finibus dignissim. Donec vehicula, nisi quis rutrum faucibus, est turpis ultrices nibh, quis rutrum diam nibh tempus nulla. Vestibulum malesuada consectetur ex in vestibulum. 
+Statistics 243 or Statistics 215A or equivalent background of (1) extensive experience with a language such as Python or R, (2) basic familiarity with programming concepts such as functional programming, object-oriented programming, variable scope, memory use, and data structures, and (3) familiarity with the basics of parallel processing.
+
+I'm also generally expecting a working familiarity with statistical methods (interpreted broadly -- experience with data science and machine learning is fine).
+
+Concurrent enrollment students, undergraduates, and graduate students not from statistics/biostatistics/computational biology/data science/computer science/engineering should talk with me Tuesday/Wednesday January 21-22 to discuss your potential enrollment in the class.
+
+## Objectives of the course {#objectives-of-the-course .unnumbered}
+
+The goals of the course are that, by the end of the course, students be
+able to:
+
+-   have a solid understanding of general programming concepts
+    and principles, including parallelization for CPUs and GPUs; and
+
+-   be able to program effectively using Julia.
+
+## Topics
+
+These are tentative (particularly in terms of exact timing and the later weeks), as the course has never been taught before.
+
+- Week 1: Julia syntax, data structures and basic types, functional programming, memory and copying, variable scope
+- Week 2: Methods and multiple dispatch, types, managing Julia (packaging, debugging, testing, exceptions, etc.)
+- Week 3: Efficiency and memory use, just-in-time (JIT) compilation
+- Week 4: Parallel programming concepts and parallelization in Julia
+- Week 5: Parallel programming in Python and additional topics in parallelization
+- Week 6: Numerical computation in Julia (floating point concepts, linear algebra, optimization
+- Week 7: Student project presentations and other topics
+
+## Course content
+
+Key websites for the course are:
+
+-   This course website, which is hosted on GitHub Pages, and the GitHub repository containing the source materials:
+    <https://github.com/berkeley-stat244/spring-2025>. The main course content will be notes prepared by me under the Notes dropdown and student presentations on various topics.
+
+-   SCF tutorials for additional content:
+    <https://statistics.berkeley.edu/computing/training/tutorials>
+
+-   Ed Discussion site for discussions/Q&A:
+    <https://edstem.org/us/courses/73174/discussion>
+
+-   Gradescope for problem sets:
+    <https://www.gradescope.com/courses/949978>
+
+**There will be no course capture for this course**, in part because of the room we are in and in part because of the seminar/special topics nature of the course. I expect you to attend all classes, except for illness or with advance notice of well-justified travel.
+
+While there is a bCourses site for the course, we won't use it at all, as far as I anticipate at the moment.
+
+## Course culture
+
+This is a small class, a graduate class, and essentially a special topics/seminar class. That has the following implications.
+
+I expect a corresponding degree of maturity from all students, including the small number of undergraduates who might take the class. Among other things, this means trying to not stress about grading, being comfortable with ambiguity (in terms of content, expectations, and grading), being curious, and fully participating in class, even if you feel a bit uncomfortable because you think it might reveal some lack of knowledge or understanding on your part.
+
+Evaluation/grading will be somewhat informal and based in part on your contributions to the class community (either to the in-class discussion or the Ed discussion board), as well as completion of problem sets, and my assessment of student project/presentations. See more below.
+
+Furthermore, I am not an expert in Julia! Part of my motivation for teaching the class was to learn Julia myself (as well as more about working with GPUs), which I've done some of in preparation for the class and to some degree will make up for remaining gaps based on my larger expertise in this sort of programming (in particular experience with R and Python). But there's a lot I don't know, and there will be lots of questions I'm not sure how to answer in the moment in class. Contributing your thoughts in class or on Ed is part of your responsibility in the class.
+
+Please do not use phones during class and limit laptop use to the material being covered.
+
+Finally, if you have suggestions for how to make the course better, including how we use time in class, please let me know.
+
+### Ed culture
+
+Please follow these guidelines for choosing how to post on Ed:
+
+- Public (non-anonymous) posts: I highly encourage public posts about course topics/concepts and topics discussed in class as well as questions about problem set problems, as that is the only way to contribute to the course discussion.
+  - Please DO NOT post public messages anonymously. 
+
+- Private (but non-anonymous) posts:
+   - If you feel very uncomfortable asking a question about the items mentioned above, you can make a private (but non-anomymous) post. But it won't "count" in terms of your class participation.
+   - In some cases, I may ask/encourage you to make your post public, so I can respond such that all students see my thoughts.
+   - Questions specific to your project or presentation are also appropriate for private posts, but in some cases you might want to elicit feedback from other students in which case a public post is entirely welcome.
+   - I welcome feedback about the course, particularly given it is the first time offered and there will be lots of things that could be improved. 
+
+- Anonymous private posts:
+   - If you'd like to leave anonymous feedback via a private post to me, you can, but I encourage you not to make it anonymous. But I won't answer general topic/course questions that are posted anonymously, whether public or private.
+
+- Anonymous public posts: Please DO NOT make such posts. I don't think it is conducive to productive discussion in a community.
+   
+
+## Course material
+
+-   Primary materials: Course notes on the website and student presentation materials, plus SCF tutorials.
+
+-   Additional materials:
+    - [Think Julia book](https://benlauwens.github.io/ThinkJulia.jl/latest/book.html)
+    - [Julia manual](https://docs.julialang.org/en/v1/)
+    - [Per-Olof Persson's Berkeley Math 124 materials](http://persson.berkeley.edu/Programming_for_Mathematical_Applications)
+    
+-   See also the [Statistics 243 course material list](https://stat243.berkeley.edu/fall-2024/syllabus.html#course-material) for references on numerical computing and software tools (bash, Quarto).
+
+## Computing Resources
+
+Most work for the course can be done on your laptop. Later in the course (in a couple weeks!), we'll also use the Statistics Department Linux cluster for access to GPUs. Please [sign up for an SCF account](https://statistics.berkeley.edu/computing/getting-started/computing-accounts) now if you don't have one.
+
+The software needed for the course is as follows:
+
+-   Julia
+-   Git
+-   Python (the Miniforge installation of Conda is recommended but by no means required)
+-   Quarto
+
+See the "how tos" in the left sidebar for tips on software installation and usage.
+
+## Course requirements and grading
+
+### Course grades
+
+Grading will be based on a combination of your general participation (in class and on the discussion forum), completion of several problem sets, and some combination of in-class presentation(s) and a project. The presentation/project topics will be fairly flexible and will be determined based on my surveying of class participants and what you are interested in. I have a number of topics I'd like to see covered by student presentation but I am open to other ideas as well. Projects and in-class presentations can be on your own or in pairs. 
+
+Tentatively, I'm anticipating the following requirement for projects/presentations -- with each student selecting one of:
+  - an in-depth final project
+  - a short final project plus a presentation
+  - two presentations
+  - a single presentation on a meaty topic
+
+I'll need to think about how that is adjusted if done in pairs. It may simply be an expectation of more in-depth work if a project or presentation is shared.
+
+I will give more details after the first week of class.
+
+Grades will generally be As and Bs, unless I assess a lack of engagement on your part.
+
+#### Problem sets
+
+Please prepare your assignments using Quarto (or a Jupyter notebook), output to PDF and submitted to Gradescope. Answers should consist of textual response (and any useful mathematical expressions as appropriate), with key chunks of code embedded within the document. 
+
+You must include a "Collaboration" section in which you indicate any other students you worked with and describing the nature of any use of ChatBots/LLMs. If you did not collaborate with anyone else (including said AIs), simply state that.
+
+You're welcome to consult with classmates on problem set problems, and I encourage it. You can discuss a problem with another student, brainstorm approaches, and share code syntax (generally not more than one line) on how to do small individual coding tasks within a problem.
+
+  - **You should not ask another student for complete code or solutions, or look at their code/solution.**
+  - **You should not share complete code or solutions with another student or on Ed Discussion.**
+
+Remember this is a small class with one goal that you learn how to effectively program, in Julia in particular. There's no point in copying code in bulk from another student or a ChatBot, because it won't help you learn programming/Julia. For that you need to wrestle with the concepts/syntax and develop "muscle memory". 
+
+I am still considering how I will grade problem sets, given there is no GSI and the nature of the class. They will either be graded complete/incomplete or on a 4 point scale:
+
+-   0 = no credit,
+-   1 = partial credit (you did some of the problems but not all),
+-   2 = generally satisfactory (you tried everything but there were pieces of what
+    you did that didn't completely/correctly solve or present/explain one or more problems), and
+-   3 = full credit.
+
+#### Projects
+
+I'm expecting that many of you will want to come up with your own final project. You'll need to discuss the topic with me in advance. It should involve programming in Julia, though use of Python for GPU computations may be ok too. I may also have a couple project topics that you could choose from if you don't have a project idea and want to do a project rather than doing class presentation(s).
+
+You should use Git to manage the code in your project. The result does not have to be, but could be, a Julia package.
+
+#### Presentations
+
+I'm planning for student presentations to be a core part of the content of the course. I have some specific ideas of topics that I think would be good, but I am also open to your ideas of topics you'd be excited to dive into and present.
+
+I expect you to do a deep dive on the topic, and while I don't expect you to be an expert in a week or two, I do expect you to have done a bunch of research and experimentation and pulled together a clear, in-depth presentation focused on examples/demonstration/code syntax, and be ready to answer questions from the class. I will discuss the focus/goal of the presentation/topic with the student(s) when the topic is chosen and then we'll have an interim "progress" discussion a few days before the presentation.
+
+ I highly recommend using Quarto to prepare presentation materials, but I am also happy to discuss other possibilities with you. We'll need to figure out a good way to make the final materials available through the website, probably through pull requests made to the course GitHub site.
+
+## Accommodations for Students with Disabilities {#accomodations-for-students-with-disabilities .unnumbered}
+
+Please see me as soon as possible if you need particular accommodations, and we will work out the necessary arrangements. That said, given the lack of exams, there may be no need for an accommodation even if you have a disability.
+
+
+## Campus Honor Code {#campus-honor-code .unnumbered}
+
+*The following is the Campus Honor Code. With regard to collaboration
+and independence, please see my rules regarding problem sets above -- Chris.*
+
+The student community at UC Berkeley has adopted the following Honor
+Code: "As a member of the UC Berkeley community, I act with honesty,
+integrity, and respect for others." The hope and expectation is that you
+will adhere to this code.
+
+Collaboration and Independence: Reviewing lecture and reading materials
+and studying for exams can be enjoyable and enriching things to do with
+fellow students. This is recommended. However, unless otherwise
+instructed, homework assignments are to be completed independently and
+materials submitted as homework should be the result of one's own
+independent work.
+
+Cheating: A good lifetime strategy is always to act in such a way that
+no one would ever imagine that you would even consider cheating. Anyone
+caught cheating on a quiz or exam in this course will receive a failing
+grade in the course and will also be reported to the University Center
+for Student Conduct. In order to guarantee that you are not suspected of
+cheating, please keep your eyes on your own materials and do not
+converse with others during the quizzes and exams.
+
+Plagiarism: To copy text or ideas from another source without
+appropriate reference is plagiarism and will result in a failing grade
+for your assignment and usually further disciplinary action. For
+additional information on plagiarism and how to avoid it, see, for
+example:
+<http://gsi.berkeley.edu/teachingguide/misconduct/prevent-plag.html>.
+
+Academic Integrity and Ethics: Cheating on exams and plagiarism are two
+common examples of dishonest, unethical behavior. Honesty and integrity
+are of great importance in all facets of life. They help to build a
+sense of self-confidence, and are key to building trust within
+relationships, whether personal or professional. There is no tolerance
+for dishonesty in the academic world, for it undermines what we are
+dedicated to doing -- furthering knowledge for the benefit of humanity.
+
+Your experience as a student at UC Berkeley is hopefully fueled by
+passion for learning and replete with fulfilling activities. And we also
+appreciate that being a student may be stressful. There may be times
+when there is temptation to engage in some kind of cheating in order to
+improve a grade or otherwise advance your career. This could be as
+blatant as having someone else sit for you in an exam, or submitting a
+written assignment that has been copied from another source. And it
+could be as subtle as glancing at a fellow student's exam when you are
+unsure of an answer to a question and are looking for some confirmation.
+One might do any of these things and potentially not get caught.
+However, if you cheat, no matter how much you may have learned in this
+class, you have failed to learn perhaps the most important lesson of
+all.
+
+

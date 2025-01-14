@@ -1,10 +1,7 @@
 ---
-title: "{{< var department >}} {{< var number >}}: {{< var name >}}"
-subtitle: "UC Berkeley, {{< var semester >}}"
+title: "Statistics 244: Computing for Statistics and Data Science with Julia"
+subtitle: "UC Berkeley, Spring 2025"
 listing:
-  - id: schedule
-    template: _extensions/qmd-lab/course-website-ejs/schedule-badge/schedule.ejs
-    contents: scheduled-docs_files/schedule.yml
   - id: buttons
     template: assets/buttons.ejs
     contents: buttons.yml
@@ -13,21 +10,18 @@ listing:
 ::: {#buttons}
 :::
 
-[UNDER CONSTRUCTION]
+Programming and computation for applications in statistics, data science and related fields, focusing on the use of Julia, a modern language that offers interactivity with high performance based on just-in-time compilation. The course will also cover the use of co-processors, in particular GPUs, through Julia and Python packages such as Jax and PyTorch. Topics will include data types, functional programming, multiple argument dispatch, memory use, efficiency, parallelization, robustness and testing. 
 
+## Course materials
 
-::: {.callout-note title="Welcome to Week 1 of Dept 999"}
-:::
+See the links above for the key resources for the course.
 
-::: {.callout-note title="Welcome to Week 2"}
-Things are picking up now.
-:::
+Most course content (in particular notes and problem sets) are available through this website via the links in the left sidebar.
 
-## Schedule
+## Questions about taking the class
 
-Here we use Quarto's EJS templating.
+If you would like to audit the class, enroll as a UC Berkeley undergraduate, or enroll as a concurrent enrollment student (i.e., for visiting students), or for some other reason are not enrolled, please fill out [this survey](https://forms.gle/oMZuoQ4kQ9WfNdAZA) as soon as possible and, ideally, chat with me before/after the first class. All those enrolled or wishing to take the class should have filled it out by Wednesday January 24 at noon.
 
+Please see the syllabus for the computing background I expect.
 
-::: {#schedule}
-:::
 

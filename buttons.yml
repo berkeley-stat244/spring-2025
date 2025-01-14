@@ -1,12 +1,13 @@
 - button: Ed
-  link: https://berkeley.edu
+  link: https://edstem.org/us/courses/73174/discussion
   color: purple
-- button: DataHub
-  link: https://berkeley.edu
-  color: green
 - button: Gradescope
-  link: https://berkeley.edu
-  color: red
-- button: bCourses
-  link: https://berkeley.edu
+  link: https://gradescope.com/courses/949978
+  color: orangered
+- button: Tutorials
+  link: https://statistics.berkeley.edu/computing/training/tutorials
   color: blue
+- button: PollEV
+  link: https://pollev.com/chrispaciorek428
+  color: green
+  

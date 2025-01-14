@@ -1,0 +1,16 @@
+---
+title: Scheduling information
+listing:
+  - id: schedule
+    template: _extensions/qmd-lab/course-website-ejs/schedule-badge/schedule.ejs
+    contents: scheduled-docs_files/schedule.yml
+---
+
+## Schedule
+
+UNDER CONSTRUCTION - ignore the date below for now.
+
+## Schedule
+
+::: {#schedule}
+:::

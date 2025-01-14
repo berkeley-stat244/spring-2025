@@ -2,41 +2,48 @@ project:
   type: website
 
 website:
-  site-url: https://berkeley-cdss.github.io/course-site-quarto/
+  site-url: https://stat244.berkeley.edu/spring-2025
   sidebar:
     style: docked
-    title: "{{< var department-abbrev >}} {{< var number >}}"
+    title: "Stat 244"
     logo: assets/stat_bear.png
     logo-alt: "UC Berkeley Statistics logo"
     tools:
       - icon: github
-        href: https://github.com/berkeley-cdss/course-site-quarto
+        href: https://github.com/berkeley-stat244/spring-2025
         aria-label: GitHub
     contents:
       - href: index.qmd
-        text: Home / Schedule
+        text: Home
       - href: syllabus.qmd
         text: Syllabus
-      - href: staff.qmd
-        text: Staff
-      - href: calendar.qmd
-        text: Calendar
-      - section: "Units"
+      - href: schedule.qmd
+        text: Schedule
+      - href: office_hours.qmd
+        text: Office Hours
+      - section: "Course Notes"
         contents:
-          - units/unit1.qmd
-          - units/unit2.ipynb
-          - units/unit3.qmd
-      - href: data.qmd
-        text: Datasets
+          - href: notes/notes1.qmd
+      - section: "Problem Sets"
+        contents:
+          - href: ps/ps1.qmd
+          - href: ps/ps2.qmd
+          - href: ps/ps3.qmd
+      - section: "How tos"
+        contents:
+          - howtos/accessJulia.md
+          - howtos/installGit.md
+          - howtos/installQuarto.md
+          - howtos/submitPS.md
       - href: license.qmd
         text: License
           
-
 format:
   html:
     theme: cosmo
     css: assets/styles.css
     toc: true
 
-
+execute:
+  freeze: auto
 
