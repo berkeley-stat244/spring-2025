@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Statistics 244: Computing for Statistics and Data Science with Julia</title>
+<title>Accessing Julia</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,27 +20,59 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -68,67 +100,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-buttons .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
 
-    const options = {
-      valueNames: ['listing-button','listing-link','listing-color',{ data: ['index'] },{ data: ['categories'] }],
-      
-      searchColumns: ["listing-button","listing-link","listing-color"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-buttons'] = new List('listing-buttons', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="../assets/styles.css">
 </head>
 
 <body class="nav-sidebar docked">
@@ -140,7 +114,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Home</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../howtos/accessJulia.html">How tos</a></li><li class="breadcrumb-item"><a href="../howtos/accessJulia.html">Accessing Julia</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -154,11 +128,11 @@ window.Quarto = {
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
-      <a href="./index.html" class="sidebar-logo-link">
-      <img src="./assets/stat_bear.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      <a href="../index.html" class="sidebar-logo-link">
+      <img src="../assets/stat_bear.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
       </a>
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Stat 244</a> 
+      <a href="../">Stat 244</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/berkeley-stat244/spring-2025" title="" class="quarto-navigation-tool px-1" aria-label="GitHub"><i class="bi bi-github"></i></a>
 </div>
@@ -173,25 +147,25 @@ window.Quarto = {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Home</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./syllabus.html" class="sidebar-item-text sidebar-link">
+  <a href="../syllabus.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Syllabus</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./schedule.html" class="sidebar-item-text sidebar-link">
+  <a href="../schedule.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Schedule</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./office_hours.html" class="sidebar-item-text sidebar-link">
+  <a href="../office_hours.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Office Hours</span></a>
   </div>
 </li>
@@ -206,7 +180,7 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./notes/notes1.html" class="sidebar-item-text sidebar-link">
+  <a href="../notes/notes1.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Notes Set 1</span></a>
   </div>
 </li>
@@ -234,31 +208,31 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./howtos/accessJulia.html" class="sidebar-item-text sidebar-link">
+  <a href="../howtos/accessJulia.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Accessing Julia</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./howtos/accessSCF.html" class="sidebar-item-text sidebar-link">
+  <a href="../howtos/accessSCF.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Accessing the SCF</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./howtos/useQuarto.html" class="sidebar-item-text sidebar-link">
+  <a href="../howtos/useQuarto.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Using Quarto</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./howtos/installPython.html" class="sidebar-item-text sidebar-link">
+  <a href="../howtos/installPython.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Installing Python</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./howtos/installGit.html" class="sidebar-item-text sidebar-link">
+  <a href="../howtos/installGit.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Installing Git</span></a>
   </div>
 </li>
@@ -266,7 +240,7 @@ window.Quarto = {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./license.html" class="sidebar-item-text sidebar-link">
+  <a href="../license.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">License</span></a>
   </div>
 </li>
@@ -280,18 +254,18 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#course-materials" id="toc-course-materials" class="nav-link active" data-scroll-target="#course-materials">Course materials</a></li>
-  <li><a href="#questions-about-taking-the-class" id="toc-questions-about-taking-the-class" class="nav-link" data-scroll-target="#questions-about-taking-the-class">Questions about taking the class</a></li>
+  <li><a href="#installing-and-accessing-julia" id="toc-installing-and-accessing-julia" class="nav-link active" data-scroll-target="#installing-and-accessing-julia">Installing and Accessing Julia</a></li>
+  <li><a href="#using-julia-packages" id="toc-using-julia-packages" class="nav-link" data-scroll-target="#using-julia-packages">Using Julia packages</a></li>
+  <li><a href="#using-julia-in-jupyter-notebooks" id="toc-using-julia-in-jupyter-notebooks" class="nav-link" data-scroll-target="#using-julia-in-jupyter-notebooks">Using Julia in Jupyter notebooks</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../howtos/accessJulia.html">How tos</a></li><li class="breadcrumb-item"><a href="../howtos/accessJulia.html">Accessing Julia</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Statistics 244: Computing for Statistics and Data Science with Julia</h1>
-<p class="subtitle lead">UC Berkeley, Spring 2025</p>
+<h1 class="title">Accessing Julia</h1>
 </div>
 
 
@@ -308,31 +282,27 @@ window.Quarto = {
 </header>
 
 
-<div id="listing-buttons" class="quarto-listing quarto-listing-container-custom">
-
-  <button style="background-color: purple;"><a href="https://edstem.org/us/courses/73174/discussion" target="_blank">Ed</a></button>
-
-  <button style="background-color: orangered;"><a href="https://gradescope.com/courses/949978" target="_blank">Gradescope</a></button>
-
-  <button style="background-color: blue;"><a href="https://statistics.berkeley.edu/computing/training/tutorials" target="_blank">Tutorials</a></button>
-
-  <button style="background-color: green;"><a href="https://pollev.com/chrispaciorek428" target="_blank">PollEV</a></button>
-
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div>
-<p>Programming and computation for applications in statistics, data science and related fields, focusing on the use of Julia, a modern language that offers interactivity with high performance based on just-in-time compilation. The course will also cover the use of co-processors, in particular GPUs, through Julia and Python packages such as Jax and PyTorch. Topics will include data types, functional programming, multiple argument dispatch, memory use, efficiency, parallelization, robustness and testing.</p>
-<section id="course-materials" class="level2">
-<h2 class="anchored" data-anchor-id="course-materials">Course materials</h2>
-<p>See the links above for the key resources for the course.</p>
-<p>Most course content (in particular notes and problem sets) are available through this website via the links in the left sidebar.</p>
+<section id="installing-and-accessing-julia" class="level2">
+<h2 class="anchored" data-anchor-id="installing-and-accessing-julia">Installing and Accessing Julia</h2>
+<p>Julia should be straightforward to <a href="https://julialang.org/downloads/">install on your own computer</a>.</p>
+<p>Julia is also available on all the SCF machines. If you’re in a shell/terminal, you’ll first need to run <code>module load julia</code>.</p>
 </section>
-<section id="questions-about-taking-the-class" class="level2">
-<h2 class="anchored" data-anchor-id="questions-about-taking-the-class">Questions about taking the class</h2>
-<p>If you would like to audit the class, enroll as a UC Berkeley undergraduate, or enroll as a concurrent enrollment student (i.e., for visiting students), or for some other reason are not enrolled, please fill out <a href="https://forms.gle/oMZuoQ4kQ9WfNdAZA">this survey</a> as soon as possible and, ideally, chat with me before/after the first class. All those enrolled or wishing to take the class should have filled it out by Wednesday January 24 at noon.</p>
-<p>Please see the syllabus for the computing background I expect.</p>
-
+<section id="using-julia-packages" class="level2">
+<h2 class="anchored" data-anchor-id="using-julia-packages">Using Julia packages</h2>
+<p>One gets access to a Julia package using <code>using &lt;packageName&gt;</code> (or <code>import &lt;packageName</code>).</p>
+<p>If the package is not part of your project (all Julia work is done in a project), you’ll need to add it like this, using the <code>BenchmarkTools</code> package as an example:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(<span class="st">"BenchmarkTools"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>If the package is not installed on the machine, Julia will prompt you to install it. Packages will generally be installed in <code>~/.julia/packages</code> (where <code>~</code> is shorthand for the location of your home directory).</p>
+</section>
+<section id="using-julia-in-jupyter-notebooks" class="level2">
+<h2 class="anchored" data-anchor-id="using-julia-in-jupyter-notebooks">Using Julia in Jupyter notebooks</h2>
+<p>To use Julia in a notebook on the SCF JupyterHub, you can just select Julia as the kernel from the dropdown in the top right.</p>
+<p>To use Julia in a notebook on your own machine, you need to install the Julia kernel for Jupyter.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(<span class="st">"IJulia"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">installkernel</span>(<span class="st">"Julia"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>That should create a kernel called “Julia” that you can select as the kernel when you are in a Jupyter notebook.</p>
 
 
 </section>

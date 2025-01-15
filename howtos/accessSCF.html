@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Statistics 244: Computing for Statistics and Data Science with Julia</title>
+<title>Accessing the SCF</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,24 +23,22 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -68,67 +66,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-buttons .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
 
-    const options = {
-      valueNames: ['listing-button','listing-link','listing-color',{ data: ['index'] },{ data: ['categories'] }],
-      
-      searchColumns: ["listing-button","listing-link","listing-color"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-buttons'] = new List('listing-buttons', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="../assets/styles.css">
 </head>
 
 <body class="nav-sidebar docked">
@@ -140,7 +80,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Home</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../howtos/accessJulia.html">How tos</a></li><li class="breadcrumb-item"><a href="../howtos/accessSCF.html">Accessing the SCF</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -154,11 +94,11 @@ window.Quarto = {
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
-      <a href="./index.html" class="sidebar-logo-link">
-      <img src="./assets/stat_bear.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      <a href="../index.html" class="sidebar-logo-link">
+      <img src="../assets/stat_bear.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
       </a>
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Stat 244</a> 
+      <a href="../">Stat 244</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/berkeley-stat244/spring-2025" title="" class="quarto-navigation-tool px-1" aria-label="GitHub"><i class="bi bi-github"></i></a>
 </div>
@@ -173,25 +113,25 @@ window.Quarto = {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Home</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./syllabus.html" class="sidebar-item-text sidebar-link">
+  <a href="../syllabus.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Syllabus</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./schedule.html" class="sidebar-item-text sidebar-link">
+  <a href="../schedule.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Schedule</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./office_hours.html" class="sidebar-item-text sidebar-link">
+  <a href="../office_hours.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Office Hours</span></a>
   </div>
 </li>
@@ -206,7 +146,7 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./notes/notes1.html" class="sidebar-item-text sidebar-link">
+  <a href="../notes/notes1.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Notes Set 1</span></a>
   </div>
 </li>
@@ -234,31 +174,31 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./howtos/accessJulia.html" class="sidebar-item-text sidebar-link">
+  <a href="../howtos/accessJulia.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Accessing Julia</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./howtos/accessSCF.html" class="sidebar-item-text sidebar-link">
+  <a href="../howtos/accessSCF.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Accessing the SCF</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./howtos/useQuarto.html" class="sidebar-item-text sidebar-link">
+  <a href="../howtos/useQuarto.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Using Quarto</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./howtos/installPython.html" class="sidebar-item-text sidebar-link">
+  <a href="../howtos/installPython.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Installing Python</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./howtos/installGit.html" class="sidebar-item-text sidebar-link">
+  <a href="../howtos/installGit.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Installing Git</span></a>
   </div>
 </li>
@@ -266,7 +206,7 @@ window.Quarto = {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./license.html" class="sidebar-item-text sidebar-link">
+  <a href="../license.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">License</span></a>
   </div>
 </li>
@@ -280,18 +220,18 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#course-materials" id="toc-course-materials" class="nav-link active" data-scroll-target="#course-materials">Course materials</a></li>
-  <li><a href="#questions-about-taking-the-class" id="toc-questions-about-taking-the-class" class="nav-link" data-scroll-target="#questions-about-taking-the-class">Questions about taking the class</a></li>
+  <li><a href="#get-an-scf-account" id="toc-get-an-scf-account" class="nav-link active" data-scroll-target="#get-an-scf-account">Get an SCF account</a></li>
+  <li><a href="#access-to-the-statistical-computing-facility-scf" id="toc-access-to-the-statistical-computing-facility-scf" class="nav-link" data-scroll-target="#access-to-the-statistical-computing-facility-scf">Access to the Statistical Computing Facility (SCF)</a></li>
+  <li><a href="#software" id="toc-software" class="nav-link" data-scroll-target="#software">Software</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../howtos/accessJulia.html">How tos</a></li><li class="breadcrumb-item"><a href="../howtos/accessSCF.html">Accessing the SCF</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Statistics 244: Computing for Statistics and Data Science with Julia</h1>
-<p class="subtitle lead">UC Berkeley, Spring 2025</p>
+<h1 class="title">Accessing the SCF</h1>
 </div>
 
 
@@ -308,31 +248,23 @@ window.Quarto = {
 </header>
 
 
-<div id="listing-buttons" class="quarto-listing quarto-listing-container-custom">
-
-  <button style="background-color: purple;"><a href="https://edstem.org/us/courses/73174/discussion" target="_blank">Ed</a></button>
-
-  <button style="background-color: orangered;"><a href="https://gradescope.com/courses/949978" target="_blank">Gradescope</a></button>
-
-  <button style="background-color: blue;"><a href="https://statistics.berkeley.edu/computing/training/tutorials" target="_blank">Tutorials</a></button>
-
-  <button style="background-color: green;"><a href="https://pollev.com/chrispaciorek428" target="_blank">PollEV</a></button>
-
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div>
-<p>Programming and computation for applications in statistics, data science and related fields, focusing on the use of Julia, a modern language that offers interactivity with high performance based on just-in-time compilation. The course will also cover the use of co-processors, in particular GPUs, through Julia and Python packages such as Jax and PyTorch. Topics will include data types, functional programming, multiple argument dispatch, memory use, efficiency, parallelization, robustness and testing.</p>
-<section id="course-materials" class="level2">
-<h2 class="anchored" data-anchor-id="course-materials">Course materials</h2>
-<p>See the links above for the key resources for the course.</p>
-<p>Most course content (in particular notes and problem sets) are available through this website via the links in the left sidebar.</p>
+<p>The SCF is the <a href="https://statistics.berkeley.edu/computing">Statistical Computing Facility</a>, which provides computational resources for the Department of Statistics.</p>
+<p>For our purposes, the SCF provides access to all the software and resources we will need for class. For much of what we do, it will serve as an alternative to your laptop if you run into problems. For GPU work and for some of the parallelization work it will be the primary resource.</p>
+<section id="get-an-scf-account" class="level2">
+<h2 class="anchored" data-anchor-id="get-an-scf-account">Get an SCF account</h2>
+<p>If you don’t already have an account, please <a href="https://scf.berkeley.edu/account">request one</a>, indicating you are a student in Statistics 244.</p>
 </section>
-<section id="questions-about-taking-the-class" class="level2">
-<h2 class="anchored" data-anchor-id="questions-about-taking-the-class">Questions about taking the class</h2>
-<p>If you would like to audit the class, enroll as a UC Berkeley undergraduate, or enroll as a concurrent enrollment student (i.e., for visiting students), or for some other reason are not enrolled, please fill out <a href="https://forms.gle/oMZuoQ4kQ9WfNdAZA">this survey</a> as soon as possible and, ideally, chat with me before/after the first class. All those enrolled or wishing to take the class should have filled it out by Wednesday January 24 at noon.</p>
-<p>Please see the syllabus for the computing background I expect.</p>
-
+<section id="access-to-the-statistical-computing-facility-scf" class="level2">
+<h2 class="anchored" data-anchor-id="access-to-the-statistical-computing-facility-scf">Access to the Statistical Computing Facility (SCF)</h2>
+<p>There are two main ways to access the SCF machines.</p>
+<ol type="1">
+<li><p>You can login to our various Linux servers and access a terminal/bash shell that way. Please see <a href="http://statistics.berkeley.edu/computing/access">http://statistics.berkeley.edu/computing/access</a>.</p></li>
+<li><p>The <a href="https://jupyter.stat.berkeley.edu">SCF JupyterHub</a> provides browser-based access to a terminal/bash shell, Jupyter notebooks, and more. From a Jupyter notebook, you can select to use Julia as the kernel (the language used for processing code cells).</p></li>
+</ol>
+</section>
+<section id="software" class="level2">
+<h2 class="anchored" data-anchor-id="software">Software</h2>
+<p>Julia (possibly not with all needed packages at the moment), Python (with all needed packages), Git, and Quarto are all available from any SCF machine.</p>
 
 
 </section>
