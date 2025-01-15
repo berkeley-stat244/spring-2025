@@ -315,6 +315,7 @@ Note that the discussion of `fruits[len]` in Section 7 of Think Julia is incorre
 
 ### Arrays (i.e., lists)
 
+```{julia}
 x = ["spam", 2.0, 5, Missing, [10, 20], NaN]
 length(x)
 
