@@ -14,7 +14,7 @@ format:
     toc: true
     code-copy: true
     code-block-background: true
-jupyter: julia-1.10
+engine: knitr
 ipynb-shell-interactivity: all
 ---
 
@@ -32,7 +32,7 @@ This document covers basic syntax, basic types, data structures, and functions.
 
 Let's start by defining some variables and seeing what their types are.
 
-```{julia}
+```{julia, types}
 typeof(2)
 x = 2.0
 typeof(x)
@@ -51,6 +51,10 @@ typeof(y)
 ```
 
 As we'll be discussing more, knowing what type a variable is (particularly for large objects such as large arrays) is important for thinking about memory use, what methods work with what types of variables, and when variables need to be cast/coerced to a different type.
+
+::: {.callout-warning}
+The Unicode/LaTeX characters may not show up in the PDF version of this document.
+:::
 
 We can enter LaTeX characters/formatting by typing in LaTeX syntax (using a "\") and then TAB.
 
@@ -94,12 +98,21 @@ more deliberate about types as we'll see.
 ### Operators (and not just for math/booleans)
 
 ```{julia}
-#| error: true
 value = 7;
 value *= 3;
 value
-Value
+```
 
+```{julia}
+#| eval: false
+Value
+```
+
+```
+ERROR: UndefVarError: `Value` not defined
+```
+
+```{julia}
 x = 3
 tmp = 7x   # Unlike any other language I know!
 
@@ -132,29 +145,45 @@ plus3(5)
 To use a function (or operator) in a vectorized way, we (with exceptions) need to use the dot notation.
 
 ```{julia}
-#| error: true
-y = [5.3, 2.5]
+y = [5.3, 2.5];
+```
 
+```{julia}
+#| eval: false
 y + 3
-y .+ 3
-
 plus3(y)
-plus3.(y)
+```
 
+```
+ERROR: MethodError: no method matching +(::Vector{Float64}, ::Int64)
+For element-wise addition, use broadcasting with dot syntax: array .+ scalar
+```
+
+```{julia, vec}
+y .+ 3
+plus3.(y)
+```
+
+```{julia}
+#| eval: false
 ## Apparently no general "recycling"/broadcasting.
 x = [2.1, 3.1, 5.3, 7.9]
 x .+ [0., 100.]
+```
 
+```
+ERROR: DimensionMismatch: arrays could not be broadcast to a common size; got a dimension with lengths 4 and 2
 ```
 
 ### Shorthand function definitions
 
-These can be handy, but as a beginner with Julia, I find them a bit hard to read.
+These can be handy, but as a newcomer to Julia, I find them a bit hard to read.
 
-```{julia}
-plus3(x=1) = 3+x
+```{julia, shorthands}
+#| eval: false
+plus3a(x=1) = 3+x
 
-plus3 = (x=1) -> 3+x
+plus3b = (x=1) -> 3+x
 
 # An anonymous function (useful for maps, functional programming).
 ((x) -> 3+x)(7)
@@ -164,8 +193,8 @@ plus3 = (x=1) -> 3+x
 
 Positional arguments (which are matched based on the order they are given) are specified before keyword arguments.  
 
-```{julia}
-#| error: true
+```{julia, args}
+#| eval: false
 function foo(x, y; w, z)
   return x - y + z * w
 end
@@ -306,7 +335,7 @@ Note that languages like R and Python distinguish types intended for math (e.g.,
 
 ### Multi-dimensional arrays
 
-```{julia}
+```{julia, multi-array}
 A = [1 2 3; 4 5 6; 7 8 9]
 A
 A[2,2]
@@ -376,7 +405,7 @@ sum(A, dims = 2)
 
 Similar to Python. 
 
-```{julia}
+```{julia, comp}
 ysq = [ w^2 for w in y ]
 xsqu = [ x^2 for x = 1:5 ]
 
@@ -397,14 +426,22 @@ A nice terse shorthand but can be hard to read.
 Key-value pairs like Python dictionaries (and somewhat like named R lists).
 
 ```{julia}
-#| error: true
 x = Dict("test" => 3, "tmp" => [2.1, 3.5], 7 => "weird")
 x["tmp"][2]
 x[7]
 x["newkey"] = 'a'
 keys(x)
+```
 
+```{julia}
+#| eval: false
 x["hello"]
+```
+```
+ERROR: KeyError: key "hello" not found
+```
+
+```{julia}
 get(x, "hello", 0)
 ```
 
@@ -433,11 +470,19 @@ Tuples are are similar to 1-dimensional arrays but they are immutable (they can'
 and can have named elements.
 
 ```{julia}
-#| error: true
 x = (3, 5, "hello")
 x[2]
-x[2] = 7
+```
 
+```{julia}
+#| eval: false
+x[2] = 7
+```
+```
+ERROR: MethodError: no method matching setindex!(::Tuple{Int64, Int64, String}, ::Int64, ::Int64)
+```
+
+```{julia}
 x = 3
 y = 9
 y,x = x,y
@@ -494,6 +539,7 @@ test()
 ## Loops
 
 ```{julia}
+#| eval: false
 numThrows = 1000;
 in_circle = 0;
 
@@ -516,8 +562,11 @@ pi_estimate = 4 * in_circle / numThrows
 Variables defined in the loop are local variables accessible only in the scope of the loop (more on this soon). This avoids clutter in the global scope.
 
 ```{julia}
-#| error: true
+#| eval: false
 xPos
+```
+```
+ERROR: UndefVarError: `xPos` not defined
 ```
 
 We can iterate over elements of an object like this:
