@@ -78,11 +78,12 @@ Please follow these guidelines for choosing how to post on Ed:
 - Private (but non-anonymous) posts:
    - If you feel very uncomfortable asking a question about the items mentioned above, you can make a private (but non-anomymous) post. But it won't "count" in terms of your class participation.
    - In some cases, I may ask/encourage you to make your post public, so I can respond such that all students see my thoughts.
-   - Questions specific to your project or presentation are also appropriate for private posts, but in some cases you might want to elicit feedback from other students in which case a public post is entirely welcome.
+   - Questions specific to your project or presentation are also appropriate for private posts, but in some cases you might want to elicit feedback from other students, in which case a public post is entirely welcome.
    - I welcome feedback about the course, particularly given it is the first time offered and there will be lots of things that could be improved. 
 
 - Anonymous private posts:
-   - If you'd like to leave anonymous feedback via a private post to me, you can, but I encourage you not to make it anonymous. But I won't answer general topic/course questions that are posted anonymously, whether public or private.
+   - If you'd like to leave anonymous feedback via a private post to me, you can. I prefer to know about it rather than for you to keep it to yourself, but I encourage you not to make it anonymous.
+   - I won't answer general topic/course questions that are posted anonymously, whether public or private.
 
 - Anonymous public posts: Please DO NOT make such posts. I don't think it is conducive to productive discussion in a community.
    
@@ -100,14 +101,15 @@ Please follow these guidelines for choosing how to post on Ed:
 
 ## Computing Resources
 
-Most work for the course can be done on your laptop. Later in the course (in a couple weeks!), we'll also use the Statistics Department Linux cluster for access to GPUs. Please [sign up for an SCF account](https://statistics.berkeley.edu/computing/getting-started/computing-accounts) now if you don't have one.
+Most work for the course can be done on your laptop. Later in the course (in a cfew weeks!), we'll also use the Statistics Department Linux cluster for access to GPUs. Please [sign up for an SCF account](https://statistics.berkeley.edu/computing/getting-started/computing-accounts) now if you don't have one.
 
 The software needed for the course is as follows:
 
 -   Julia
--   Git
--   Python (the Miniforge installation of Conda is recommended but by no means required)
 -   Quarto
+-   Python (the Miniforge installation of Conda is recommended but by no means required)
+-   Git
+
 
 See the "how tos" in the left sidebar for tips on software installation and usage.
 
@@ -117,13 +119,14 @@ See the "how tos" in the left sidebar for tips on software installation and usag
 
 Grading will be based on a combination of your general participation (in class and on the discussion forum), completion of several problem sets, and some combination of in-class presentation(s) and a project. The presentation/project topics will be fairly flexible and will be determined based on my surveying of class participants and what you are interested in. I have a number of topics I'd like to see covered by student presentation but I am open to other ideas as well. Projects and in-class presentations can be on your own or in pairs. 
 
-Tentatively, I'm anticipating the following requirement for projects/presentations -- with each student selecting one of:
+**Tentatively**, I'm anticipating the following requirement for projects/presentations -- with each student selecting one of:
+
   - an in-depth final project
   - a short final project plus a presentation
-  - two presentations
-  - a single presentation on a meaty topic
+  - two presentations 
+  - a single presentation on a meaty topic (or two such if done with a partner)
 
-I'll need to think about how that is adjusted if done in pairs. It may simply be an expectation of more in-depth work if a project or presentation is shared.
+I'll need to think more about how that is adjusted if done in pairs. It may simply be an expectation of more in-depth work if a project or presentation is shared.
 
 I will give more details after the first week of class.
 

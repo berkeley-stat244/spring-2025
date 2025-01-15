@@ -2,7 +2,7 @@
 title: Installing Git
 ---
 
-Here are some instructions for installing Git on your computer. Git is the version control software we'll use in the course.
+Here are some instructions for installing Git on your computer. You should use Git to manage your work on your final project. You may also want to use it for your problem set and presentation work.
 
 You can install Git by downloading and installing the correct binary from [here](http://git-scm.com/downloads).
 

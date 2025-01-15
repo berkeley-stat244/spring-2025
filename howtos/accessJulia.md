@@ -14,7 +14,7 @@ One gets access to a Julia package using `using <packageName>` (or `import <pack
 
 If the package is not part of your project (all Julia work is done in a project), you'll need to add it like this, using the `BenchmarkTools` package as an example:
 
-```{julia}
+```julia
 using Pkg
 Pkg.add("BenchmarkTools")
 ```
@@ -27,7 +27,7 @@ To use Julia in a notebook on the SCF JupyterHub, you can just select Julia as t
 
 To use Julia in a notebook on your own machine, you need to install the Julia kernel for Jupyter.
 
-```{julia}
+```julia
 using Pkg
 Pkg.add("IJulia")
 installkernel("Julia")

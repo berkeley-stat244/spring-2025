@@ -12,6 +12,7 @@ Once you've installed Python, please install the following packages:
 - scipy
 - pandas
 - jax
+- pytorch
 
 
 Assuming you installed Miniforge, you should be able to do this from the command line:
