@@ -14,7 +14,7 @@ format:
     toc: true
     code-copy: true
     code-block-background: true
-engine: knitr
+jupyter: julia-1.10
 ipynb-shell-interactivity: all
 ---
 

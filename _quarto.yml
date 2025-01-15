@@ -2,7 +2,7 @@ project:
   type: website
 
 website:
-  site-url: https://stat244.berkeley.edu/spring-2025
+  site-url: https://berkeley-stat244.github.io/spring-2025
   sidebar:
     style: docked
     title: "Stat 244"
@@ -31,10 +31,11 @@ website:
           - href: ps/ps3.qmd
       - section: "How tos"
         contents:
-          - howtos/accessJulia.md
-          - howtos/installGit.md
-          - howtos/installQuarto.md
-          - howtos/submitPS.md
+          - href: howtos/accessJulia.md
+          - href: howtos/accessSCF.md
+          - href: howtos/useQuarto.md
+          - href: howtos/installPython.md
+          - href: howtos/installGit.md
       - href: license.qmd
         text: License
           
