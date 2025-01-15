@@ -30,80 +30,129 @@
     ]
   },
   {
-    "objectID": "notes/notes1.html",
-    "href": "notes/notes1.html",
-    "title": "Notes Set 1",
+    "objectID": "howtos/accessSCF.html",
+    "href": "howtos/accessSCF.html",
+    "title": "Accessing the SCF",
     "section": "",
-    "text": "UNDER CONSTRUCTION",
+    "text": "The SCF is the Statistical Computing Facility, which provides computational resources for the Department of Statistics.\nFor our purposes, the SCF provides access to all the software and resources we will need for class. For much of what we do, it will serve as an alternative to your laptop if you run into problems. For GPU work and for some of the parallelization work it will be the primary resource.",
     "crumbs": [
-      "Course Notes",
-      "Notes Set 1"
+      "How tos",
+      "Accessing the SCF"
     ]
   },
   {
-    "objectID": "notes/notes1.html#variables-and-types",
-    "href": "notes/notes1.html#variables-and-types",
-    "title": "Notes Set 1",
-    "section": "Variables and types",
-    "text": "Variables and types\nLet’s start by defining some variables and seeing what their types are.\n\ntypeof(2)\nx = 2.0\ntypeof(x)\ns = \"hello\"\ntypeof(s)\ntypeof(s[1])\ntypeof('\\n')\n## Unicode characters\n'h'\n'i'\n'\\n'\n'θ'\n\ny = (3, 7.5)\ntypeof(y)\n\nTuple{Int64, Float64}",
+    "objectID": "howtos/accessSCF.html#get-an-scf-account",
+    "href": "howtos/accessSCF.html#get-an-scf-account",
+    "title": "Accessing the SCF",
+    "section": "Get an SCF account",
+    "text": "Get an SCF account\nIf you don’t already have an account, please request one, indicating you are a student in Statistics 244.",
     "crumbs": [
-      "Course Notes",
-      "Notes Set 1"
+      "How tos",
+      "Accessing the SCF"
     ]
   },
   {
-    "objectID": "howtos/accessJulia.html",
-    "href": "howtos/accessJulia.html",
-    "title": "Accessing Julia",
+    "objectID": "howtos/accessSCF.html#access-to-the-statistical-computing-facility-scf",
+    "href": "howtos/accessSCF.html#access-to-the-statistical-computing-facility-scf",
+    "title": "Accessing the SCF",
+    "section": "Access to the Statistical Computing Facility (SCF)",
+    "text": "Access to the Statistical Computing Facility (SCF)\nThere are two main ways to access the SCF machines.\n\nYou can login to our various Linux servers and access a terminal/bash shell that way. Please see http://statistics.berkeley.edu/computing/access.\nThe SCF JupyterHub provides browser-based access to a terminal/bash shell, Jupyter notebooks, and more. From a Jupyter notebook, you can select to use Julia as the kernel (the language used for processing code cells).",
+    "crumbs": [
+      "How tos",
+      "Accessing the SCF"
+    ]
+  },
+  {
+    "objectID": "howtos/accessSCF.html#software",
+    "href": "howtos/accessSCF.html#software",
+    "title": "Accessing the SCF",
+    "section": "Software",
+    "text": "Software\nJulia (possibly not with all needed packages at the moment), Python (with all needed packages), Git, and Quarto are all available from any SCF machine.",
+    "crumbs": [
+      "How tos",
+      "Accessing the SCF"
+    ]
+  },
+  {
+    "objectID": "howtos/installPython.html",
+    "href": "howtos/installPython.html",
+    "title": "Installing Python",
     "section": "",
-    "text": "Julia should be straightforward to install on your own computer.\nJulia is also available on all the SCF machines. If you’re in a shell/terminal, you’ll first need to run module load julia.",
+    "text": "The focus of the course is Julia, but I plan to spend a small amount of time on the use of GPUs via Python. You can use Python through the SCF (and you’ll need to do so for GPU access), but if you do want install Python on your own machine, here is some information\nWe recommend using the Miniforge distribution as your Python 3.12 installation.\nOnce you’ve installed Python, please install the following packages:\n\nnumpy\nscipy\npandas\njax\npytorch\n\nAssuming you installed Miniforge, you should be able to do this from the command line:\nconda install -c conda-forge numpy scipy pandas jax\nconda install pytorch torchvision torchaudio pytorch-cuda=12.4 -c pytorch -c nvidia",
     "crumbs": [
       "How tos",
-      "Accessing Julia"
+      "Installing Python"
     ]
   },
   {
-    "objectID": "howtos/accessJulia.html#installing-and-accessing-julia",
-    "href": "howtos/accessJulia.html#installing-and-accessing-julia",
-    "title": "Accessing Julia",
+    "objectID": "howtos/useQuarto.html",
+    "href": "howtos/useQuarto.html",
+    "title": "Using Quarto",
     "section": "",
-    "text": "Julia should be straightforward to install on your own computer.\nJulia is also available on all the SCF machines. If you’re in a shell/terminal, you’ll first need to run module load julia.",
+    "text": "Unless you plan to generate your problem set solutions on the SCF, you’ll need to install Quarto.\nOnce installed, you should be able to run commands such as quarto render FILE and quarto preview FILE from the command line.\nTo render to PDF, you’ll need a LaTeX engine installed. A good minimal solution if don’t already have LaTeX installed (e.g., via MicTeX in Windows or MacTeX on MacOS) is to install tinytex: quarto install tinytex.\nQuarto also runs from the Windows Command shell or PowerShell.\nquarto convert converts back and forth between the Jupyter notebook (.ipynb) and Quarto Markdown (.qmd) formats. So if you prefer, you can develop in a notebook and then convert to qmd and then render to prepare a nice-looking pdf for problem set/project/presentation submission.\nBy default, quarto uses Jupyter to process code chunks. While this generally works well, for Julia, I think that using the R-based knitr will be a better choice (e.g., the output from running code prints out more nicely). To do so, add engine: knitr to the YAML metadata at the top of the file (if you happen to have an execute stanza, you’ll need to have engine: knitr nested within that stanza). For the knitr engine, you’ll need to have R installed on your computer, with the rmarkdown R package installed. If you do want to use Jupyter, you will probably need to add jupyter: julia to the YAML metadata at the top of the file (jupyter: julia-1.10 on the SCF), and you will need a the IJulia kernel installed – see the howto on accessing Julia.\nFor Python chunks when using the default jupyter engine, if you want all output from multiple commands in a chunk to be printed (without explicitly using print()), you can add the following syntax to the YAML metadata at the top of the file. (Note that, unfortunately, the output will be printed out below the code chunk rather than interspersed with the code, as that is how Jupyter notebooks chunks work.)\nipynb-shell-interactivity: all",
     "crumbs": [
       "How tos",
-      "Accessing Julia"
+      "Using Quarto"
     ]
   },
   {
-    "objectID": "howtos/accessJulia.html#using-julia-packages",
-    "href": "howtos/accessJulia.html#using-julia-packages",
-    "title": "Accessing Julia",
-    "section": "Using Julia packages",
-    "text": "Using Julia packages\nOne gets access to a Julia package using using &lt;packageName&gt; (or import &lt;packageName).\nIf the package is not part of your project (all Julia work is done in a project), you’ll need to add it like this, using the BenchmarkTools package as an example:\nusing Pkg\nPkg.add(\"BenchmarkTools\")\nIf the package is not installed on the machine, Julia will prompt you to install it. Packages will generally be installed in ~/.julia/packages (where ~ is shorthand for the location of your home directory).",
-    "crumbs": [
-      "How tos",
-      "Accessing Julia"
-    ]
-  },
-  {
-    "objectID": "howtos/accessJulia.html#using-julia-in-jupyter-notebooks",
-    "href": "howtos/accessJulia.html#using-julia-in-jupyter-notebooks",
-    "title": "Accessing Julia",
-    "section": "Using Julia in Jupyter notebooks",
-    "text": "Using Julia in Jupyter notebooks\nTo use Julia in a notebook on the SCF JupyterHub, you can just select Julia as the kernel from the dropdown in the top right.\nTo use Julia in a notebook on your own machine, you need to install the Julia kernel for Jupyter.\nusing Pkg\nPkg.add(\"IJulia\")\ninstallkernel(\"Julia\")\nThat should create a kernel called “Julia” that you can select as the kernel when you are in a Jupyter notebook.",
-    "crumbs": [
-      "How tos",
-      "Accessing Julia"
-    ]
-  },
-  {
-    "objectID": "howtos/installGit.html",
-    "href": "howtos/installGit.html",
-    "title": "Installing Git",
+    "objectID": "office_hours.html",
+    "href": "office_hours.html",
+    "title": "Office hours",
     "section": "",
-    "text": "Here are some instructions for installing Git on your computer. You should use Git to manage your work on your final project. You may also want to use it for your problem set and presentation work.\nYou can install Git by downloading and installing the correct binary from here.\nFor macOS, we recommend using the Homebrew option.\nGit comes installed on the SCF, so if you login to an SCF machine and want to use Git there, you don’t need to install Git.",
+    "text": "Chris (Evans 495 or Zoom [email in advance])\n\nSpecific hours TBD\nBy appoinment\nFeel free to drop by if my door is open, though I won’t always be able to help at the time.",
     "crumbs": [
-      "How tos",
-      "Installing Git"
+      "Office Hours"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Statistics 244: Computing for Statistics and Data Science with Julia",
+    "section": "",
+    "text": "Ed\n\n  Gradescope\n\n  Tutorials\n\n  PollEV\n\n\nNo matching items",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#course-description",
+    "href": "index.html#course-description",
+    "title": "Statistics 244: Computing for Statistics and Data Science with Julia",
+    "section": "Course description",
+    "text": "Course description\nProgramming and computation for applications in statistics, data science and related fields, focusing on the use of Julia, a modern language that offers interactivity with high performance based on just-in-time compilation. The course will also cover the use of co-processors, in particular GPUs, through Julia and Python packages such as Jax and PyTorch. Topics will include data types, functional programming, multiple argument dispatch, memory use, efficiency, parallelization, robustness and testing.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#course-materials",
+    "href": "index.html#course-materials",
+    "title": "Statistics 244: Computing for Statistics and Data Science with Julia",
+    "section": "Course materials",
+    "text": "Course materials\nSee the links above for the key resources for the course.\nMost course content (in particular notes and problem sets) are available through this website via the links in the left sidebar.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#questions-about-taking-the-class",
+    "href": "index.html#questions-about-taking-the-class",
+    "title": "Statistics 244: Computing for Statistics and Data Science with Julia",
+    "section": "Questions about taking the class",
+    "text": "Questions about taking the class\nIf you would like to audit the class, enroll as a UC Berkeley undergraduate, or enroll as a concurrent enrollment student (i.e., for visiting students), or for some other reason are not enrolled, please fill out this survey as soon as possible and, ideally, chat with me before/after the first class. All those enrolled or wishing to take the class should have filled it out by Wednesday January 24 at noon.\nPlease see the syllabus for the computing background I expect.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "license.html",
+    "href": "license.html",
+    "title": "License",
+    "section": "",
+    "text": "This work is licensed under a Creative Commons Attribution 4.0 International License.",
+    "crumbs": [
+      "License"
     ]
   },
   {
@@ -151,7 +200,7 @@
     "href": "syllabus.html#course-culture",
     "title": "Syllabus",
     "section": "Course culture",
-    "text": "Course culture\nThis is a small class, a graduate class, and essentially a special topics/seminar class. That has the following implications.\nI expect a corresponding degree of maturity from all students, including the small number of undergraduates who might take the class. Among other things, this means trying to not stress about grading, being comfortable with ambiguity (in terms of content, expectations, and grading), being curious, and fully participating in class, even if you feel a bit uncomfortable because you think it might reveal some lack of knowledge or understanding on your part.\nEvaluation/grading will be somewhat informal and based in part on your contributions to the class community (either to the in-class discussion or the Ed discussion board), as well as completion of problem sets, and my assessment of student project/presentations. See more below.\nFurthermore, I am not an expert in Julia! Part of my motivation for teaching the class was to learn Julia myself (as well as more about working with GPUs), which I’ve done some of in preparation for the class and to some degree will make up for remaining gaps based on my larger expertise in this sort of programming (in particular experience with R and Python). But there’s a lot I don’t know, and there will be lots of questions I’m not sure how to answer in the moment in class. Contributing your thoughts in class or on Ed is part of your responsibility in the class.\nPlease do not use phones during class and limit laptop use to the material being covered.\nFinally, if you have suggestions for how to make the course better, including how we use time in class, please let me know.\n\nEd culture\nPlease follow these guidelines for choosing how to post on Ed:\n\nPublic (non-anonymous) posts: I highly encourage public posts about course topics/concepts and topics discussed in class as well as questions about problem set problems, as that is the only way to contribute to the course discussion.\n\nPlease DO NOT post public messages anonymously.\n\nPrivate (but non-anonymous) posts:\n\nIf you feel very uncomfortable asking a question about the items mentioned above, you can make a private (but non-anomymous) post. But it won’t “count” in terms of your class participation.\nIn some cases, I may ask/encourage you to make your post public, so I can respond such that all students see my thoughts.\nQuestions specific to your project or presentation are also appropriate for private posts, but in some cases you might want to elicit feedback from other students in which case a public post is entirely welcome.\nI welcome feedback about the course, particularly given it is the first time offered and there will be lots of things that could be improved.\n\nAnonymous private posts:\n\nIf you’d like to leave anonymous feedback via a private post to me, you can, but I encourage you not to make it anonymous. But I won’t answer general topic/course questions that are posted anonymously, whether public or private.\n\nAnonymous public posts: Please DO NOT make such posts. I don’t think it is conducive to productive discussion in a community.",
+    "text": "Course culture\nThis is a small class, a graduate class, and essentially a special topics/seminar class. That has the following implications.\nI expect a corresponding degree of maturity from all students, including the small number of undergraduates who might take the class. Among other things, this means trying to not stress about grading, being comfortable with ambiguity (in terms of content, expectations, and grading), being curious, and fully participating in class, even if you feel a bit uncomfortable because you think it might reveal some lack of knowledge or understanding on your part.\nEvaluation/grading will be somewhat informal and based in part on your contributions to the class community (either to the in-class discussion or the Ed discussion board), as well as completion of problem sets, and my assessment of student project/presentations. See more below.\nFurthermore, I am not an expert in Julia! Part of my motivation for teaching the class was to learn Julia myself (as well as more about working with GPUs), which I’ve done some of in preparation for the class and to some degree will make up for remaining gaps based on my larger expertise in this sort of programming (in particular experience with R and Python). But there’s a lot I don’t know, and there will be lots of questions I’m not sure how to answer in the moment in class. Contributing your thoughts in class or on Ed is part of your responsibility in the class.\nPlease do not use phones during class and limit laptop use to the material being covered.\nFinally, if you have suggestions for how to make the course better, including how we use time in class, please let me know.\n\nEd culture\nPlease follow these guidelines for choosing how to post on Ed:\n\nPublic (non-anonymous) posts: I highly encourage public posts about course topics/concepts and topics discussed in class as well as questions about problem set problems, as that is the only way to contribute to the course discussion.\n\nPlease DO NOT post public messages anonymously.\n\nPrivate (but non-anonymous) posts:\n\nIf you feel very uncomfortable asking a question about the items mentioned above, you can make a private (but non-anomymous) post. But it won’t “count” in terms of your class participation.\nIn some cases, I may ask/encourage you to make your post public, so I can respond such that all students see my thoughts.\nQuestions specific to your project or presentation are also appropriate for private posts, but in some cases you might want to elicit feedback from other students, in which case a public post is entirely welcome.\nI welcome feedback about the course, particularly given it is the first time offered and there will be lots of things that could be improved.\n\nAnonymous private posts:\n\nIf you’d like to leave anonymous feedback via a private post to me, you can. I prefer to know about it rather than for you to keep it to yourself, but I encourage you not to make it anonymous.\nI won’t answer general topic/course questions that are posted anonymously, whether public or private.\n\nAnonymous public posts: Please DO NOT make such posts. I don’t think it is conducive to productive discussion in a community.",
     "crumbs": [
       "Syllabus"
     ]
@@ -171,7 +220,7 @@
     "href": "syllabus.html#computing-resources",
     "title": "Syllabus",
     "section": "Computing Resources",
-    "text": "Computing Resources\nMost work for the course can be done on your laptop. Later in the course (in a couple weeks!), we’ll also use the Statistics Department Linux cluster for access to GPUs. Please sign up for an SCF account now if you don’t have one.\nThe software needed for the course is as follows:\n\nJulia\nGit\nPython (the Miniforge installation of Conda is recommended but by no means required)\nQuarto\n\nSee the “how tos” in the left sidebar for tips on software installation and usage.",
+    "text": "Computing Resources\nMost work for the course can be done on your laptop. Later in the course (in a cfew weeks!), we’ll also use the Statistics Department Linux cluster for access to GPUs. Please sign up for an SCF account now if you don’t have one.\nThe software needed for the course is as follows:\n\nJulia\nQuarto\nPython (the Miniforge installation of Conda is recommended but by no means required)\nGit\n\nSee the “how tos” in the left sidebar for tips on software installation and usage.",
     "crumbs": [
       "Syllabus"
     ]
@@ -181,7 +230,7 @@
     "href": "syllabus.html#course-requirements-and-grading",
     "title": "Syllabus",
     "section": "Course requirements and grading",
-    "text": "Course requirements and grading\n\nCourse grades\nGrading will be based on a combination of your general participation (in class and on the discussion forum), completion of several problem sets, and some combination of in-class presentation(s) and a project. The presentation/project topics will be fairly flexible and will be determined based on my surveying of class participants and what you are interested in. I have a number of topics I’d like to see covered by student presentation but I am open to other ideas as well. Projects and in-class presentations can be on your own or in pairs.\nTentatively, I’m anticipating the following requirement for projects/presentations – with each student selecting one of: - an in-depth final project - a short final project plus a presentation - two presentations - a single presentation on a meaty topic (or two such if done with a partner)\nI’ll need to think more about how that is adjusted if done in pairs. It may simply be an expectation of more in-depth work if a project or presentation is shared.\nI will give more details after the first week of class.\nGrades will generally be As and Bs, unless I assess a lack of engagement on your part.\n\nProblem sets\nPlease prepare your assignments using Quarto (or a Jupyter notebook), output to PDF and submitted to Gradescope. Answers should consist of textual response (and any useful mathematical expressions as appropriate), with key chunks of code embedded within the document.\nYou must include a “Collaboration” section in which you indicate any other students you worked with and describing the nature of any use of ChatBots/LLMs. If you did not collaborate with anyone else (including said AIs), simply state that.\nYou’re welcome to consult with classmates on problem set problems, and I encourage it. You can discuss a problem with another student, brainstorm approaches, and share code syntax (generally not more than one line) on how to do small individual coding tasks within a problem.\n\nYou should not ask another student for complete code or solutions, or look at their code/solution.\nYou should not share complete code or solutions with another student or on Ed Discussion.\n\nRemember this is a small class with one goal that you learn how to effectively program, in Julia in particular. There’s no point in copying code in bulk from another student or a ChatBot, because it won’t help you learn programming/Julia. For that you need to wrestle with the concepts/syntax and develop “muscle memory”.\nI am still considering how I will grade problem sets, given there is no GSI and the nature of the class. They will either be graded complete/incomplete or on a 4 point scale:\n\n0 = no credit,\n1 = partial credit (you did some of the problems but not all),\n2 = generally satisfactory (you tried everything but there were pieces of what you did that didn’t completely/correctly solve or present/explain one or more problems), and\n3 = full credit.\n\n\n\nProjects\nI’m expecting that many of you will want to come up with your own final project. You’ll need to discuss the topic with me in advance. It should involve programming in Julia, though use of Python for GPU computations may be ok too. I may also have a couple project topics that you could choose from if you don’t have a project idea and want to do a project rather than doing class presentation(s).\nYou should use Git to manage the code in your project. The result does not have to be, but could be, a Julia package.\n\n\nPresentations\nI’m planning for student presentations to be a core part of the content of the course. I have some specific ideas of topics that I think would be good, but I am also open to your ideas of topics you’d be excited to dive into and present.\nI expect you to do a deep dive on the topic, and while I don’t expect you to be an expert in a week or two, I do expect you to have done a bunch of research and experimentation and pulled together a clear, in-depth presentation focused on examples/demonstration/code syntax, and be ready to answer questions from the class. I will discuss the focus/goal of the presentation/topic with the student(s) when the topic is chosen and then we’ll have an interim “progress” discussion a few days before the presentation.\nI highly recommend using Quarto to prepare presentation materials, but I am also happy to discuss other possibilities with you. We’ll need to figure out a good way to make the final materials available through the website, probably through pull requests made to the course GitHub site.",
+    "text": "Course requirements and grading\n\nCourse grades\nGrading will be based on a combination of your general participation (in class and on the discussion forum), completion of several problem sets, and some combination of in-class presentation(s) and a project. The presentation/project topics will be fairly flexible and will be determined based on my surveying of class participants and what you are interested in. I have a number of topics I’d like to see covered by student presentation but I am open to other ideas as well. Projects and in-class presentations can be on your own or in pairs.\nTentatively, I’m anticipating the following requirement for projects/presentations – with each student selecting one of:\n\nan in-depth final project\na short final project plus a presentation\ntwo presentations\na single presentation on a meaty topic (or two such if done with a partner)\n\nI’ll need to think more about how that is adjusted if done in pairs. It may simply be an expectation of more in-depth work if a project or presentation is shared.\nI will give more details after the first week of class.\nGrades will generally be As and Bs, unless I assess a lack of engagement on your part.\n\nProblem sets\nPlease prepare your assignments using Quarto (or a Jupyter notebook), output to PDF and submitted to Gradescope. Answers should consist of textual response (and any useful mathematical expressions as appropriate), with key chunks of code embedded within the document.\nYou must include a “Collaboration” section in which you indicate any other students you worked with and describing the nature of any use of ChatBots/LLMs. If you did not collaborate with anyone else (including said AIs), simply state that.\nYou’re welcome to consult with classmates on problem set problems, and I encourage it. You can discuss a problem with another student, brainstorm approaches, and share code syntax (generally not more than one line) on how to do small individual coding tasks within a problem.\n\nYou should not ask another student for complete code or solutions, or look at their code/solution.\nYou should not share complete code or solutions with another student or on Ed Discussion.\n\nRemember this is a small class with one goal that you learn how to effectively program, in Julia in particular. There’s no point in copying code in bulk from another student or a ChatBot, because it won’t help you learn programming/Julia. For that you need to wrestle with the concepts/syntax and develop “muscle memory”.\nI am still considering how I will grade problem sets, given there is no GSI and the nature of the class. They will either be graded complete/incomplete or on a 4 point scale:\n\n0 = no credit,\n1 = partial credit (you did some of the problems but not all),\n2 = generally satisfactory (you tried everything but there were pieces of what you did that didn’t completely/correctly solve or present/explain one or more problems), and\n3 = full credit.\n\n\n\nProjects\nI’m expecting that many of you will want to come up with your own final project. You’ll need to discuss the topic with me in advance. It should involve programming in Julia, though use of Python for GPU computations may be ok too. I may also have a couple project topics that you could choose from if you don’t have a project idea and want to do a project rather than doing class presentation(s).\nYou should use Git to manage the code in your project. The result does not have to be, but could be, a Julia package.\n\n\nPresentations\nI’m planning for student presentations to be a core part of the content of the course. I have some specific ideas of topics that I think would be good, but I am also open to your ideas of topics you’d be excited to dive into and present.\nI expect you to do a deep dive on the topic, and while I don’t expect you to be an expert in a week or two, I do expect you to have done a bunch of research and experimentation and pulled together a clear, in-depth presentation focused on examples/demonstration/code syntax, and be ready to answer questions from the class. I will discuss the focus/goal of the presentation/topic with the student(s) when the topic is chosen and then we’ll have an interim “progress” discussion a few days before the presentation.\nI highly recommend using Quarto to prepare presentation materials, but I am also happy to discuss other possibilities with you. We’ll need to figure out a good way to make the final materials available through the website, probably through pull requests made to the course GitHub site.",
     "crumbs": [
       "Syllabus"
     ]
@@ -207,136 +256,157 @@
     ]
   },
   {
-    "objectID": "license.html",
-    "href": "license.html",
-    "title": "License",
+    "objectID": "howtos/installGit.html",
+    "href": "howtos/installGit.html",
+    "title": "Installing Git",
     "section": "",
-    "text": "This work is licensed under a Creative Commons Attribution 4.0 International License.",
-    "crumbs": [
-      "License"
-    ]
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Statistics 244: Computing for Statistics and Data Science with Julia",
-    "section": "",
-    "text": "Ed\n\n  Gradescope\n\n  Tutorials\n\n  PollEV\n\n\nNo matching items",
-    "crumbs": [
-      "Home"
-    ]
-  },
-  {
-    "objectID": "index.html#course-description",
-    "href": "index.html#course-description",
-    "title": "Statistics 244: Computing for Statistics and Data Science with Julia",
-    "section": "Course description",
-    "text": "Course description\nProgramming and computation for applications in statistics, data science and related fields, focusing on the use of Julia, a modern language that offers interactivity with high performance based on just-in-time compilation. The course will also cover the use of co-processors, in particular GPUs, through Julia and Python packages such as Jax and PyTorch. Topics will include data types, functional programming, multiple argument dispatch, memory use, efficiency, parallelization, robustness and testing.",
-    "crumbs": [
-      "Home"
-    ]
-  },
-  {
-    "objectID": "index.html#course-materials",
-    "href": "index.html#course-materials",
-    "title": "Statistics 244: Computing for Statistics and Data Science with Julia",
-    "section": "Course materials",
-    "text": "Course materials\nSee the links above for the key resources for the course.\nMost course content (in particular notes and problem sets) are available through this website via the links in the left sidebar.",
-    "crumbs": [
-      "Home"
-    ]
-  },
-  {
-    "objectID": "index.html#questions-about-taking-the-class",
-    "href": "index.html#questions-about-taking-the-class",
-    "title": "Statistics 244: Computing for Statistics and Data Science with Julia",
-    "section": "Questions about taking the class",
-    "text": "Questions about taking the class\nIf you would like to audit the class, enroll as a UC Berkeley undergraduate, or enroll as a concurrent enrollment student (i.e., for visiting students), or for some other reason are not enrolled, please fill out this survey as soon as possible and, ideally, chat with me before/after the first class. All those enrolled or wishing to take the class should have filled it out by Wednesday January 24 at noon.\nPlease see the syllabus for the computing background I expect.",
-    "crumbs": [
-      "Home"
-    ]
-  },
-  {
-    "objectID": "office_hours.html",
-    "href": "office_hours.html",
-    "title": "Office hours",
-    "section": "",
-    "text": "Chris (Evans 495 or Zoom [email in advance])\n\nSpecific hours TBD\nBy appoinment\nFeel free to drop by if my door is open, though I won’t always be able to help at the time.",
-    "crumbs": [
-      "Office Hours"
-    ]
-  },
-  {
-    "objectID": "howtos/useQuarto.html",
-    "href": "howtos/useQuarto.html",
-    "title": "Using Quarto",
-    "section": "",
-    "text": "Unless you plan to generate your problem set solutions on the SCF, you’ll need to install Quarto.\nOnce installed, you should be able to run commands such as quarto render FILE and quarto preview FILE from the command line.\nTo render to PDF, you’ll need a LaTeX engine installed. A good minimal solution if don’t already have LaTeX installed (e.g., via MicTeX in Windows or MacTeX on MacOS) is to install tinytex: quarto install tinytex.\nQuarto also runs from the Windows Command shell or PowerShell.\nquarto convert converts back and forth between the Jupyter notebook (.ipynb) and Quarto Markdown (.qmd) formats. So if you prefer, you can develop in a notebook and then convert to qmd and then render to prepare a nice-looking pdf for problem set/project/presentation submission.\nBy default, quarto uses Jupyter to process code chunks. While this generally works well, for Julia, I think that using the R-based knitr will be a better choice (e.g., the output from running code prints out more nicely). To do so, add engine: knitr to the YAML metadata at the top of the file (if you happen to have an execute stanza, you’ll need to have engine: knitr nested within that stanza). For the knitr engine, you’ll need to have R installed on your computer, with the rmarkdown R package installed. If you do want to use Jupyter, you will probably need to add jupyter: julia to the YAML metadata at the top of the file (jupyter: julia-1.10 on the SCF), and you will need a the IJulia kernel installed – see the howto on accessing Julia.\nFor Python chunks when using the default jupyter engine, if you want all output from multiple commands in a chunk to be printed (without explicitly using print()), you can add the following syntax to the YAML metadata at the top of the file. (Note that, unfortunately, the output will be printed out below the code chunk rather than interspersed with the code, as that is how Jupyter notebooks chunks work.)\nipynb-shell-interactivity: all",
+    "text": "Here are some instructions for installing Git on your computer. You should use Git to manage your work on your final project. You may also want to use it for your problem set and presentation work.\nYou can install Git by downloading and installing the correct binary from here.\nFor macOS, we recommend using the Homebrew option.\nGit comes installed on the SCF, so if you login to an SCF machine and want to use Git there, you don’t need to install Git.",
     "crumbs": [
       "How tos",
-      "Using Quarto"
+      "Installing Git"
     ]
   },
   {
-    "objectID": "howtos/installPython.html",
-    "href": "howtos/installPython.html",
-    "title": "Installing Python",
+    "objectID": "howtos/accessJulia.html",
+    "href": "howtos/accessJulia.html",
+    "title": "Accessing Julia",
     "section": "",
-    "text": "The focus of the course is Julia, but I plan to spend a small amount of time on the use of GPUs via Python. You can use Python through the SCF (and you’ll need to do so for GPU access), but if you do want install Python on your own machine, here is some information\nWe recommend using the Miniforge distribution as your Python 3.12 installation.\nOnce you’ve installed Python, please install the following packages:\n\nnumpy\nscipy\npandas\njax\npytorch\n\nAssuming you installed Miniforge, you should be able to do this from the command line:\nconda install -c conda-forge numpy scipy pandas jax\nconda install pytorch torchvision torchaudio pytorch-cuda=12.4 -c pytorch -c nvidia",
+    "text": "Julia should be straightforward to install on your own computer.\nJulia is also available on all the SCF machines. If you’re in a shell/terminal, you’ll first need to run module load julia.",
     "crumbs": [
       "How tos",
-      "Installing Python"
+      "Accessing Julia"
     ]
   },
   {
-    "objectID": "howtos/accessSCF.html",
-    "href": "howtos/accessSCF.html",
-    "title": "Accessing the SCF",
+    "objectID": "howtos/accessJulia.html#installing-and-accessing-julia",
+    "href": "howtos/accessJulia.html#installing-and-accessing-julia",
+    "title": "Accessing Julia",
     "section": "",
-    "text": "The SCF is the Statistical Computing Facility, which provides computational resources for the Department of Statistics.\nFor our purposes, the SCF provides access to all the software and resources we will need for class. For much of what we do, it will serve as an alternative to your laptop if you run into problems. For GPU work and for some of the parallelization work it will be the primary resource.",
+    "text": "Julia should be straightforward to install on your own computer.\nJulia is also available on all the SCF machines. If you’re in a shell/terminal, you’ll first need to run module load julia.",
     "crumbs": [
       "How tos",
-      "Accessing the SCF"
+      "Accessing Julia"
     ]
   },
   {
-    "objectID": "howtos/accessSCF.html#get-an-scf-account",
-    "href": "howtos/accessSCF.html#get-an-scf-account",
-    "title": "Accessing the SCF",
-    "section": "Get an SCF account",
-    "text": "Get an SCF account\nIf you don’t already have an account, please request one, indicating you are a student in Statistics 244.",
+    "objectID": "howtos/accessJulia.html#using-julia-packages",
+    "href": "howtos/accessJulia.html#using-julia-packages",
+    "title": "Accessing Julia",
+    "section": "Using Julia packages",
+    "text": "Using Julia packages\nOne gets access to a Julia package using using &lt;packageName&gt; (or import &lt;packageName).\nIf the package is not part of your project (all Julia work is done in a project), you’ll need to add it like this, using the BenchmarkTools package as an example:\nusing Pkg\nPkg.add(\"BenchmarkTools\")\nIf the package is not installed on the machine, Julia will prompt you to install it. Packages will generally be installed in ~/.julia/packages (where ~ is shorthand for the location of your home directory).",
     "crumbs": [
       "How tos",
-      "Accessing the SCF"
+      "Accessing Julia"
     ]
   },
   {
-    "objectID": "howtos/accessSCF.html#access-to-the-statistical-computing-facility-scf",
-    "href": "howtos/accessSCF.html#access-to-the-statistical-computing-facility-scf",
-    "title": "Accessing the SCF",
-    "section": "Access to the Statistical Computing Facility (SCF)",
-    "text": "Access to the Statistical Computing Facility (SCF)\nThere are two main ways to access the SCF machines.\n\nYou can login to our various Linux servers and access a terminal/bash shell that way. Please see http://statistics.berkeley.edu/computing/access.\nThe SCF JupyterHub provides browser-based access to a terminal/bash shell, Jupyter notebooks, and more. From a Jupyter notebook, you can select to use Julia as the kernel (the language used for processing code cells).",
+    "objectID": "howtos/accessJulia.html#using-julia-in-jupyter-notebooks",
+    "href": "howtos/accessJulia.html#using-julia-in-jupyter-notebooks",
+    "title": "Accessing Julia",
+    "section": "Using Julia in Jupyter notebooks",
+    "text": "Using Julia in Jupyter notebooks\nTo use Julia in a notebook on the SCF JupyterHub, you can just select Julia as the kernel from the dropdown in the top right.\nTo use Julia in a notebook on your own machine, you need to install the Julia kernel for Jupyter.\nusing Pkg\nPkg.add(\"IJulia\")\ninstallkernel(\"Julia\")\nThat should create a kernel called “Julia” that you can select as the kernel when you are in a Jupyter notebook.",
     "crumbs": [
       "How tos",
-      "Accessing the SCF"
+      "Accessing Julia"
     ]
   },
   {
-    "objectID": "howtos/accessSCF.html#software",
-    "href": "howtos/accessSCF.html#software",
-    "title": "Accessing the SCF",
-    "section": "Software",
-    "text": "Software\nJulia (possibly not with all needed packages at the moment), Python (with all needed packages), Git, and Quarto are all available from any SCF machine.",
-    "crumbs": [
-      "How tos",
-      "Accessing the SCF"
-    ]
-  },
-  {
-    "objectID": "notes/test.html",
-    "href": "notes/test.html",
-    "title": "foo",
+    "objectID": "notes/notes1.html",
+    "href": "notes/notes1.html",
+    "title": "Notes Set 1: Introduction",
     "section": "",
-    "text": "print(3)\n\n3"
+    "text": "This document is the first of a set of notes giving an overview of key syntax, tools, and concepts for using Julia. The notes are not meant to be particularly complete in terms of useful functions (Google and LLMs can now provide that quite well), but rather to introduce the language and consider key programming concepts in the context of Julia.\nGiven that, the document heavily relies on demos, with interpretation in some cases left to the reader.\nThis document covers basic syntax, basic types, data structures, and functions.",
+    "crumbs": [
+      "Course Notes",
+      "Notes Set 1: Introduction"
+    ]
+  },
+  {
+    "objectID": "notes/notes1.html#introduction",
+    "href": "notes/notes1.html#introduction",
+    "title": "Notes Set 1: Introduction",
+    "section": "",
+    "text": "This document is the first of a set of notes giving an overview of key syntax, tools, and concepts for using Julia. The notes are not meant to be particularly complete in terms of useful functions (Google and LLMs can now provide that quite well), but rather to introduce the language and consider key programming concepts in the context of Julia.\nGiven that, the document heavily relies on demos, with interpretation in some cases left to the reader.\nThis document covers basic syntax, basic types, data structures, and functions.",
+    "crumbs": [
+      "Course Notes",
+      "Notes Set 1: Introduction"
+    ]
+  },
+  {
+    "objectID": "notes/notes1.html#variables-and-types",
+    "href": "notes/notes1.html#variables-and-types",
+    "title": "Notes Set 1: Introduction",
+    "section": "Variables and types",
+    "text": "Variables and types\n\nBasic types\nLet’s start by defining some variables and seeing what their types are.\n\ntypeof(2)\n\nInt64\n\nx = 2.0\n\n2.0\n\ntypeof(x)\n\nFloat64\n\ns = \"hello\"\n\n\"hello\"\n\ntypeof(s)\n\nString\n\ntypeof(s[1])\n\nChar\n\ntypeof('\\n')\n\nChar\n\n## Unicode characters\n'h'\n\n'h': ASCII/Unicode U+0068 (category Ll: Letter, lowercase)\n\n'i'\n\n'i': ASCII/Unicode U+0069 (category Ll: Letter, lowercase)\n\n'\\n'\n\n'\\n': ASCII/Unicode U+000A (category Cc: Other, control)\n\n'θ'\n\n'θ': Unicode U+03B8 (category Ll: Letter, lowercase)\n\n\ny = (3, 7.5)\n\n(3, 7.5)\n\ntypeof(y)\n\nTuple{Int64, Float64}\n\n\nAs we’ll be discussing more, knowing what type a variable is (particularly for large objects such as large arrays) is important for thinking about memory use, what methods work with what types of variables, and when variables need to be cast/coerced to a different type.\n\n\n\n\n\n\nWarning\n\n\n\nThe Unicode/LaTeX characters may not show up in the PDF version of this document.\n\n\nWe can enter LaTeX characters/formatting by typing in LaTeX syntax (using a “\") and then TAB.\n\nθ = 3.57  # \\theta TAB\n\n3.57\n\n\n#=\nNote the use of a comment\nin the initial line.\n\nAnd this here is a multi-line comment.\n=#\n\nx₁ = 7  # x\\_1 TAB\n\n7\n\n\n\n\nA bit about strings\n\nx = 'hello'\n\nx = \"hello\"\nx[1] = \"a\"\n\n\n\nCasting/coercing between types\n\nstring(32)\n\n\"32\"\n\nparse(Float64, \"32.5\")\n\n32.5\n\n\nSome languages (such as R) will often cast between types behind the scenes. With Julia, one is often more deliberate about types as we’ll see.",
+    "crumbs": [
+      "Course Notes",
+      "Notes Set 1: Introduction"
+    ]
+  },
+  {
+    "objectID": "notes/notes1.html#functions-and-operators",
+    "href": "notes/notes1.html#functions-and-operators",
+    "title": "Notes Set 1: Introduction",
+    "section": "Functions and operators",
+    "text": "Functions and operators\n\nOperators (and not just for math/booleans)\n\nvalue = 7;\nvalue *= 3;\nvalue\n\n21\n\n\n\nValue\n\nERROR: UndefVarError: `Value` not defined\n\nx = 3\n\n3\n\ntmp = 7x   # Unlike any other language I know!\n\n21\n\n\ns * \" there\"\n\n\"hello there\"\n\n\ns^4\n\n\"hellohellohellohello\"\n\n\n\n\nGetting help on functions\nType ? to get into help mode, then the name of the function you want help on.\nTo see all the functions/operators available in base Julia, type “Base.” and hit tab.\n\n\nFunction definitions\n\nfunction plus3(x=0)\n  return 3+x\nend\n\nplus3 (generic function with 2 methods)\n\n\nplus3(5)\n\n8\n\n\n\n\nVectorized use\nTo use a function (or operator) in a vectorized way, we (with exceptions) need to use the dot notation.\n\ny = [5.3, 2.5];\n\n\ny + 3\nplus3(y)\n\nERROR: MethodError: no method matching +(::Vector{Float64}, ::Int64)\nFor element-wise addition, use broadcasting with dot syntax: array .+ scalar\n\ny .+ 3\n\n2-element Vector{Float64}:\n 8.3\n 5.5\n\nplus3.(y)\n\n2-element Vector{Float64}:\n 8.3\n 5.5\n\n\n\n## Apparently no general \"recycling\"/broadcasting.\nx = [2.1, 3.1, 5.3, 7.9]\nx .+ [0., 100.]\n\nERROR: DimensionMismatch: arrays could not be broadcast to a common size; got a dimension with lengths 4 and 2\n\n\nShorthand function definitions\nThese can be handy, but as a newcomer to Julia, I find them a bit hard to read.\n\nplus3a(x=1) = 3+x\n\nplus3b = (x=1) -&gt; 3+x\n\n# An anonymous function (useful for maps, functional programming).\n((x) -&gt; 3+x)(7)\n\n\n\nPositional and keyword arguments\nPositional arguments (which are matched based on the order they are given) are specified before keyword arguments.\n\nfunction foo(x, y; w, z)\n  return x - y + z * w\nend\n\nfoo(3, 5, 7, 9)\nfoo(3, 5, z = 9, w = 7)\nfoo(3, 5; z = 9, w = 7)\nfoo(y = 5, x = 3, w = 7, z = 9)\n\nfunction foo2(; x, y, w, z) return x - y + z * w end\nfoo2(y = 5, x = 3, z = 9, w = 7)\n\nArguments can have defaults:\n\n::: {.cell}\n\n```{.julia .cell-code}\nfunction foo(x=0, y=0; add=true)\n  if add\n    return x + y\n  else\n    return x*y\n  end\nend\n\nfoo (generic function with 3 methods)\n\n:::\n\n\n\n\n\n\nExercise\n\n\n\nTry out various argument orders and giving or not giving names or values to the arguments and try to figure out the syntax rules of how Julia behaves. Think about how they are similar/different to your primary language and whether you like the syntax rules.\n\n\nKeyword arguments are generally used for controlling function behavior rather than as core inputs. They are not involved in multiple dispatch (more later).",
+    "crumbs": [
+      "Course Notes",
+      "Notes Set 1: Introduction"
+    ]
+  },
+  {
+    "objectID": "notes/notes1.html#some-additional-topics",
+    "href": "notes/notes1.html#some-additional-topics",
+    "title": "Notes Set 1: Introduction",
+    "section": "Some additional topics",
+    "text": "Some additional topics\n\nBasic variable types (and comparisons)\n\nx = 3\n\n3\n\ny = 3.0\n\n3.0\n\nx == y\n\ntrue\n\nx ≠ y\n\nfalse\n\nx &gt; y\n\nfalse\n\nx &gt; y || x &lt;= y\n\ntrue\n\n\nisa(x, Int)\n\ntrue\n\ny isa Int\n\nfalse\n\ny isa Number\n\ntrue\n\n\n'a' ∈ \"banana\"  # \\in TAB\n\ntrue\n\n'a' ∉ \"banana\"  # \\notin TAB\n\nfalse\n\n\naString = \"a\"\n\n\"a\"\n\n'a' == aString\n\nfalse\n\n'a' == aString[1]\n\ntrue\n\n\n\n\nConditional (if-else) statements\n\nif x &lt; y\n    println(\"x is less than y\")\nelseif x &gt; y\n    println(\"x is greater than y\")\nelse\n    println(\"x and y are equal\")\nend\n\nx and y are equal\n\n\n\n\nPrinting and string interpolation\nWe can use variables in print statements in various ways.\n\nperson = \"Alice\"\n\n\"Alice\"\n\n\nperson = \"Alice\";\n\n\"Hello, $(person) with name of length $(length(person)).\"\n\n\"Hello, Alice with name of length 5.\"\n\n\nprintln(\"Hello, \", person, \" with name of length \", length(person), \".\")\n\nHello, Alice with name of length 5.\n\nprintln(\"Hello, $(person) with name of length $(length(person)).\")\n\nHello, Alice with name of length 5.\n\nprintln(\"Hello, \" * person * \" with name of length \" * string(length(person)) * \".\")\n\nHello, Alice with name of length 5.",
+    "crumbs": [
+      "Course Notes",
+      "Notes Set 1: Introduction"
+    ]
+  },
+  {
+    "objectID": "notes/notes1.html#arrays-and-subsetting",
+    "href": "notes/notes1.html#arrays-and-subsetting",
+    "title": "Notes Set 1: Introduction",
+    "section": "Arrays and subsetting",
+    "text": "Arrays and subsetting\n\nSequences (and slicing)\n\nsome_text = \"This is the Greek θ\"\n\n\"This is the Greek θ\"\n\nsome_text[1]\n\n'T': ASCII/Unicode U+0054 (category Lu: Letter, uppercase)\n\nsome_text[19]\n\n'θ': Unicode U+03B8 (category Ll: Letter, lowercase)\n\nsome_text[1:4]\n\n\"This\"\n\nsome_text[17:end]\n\n\"k θ\"\n\n\n\ny = [1.1, 2.1, 3.2, 4.3, 5.7]\n\n5-element Vector{Float64}:\n 1.1\n 2.1\n 3.2\n 4.3\n 5.7\n\nprintln(y)               # Original vector\n\n[1.1, 2.1, 3.2, 4.3, 5.7]\n\nprintln(y[1:3])          # First 3 elements\n\n[1.1, 2.1, 3.2]\n\nprintln(y[1:2:4])        # All odd-numbered elements\n\n[1.1, 3.2]\n\nprintln(y[end:-1:2])     # From end back to second element in reverse\n\n[5.7, 4.3, 3.2, 2.1]\n\nprintln(y[4:3])          # Empty subset\n\nFloat64[]\n\nz = y[:]                 # All elements (copy (not alias) of original vector)\n\n5-element Vector{Float64}:\n 1.1\n 2.1\n 3.2\n 4.3\n 5.7\n\nprintln(y[[4,2,4,3,3]])  # Slice by index\n\n[4.3, 2.1, 4.3, 3.2, 3.2]\n\ny[[true,false,true,false,true]]   # Slice by boolean array\n\n3-element Vector{Float64}:\n 1.1\n 3.2\n 5.7\n\n\n\n\n\n\n\n\nExercise\n\n\n\nExperiment more with slicing/indexing to make sure you get it, and what errors can occur. (As an example what happens if you index beyond the extent of the object?\n\n\nNote that the discussion of fruits[len] in Section 7 of Think Julia is incorrect.\n\n\nArrays (i.e., lists)\nx = [“spam”, 2.0, 5, Missing, [10, 20], NaN] length(x)\ntypeof(x) y = [10, 20, 30, 40] typeof(y) x[1] = 3.3 x[4] = 2.7 typeof(x) # Mutable, but type doesn’t change.\n\n:::{.callout-note title=\"Math with arrays\"}\n\nFor computational efficiency, we'd want the array to contain elements all of the same type.\n\nNote that languages like R and Python distinguish types intended for math (e.g., numpy arrays, R matrices) from more general types (e.g., lists). This is not the case for Julia, where the key thing is the type(s) involved.\n:::\n\n### Multi-dimensional arrays\n\n::: {.cell}\n\n```{.julia .cell-code}\nA = [1 2 3; 4 5 6; 7 8 9]\n\n3×3 Matrix{Int64}:\n 1  2  3\n 4  5  6\n 7  8  9\n\nA\n\n3×3 Matrix{Int64}:\n 1  2  3\n 4  5  6\n 7  8  9\n\nA[2,2]\n\n5\n\nA[2,:]\n\n3-element Vector{Int64}:\n 4\n 5\n 6\n\n\nsize(A)\n\n(3, 3)\n\nsize(A, 2)\n\n3\n\n\n## Defined column-wise:\nA = [1:4  5:8  ones(Int64,4)]\n\n4×3 Matrix{Int64}:\n 1  5  1\n 2  6  1\n 3  7  1\n 4  8  1\n\n:::\n\n\nArrays vs. vectors\n\nones(5)\n\n5-element Vector{Float64}:\n 1.0\n 1.0\n 1.0\n 1.0\n 1.0\n\nones(5, 1)\n\n5×1 Matrix{Float64}:\n 1.0\n 1.0\n 1.0\n 1.0\n 1.0\n\nones(1, 5)\n\n1×5 Matrix{Float64}:\n 1.0  1.0  1.0  1.0  1.0\n\nones(5, 5)\n\n5×5 Matrix{Float64}:\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n\n\n## Outer product:\nones(5, 1) * ones(1, 5)\n\n5×5 Matrix{Float64}:\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n\nones(5, 1) .* ones(1, 5)\n\n5×5 Matrix{Float64}:\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n\n\n\n\nA bit of linear algebra\nWe do linear algebra directly on the core Array type.\n\nA = [1 2 3; 4 1 6; 7 8 1]\n\n3×3 Matrix{Int64}:\n 1  2  3\n 4  1  6\n 7  8  1\n\nA * A\n\n3×3 Matrix{Int64}:\n 30  28  18\n 50  57  24\n 46  30  70\n\n\nMuch more in a few weeks.\n\n\nMore on vectorization\n\nx = [\"spam\", 2.0, 5, [10, 20]]\n\n4-element Vector{Any}:\n  \"spam\"\n 2.0\n 5\n  [10, 20]\n\nlength(x)\n\n4\n\nlength.(x)\n\n4-element Vector{Int64}:\n 4\n 1\n 1\n 2\n\nmap(length, x)\n\n4-element Vector{Int64}:\n 4\n 1\n 1\n 2\n\n\nx = [2.1, 3.1, 5.3, 7.9]\n\n4-element Vector{Float64}:\n 2.1\n 3.1\n 5.3\n 7.9\n\nx .+ 10\n\n4-element Vector{Float64}:\n 12.1\n 13.1\n 15.3\n 17.9\n\n\nx + x\n\n4-element Vector{Float64}:\n  4.2\n  6.2\n 10.6\n 15.8\n\n\nx .&gt; 5.0\n\n4-element BitVector:\n 0\n 0\n 1\n 1\n\nx .== 3.1\n\n4-element BitVector:\n 0\n 1\n 0\n 0\n\n\n\n\nReduction\n\nA = rand(4, 5)\n\n4×5 Matrix{Float64}:\n 0.457429  0.973799  0.430627  0.524481  0.825118\n 0.723687  0.980652  0.356162  0.857092  0.73286\n 0.943764  0.630133  0.85798   0.258709  0.382781\n 0.462001  0.25342   0.994757  0.239857  0.0235977\n\nsum(A)\n\n11.908907162997668\n\nsum(A, dims = 1)  # 2D array result\n\n1×5 Matrix{Float64}:\n 2.58688  2.838  2.63953  1.88014  1.96436\n\nsum(A, dims = 1)[:]  # 1D array result\n\n5-element Vector{Float64}:\n 2.586880147965295\n 2.838004441989248\n 2.639525481823683\n 1.8801400125669656\n 1.9643570786524764\n\n\nsum(A, dims = 2)\n\n4×1 Matrix{Float64}:\n 3.2114526562153722\n 3.6504530649085134\n 3.0733677927847034\n 1.9736336490890791\n\n\n\n\nList comprehension (comprehension syntax)\nSimilar to Python.\n\nysq = [ w^2 for w in y ]\n\n5-element Vector{Float64}:\n  1.2100000000000002\n  4.41\n 10.240000000000002\n 18.49\n 32.49\n\nxsqu = [ x^2 for x = 1:5 ]\n\n5-element Vector{Int64}:\n  1\n  4\n  9\n 16\n 25\n\n\nxsqu_even = [ x^2 for x = 1:5 if iseven(x)]\n\n2-element Vector{Int64}:\n  4\n 16\n\n\nnorm2 = [ x^2 + y^2 for x = 1:5, y = 1:5 ]\n\n5×5 Matrix{Int64}:\n  2   5  10  17  26\n  5   8  13  20  29\n 10  13  18  25  34\n 17  20  25  32  41\n 26  29  34  41  50\n\n\nA nice terse shorthand but can be hard to read.\n(Some people love it and some people hate it.)",
+    "crumbs": [
+      "Course Notes",
+      "Notes Set 1: Introduction"
+    ]
+  },
+  {
+    "objectID": "notes/notes1.html#dictionaries-and-tuples",
+    "href": "notes/notes1.html#dictionaries-and-tuples",
+    "title": "Notes Set 1: Introduction",
+    "section": "Dictionaries and tuples",
+    "text": "Dictionaries and tuples\n\nDictionaries\nKey-value pairs like Python dictionaries (and somewhat like named R lists).\n\nx = Dict(\"test\" =&gt; 3, \"tmp\" =&gt; [2.1, 3.5], 7 =&gt; \"weird\")\n\nDict{Any, Any} with 3 entries:\n  7      =&gt; \"weird\"\n  \"test\" =&gt; 3\n  \"tmp\"  =&gt; [2.1, 3.5]\n\nx[\"tmp\"][2]\n\n3.5\n\nx[7]\n\n\"weird\"\n\nx[\"newkey\"] = 'a'\n\n'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)\n\nkeys(x)\n\nKeySet for a Dict{Any, Any} with 4 entries. Keys:\n  7\n  \"test\"\n  \"tmp\"\n  \"newkey\"\n\n\n\nx[\"hello\"]\n\nERROR: KeyError: key \"hello\" not found\n\nget(x, \"hello\", 0)\n\n0\n\n\nNote that the keys don’t have to be strings! This could be good for caching/memoizing/lookup:\n\nx = Dict([\"foo\", \"bar\"] =&gt; 3, \"tmp\" =&gt; [2.1, 3.5], 7 =&gt; \"weird\")\n\nDict{Any, Any} with 3 entries:\n  7              =&gt; \"weird\"\n  [\"foo\", \"bar\"] =&gt; 3\n  \"tmp\"          =&gt; [2.1, 3.5]\n\nx[[\"foo\", \"bar\"]]\n\n3\n\nind = 7\n\n7\n\nx[ind]\n\n\"weird\"\n\n\nWhat do you think will happen here?\n\nind = Int32(7)  # What do you expect?\nx[ind]\nind = 7.0       # What do you expect?\nx[ind]\n\n\n\nTuples\nTuples are are similar to 1-dimensional arrays but they are immutable (they can’t be modified) and can have named elements.\n\nx = (3, 5, \"hello\")\n\n(3, 5, \"hello\")\n\nx[2]\n\n5\n\n\n\nx[2] = 7\n\nERROR: MethodError: no method matching setindex!(::Tuple{Int64, Int64, String}, ::Int64, ::Int64)\n\nx = 3\n\n3\n\ny = 9\n\n9\n\ny,x = x,y\n\n(3, 9)\n\n\n# Named tuple:\nx = (a=3, b=5, other=\"hello\")\n\n(a = 3, b = 5, other = \"hello\")\n\nx.b\n\n5\n\n\nWhat do you think will happen here?\n\nx = (a=3, b=5, other=\"hello\", b=\"foo\")\nx.b\n\nTuples come in handy for providing flexibility in function inputs and outputs, as seen next.\n\n\nTuples and functions\nHere we create a function that can take an arbitrary number of inputs.\n\nfunction flexsum(args...)\n   println(\"The first value is $(args[1]).\")\n   return sum(args)\nend\n\nflexsum (generic function with 1 method)\n\n\nflexsum(5, 7, 9)\n\nThe first value is 5.\n\n\n21\n\n\nHere’s how to call a function that takes multiple inputs, but pass as a tuple:\n\nfunction mydiv(x, y)\n   return x / y\nend\n\nmydiv (generic function with 1 method)\n\n\nvals = [3,5]\n\n2-element Vector{Int64}:\n 3\n 5\n\nmydiv(vals...)\n\n0.6\n\n\nWe use tuples to have a function return multiple values.\n\nfunction test()\n  return 3, 5, [3,7]\nend\n\ntest (generic function with 1 method)\n\n\ntest()\n\n(3, 5, [3, 7])",
+    "crumbs": [
+      "Course Notes",
+      "Notes Set 1: Introduction"
+    ]
+  },
+  {
+    "objectID": "notes/notes1.html#loops",
+    "href": "notes/notes1.html#loops",
+    "title": "Notes Set 1: Introduction",
+    "section": "Loops",
+    "text": "Loops\n\nnumThrows = 1000;\nin_circle = 0;\n\n# Run Monte Carlo simulation\nfor _ in 1:numThrows\n  # Generate random points on 2x2 square.\n  xPos = rand() * 2 - 1.0  # Equivalent to random.uniform(-1.0, 1.0)\n  yPos = rand() * 2 - 1.0\n\n  # Is point inside unit circle?\n  if sqrt(xPos^2 + yPos^2) &lt;= 1.0  # Equivalent to math.hypot()\n    in_circle += 1\n  end\nend\n\n# Estimate PI\npi_estimate = 4 * in_circle / numThrows\n\nVariables defined in the loop are local variables accessible only in the scope of the loop (more on this soon). This avoids clutter in the global scope.\n\nxPos\n\nERROR: UndefVarError: `xPos` not defined\nWe can iterate over elements of an object like this:\n\nfor i in eachindex(x)\n  println(i)\nend\n\na\nb\nother",
+    "crumbs": [
+      "Course Notes",
+      "Notes Set 1: Introduction"
+    ]
+  },
+  {
+    "objectID": "notes/notes1.html#string-processing-and-regular-expressions",
+    "href": "notes/notes1.html#string-processing-and-regular-expressions",
+    "title": "Notes Set 1: Introduction",
+    "section": "String processing and regular expressions",
+    "text": "String processing and regular expressions\n\nx = \"The cat in the hat.\"\n\n\"The cat in the hat.\"\n\nreplace(x, \"at\"=&gt;\"\")\n\n\"The c in the h.\"\n\n\nx = \"We found 999 red balloons.\"\n\n\"We found 999 red balloons.\"\n\nreplace(x, r\"[0-9]+\"=&gt;\"some\")  # Regular expression.\n\n\"We found some red balloons.\"\n\n\n'a' ∈ \"banana\"\n\ntrue\n\n\n\nx = \"We found 99 red balloons.\"\n\n\"We found 99 red balloons.\"\n\nm = match(r\"[0-9]+ ([a-z]+)\", x)\n\nRegexMatch(\"99 red\", 1=\"red\")\n\nm.match\n\n\"99 red\"\n\nm.captures\n\n1-element Vector{Union{Nothing, SubString{String}}}:\n \"red\"\n\nm.offset\n\n10",
+    "crumbs": [
+      "Course Notes",
+      "Notes Set 1: Introduction"
+    ]
   }
 ]
