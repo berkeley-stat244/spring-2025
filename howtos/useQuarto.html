@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -248,6 +282,10 @@ ul.task-list li input[type="checkbox"] {
 <p>By default, quarto uses Jupyter to process code chunks. While this generally works well, for Julia, I think that using the R-based <code>knitr</code> will be a better choice (e.g., the output from running code prints out more nicely). To do so, add <code>engine: knitr</code> to the YAML metadata at the top of the file (if you happen to have an <code>execute</code> stanza, you’ll need to have <code>engine: knitr</code> nested within that stanza). For the <code>knitr</code> engine, you’ll need to have R installed on your computer, with the <code>rmarkdown</code> R package installed. If you do want to use Jupyter, you will probably need to add <code>jupyter: julia</code> to the YAML metadata at the top of the file (<code>jupyter: julia-1.10</code> on the SCF), and you will need a the IJulia kernel installed – see the <a href="./accessJulia.html">howto on accessing Julia</a>.</p>
 <p>For Python chunks when using the default <code>jupyter</code> engine, if you want all output from multiple commands in a chunk to be printed (without explicitly using <code>print()</code>), you can add the following syntax to the YAML metadata at the top of the file. (Note that, unfortunately, the output will be printed out below the code chunk rather than interspersed with the code, as that is how Jupyter notebooks chunks work.)</p>
 <pre><code>ipynb-shell-interactivity: all</code></pre>
+<p>There is also now a Julia engine for Quarto. I think it has the same downside as the Jupyter engine (all chunk output is printed together after the code chunk and only the last output is printed automatically), but you can try it like this.</p>
+<p>First, install the QuartoNotebookRunner Julia package:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>]add QuartoNotebookRunner<span class="co">#main</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then put <code>engine: julia</code> in the YAML metadata at the top of your Quarto document.</p>
 
 
 
