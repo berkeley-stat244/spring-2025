@@ -434,7 +434,7 @@ A nice terse shorthand but can be hard to read.
 (Some people love it and some people hate it.)
 
 
-## Dictionaries and tuples
+## Dictionaries, tuples, and structs
 
 ### Dictionaries
 
@@ -550,6 +550,23 @@ end
 
 test()
 ```
+
+### Structs
+
+A struct is a "composite type", a collection of named fields, useful for holding information of a particular structure. 
+
+```{julia}
+struct Person
+  name
+  age
+  occupation
+end
+
+lincoln = Person("Abraham Lincoln", 203, "politician")
+lincoln.age
+```
+
+We'll see much more on structs next week when we talk more about using types for robust code.
 
 ## Loops
 
