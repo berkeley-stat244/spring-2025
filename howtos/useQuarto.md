@@ -20,3 +20,12 @@ For Python chunks when using the default `jupyter` engine, if you want all outpu
 ipynb-shell-interactivity: all
 ```
 
+There is also now a Julia engine for Quarto. I think it has the same downside as the Jupyter engine (all chunk output is printed together after the code chunk and only the last output is printed automatically), but you can try it like this.
+
+First, install the QuartoNotebookRunner Julia package:
+
+```julia
+]add QuartoNotebookRunner#main
+```
+
+Then put `engine: julia` in the YAML metadata at the top of your Quarto document.
