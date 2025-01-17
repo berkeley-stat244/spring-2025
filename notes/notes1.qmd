@@ -93,6 +93,57 @@ parse(Float64, "32.5")
 Some languages (such as R) will often cast between types behind the scenes. With Julia, one is often
 more deliberate about types as we'll see.
 
+### More on types and comparisons
+
+```{julia}
+x = 3
+y = 3.0
+x == y
+x ≠ y
+x > y
+x > y || x <= y
+
+isa(x, Int)
+y isa Int
+y isa Number
+
+'a' ∈ "banana"  # \in TAB
+'a' ∉ "banana"  # \notin TAB
+
+aString = "a"
+'a' == aString
+'a' == aString[1]
+```
+
+### Conditional (if-else) statements
+
+```{julia}
+if x < y
+    println("x is less than y")
+elseif x > y
+    println("x is greater than y")
+else
+    println("x and y are equal")
+end
+```
+
+### Printing and string interpolation
+
+We can use variables in print statements in various ways.
+
+```{julia}
+person = "Alice"
+
+person = "Alice";
+
+"Hello, $(person) with name of length $(length(person))."
+
+println("Hello, ", person, " with name of length ", length(person), ".")
+println("Hello, $(person) with name of length $(length(person)).")
+println("Hello, " * person * " with name of length " * string(length(person)) * ".")
+```
+
+
 ## Functions and operators
 
 ### Operators (and not just for math/booleans)
@@ -175,6 +226,59 @@ x .+ [0., 100.]
 ERROR: DimensionMismatch: arrays could not be broadcast to a common size; got a dimension with lengths 4 and 2
 ```
 
+
+### Positional and keyword arguments
+
+Positional arguments (which are matched based on the order they are given) are specified before keyword arguments.  
+
+```{julia, args}
+#| eval: false
+
+function norm(x, p; verbose, extra)
+  if verbose  # We'll see that "logging" is a better way to do this.
+     println("Executing $(p)-norm.")
+  end
+  if !isfinite(p) and p > 0
+    return maximum(abs.(x))
+  return sum(x .^ p)^(1/p)
+end
+
+z = [3.3, 4.7, -2.2]
+
+norm(z, 2, verbose=false, extra=0)
+norm(z, 2; verbose=false, extra=0)
+norm(z, 2, false, 0)
+norm(z, p=1; verbose=false, extra=0)
+norm(z, 1, extra=0, verbose=false)
+```
+
+Arguments can have defaults:
+
+```{julia}
+function norm(x, p=2; verbose=false)
+  if verbose  # We'll see that "logging" is a better way to do this.
+     println("Executing $(p)-norm.")
+  end
+  return sum(x .^ p)^(1/p)
+end
+```
+
+:::{.callout-tip title="Exercise"}
+Try out various argument orders and giving or not giving names or values to the arguments and try to figure out the syntax rules of how Julia behaves. Think about how they are similar/different to your primary language and whether you like the syntax rules.
+:::
+
+Keyword arguments are generally used for controlling function behavior rather than as core inputs. They are not involved in multiple dispatch (more later).
+
+Try asking a ChatBot to write a norm function in Julia. When I tried Claude it gave me a better answer than what I wrote above (handling more cases for values of $p$ and with a docstring.
+
+:::{.callout-tip title="Exercise"}
+Write a function that implements the gamma density, 
+$$ f(x) = \frac{\beta^{\alpha}}{\Gamma(\alpha)} x^{\alpha-1} \exp(-\beta x), $$
+for shape $\alpha$ and rate $\beta$ or scale $1/\beta$, with $x>0, \alpha>0, \beta>0$.
+Allow it to handle either the rate or scale parameterization and to return either the density or log density. Check that it works in a vectorized way for the random variable value and the parameters. Compare what you wrote to what a ChatBot gives.
+:::
+
+
 ### Shorthand function definitions
 
 These can be handy, but as a newcomer to Julia, I find them a bit hard to read.
@@ -186,101 +290,11 @@ plus3a(x=1) = 3+x
 plus3b = (x=1) -> 3+x
 
 # An anonymous function (useful for maps, functional programming).
+((x) -> 3+x)
+
 ((x) -> 3+x)(7)
 ```
 
-### Positional and keyword arguments
-
-Positional arguments (which are matched based on the order they are given) are specified before keyword arguments.  
-
-```{julia, args}
-#| eval: false
-function foo(x, y; w, z)
-  return x - y + z * w
-end
-
-foo(3, 5, 7, 9)
-foo(3, 5, z = 9, w = 7)
-foo(3, 5; z = 9, w = 7)
-foo(y = 5, x = 3, w = 7, z = 9)
-```
-
-function foo2(; x, y, w, z)
-  return x - y + z * w
-end
-
-foo2(y = 5, x = 3, z = 9, w = 7)
-```
-
-Arguments can have defaults:
-
-```{julia}
-function foo(x=0, y=0; add=true)
-  if add
-    return x + y
-  else
-    return x*y
-  end
-end
-```
-
-:::{.callout-tip title="Exercise"}
-Try out various argument orders and giving or not giving names or values to the arguments and try to figure out the syntax rules of how Julia behaves. Think about how they are similar/different to your primary language and whether you like the syntax rules.
-:::
-
-Keyword arguments are generally used for controlling function behavior rather than as core inputs. They are not involved in multiple dispatch (more later).
-
-## Some additional topics
-
-### Basic variable types (and comparisons)
-
-```{julia}
-x = 3
-y = 3.0
-x == y
-x ≠ y
-x > y
-x > y || x <= y
-
-isa(x, Int)
-y isa Int
-y isa Number
-
-'a' ∈ "banana"  # \in TAB
-'a' ∉ "banana"  # \notin TAB
-
-aString = "a"
-'a' == aString
-'a' == aString[1]
-```
-
-### Conditional (if-else) statements
-
-```{julia}
-if x < y
-    println("x is less than y")
-elseif x > y
-    println("x is greater than y")
-else
-    println("x and y are equal")
-end
-```
-
-### Printing and string interpolation
-
-We can use variables in print statements in various ways.
-
-```{julia}
-person = "Alice"
-
-person = "Alice";
-
-"Hello, $(person) with name of length $(length(person))."
-
-println("Hello, ", person, " with name of length ", length(person), ".")
-println("Hello, $(person) with name of length $(length(person)).")
-println("Hello, " * person * " with name of length " * string(length(person)) * ".")
-```
 
 ## Arrays and subsetting
 
