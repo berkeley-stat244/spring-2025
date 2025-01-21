@@ -56,7 +56,7 @@ As we'll be discussing more, knowing what type a variable is (particularly for l
 The Unicode/LaTeX characters may not show up in the PDF version of this document.
 :::
 
-We can enter LaTeX characters/formatting by typing in LaTeX syntax (using a "\") and then TAB.
+We can enter LaTeX characters/formatting by typing in LaTeX syntax (using a `\`) and then TAB.
 
 ```{julia}
 θ = 3.57  # \theta TAB
