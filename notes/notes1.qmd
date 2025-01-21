@@ -56,7 +56,7 @@ As we'll be discussing more, knowing what type a variable is (particularly for l
 The Unicode/LaTeX characters may not show up in the PDF version of this document.
 :::
 
-We can enter LaTeX characters/formatting by typing in LaTeX syntax (using a `\`) and then TAB.
+We can enter LaTeX characters/formatting by typing in LaTeX syntax (starting with a `\`) and then TAB.
 
 ```{julia}
 θ = 3.57  # \theta TAB
@@ -69,7 +69,13 @@ And this here is a multi-line comment.
 =#
 
 x₁ = 7  # x\_1 TAB
+
+# Try \theta TAB \bar TAB = 7 (it works in some contexts).
 ```
+
+:::{.callout-tip title="Question"}
+Do you like the idea of using non-ASCII characters for variable names?
+:::
 
 ### A bit about strings
 
@@ -191,6 +197,14 @@ end
 plus3(5)
 ```
 
+Why are there two methods?
+
+```{julia}
+#| eval: false
+methods(plus3)
+methods(+)
+```
+
 ### Vectorized use
 
 To use a function (or operator) in a vectorized way, we (with exceptions) need to use the dot notation.
@@ -269,7 +283,7 @@ Try out various argument orders and giving or not giving names or values to the 
 
 Keyword arguments are generally used for controlling function behavior rather than as core inputs. They are not involved in multiple dispatch (more later).
 
-Try asking a ChatBot to write a norm function in Julia. When I tried Claude it gave me a better answer than what I wrote above (handling more cases for values of $p$ and with a docstring.
+Let's try asking a ChatBot to write a norm function in Julia. 
 
 :::{.callout-tip title="Exercise"}
 Write a function that implements the gamma density, 
@@ -322,7 +336,7 @@ y[[true,false,true,false,true]]   # Slice by boolean array
 ```
 
 :::{.callout-tip title="Exercise"}
-Experiment more with slicing/indexing to make sure you get it, and what errors can occur. (As an example what happens if you index beyond the extent of the object?
+Experiment more with slicing/indexing to make sure you get it, and what errors can occur. (As an example what happens if you index beyond the extent of the object?)
 :::
 
 Note that the discussion of `fruits[len]` in Section 7 of Think Julia is incorrect.
@@ -386,6 +400,11 @@ A = [1 2 3; 4 1 6; 7 8 1]
 A * A
 ```
 
+:::{.callout-tip title="Exercise"}
+What do you expect to happen if you try to do matrix multiplication with a matrix with a mix of reals and integers? What if an element is a string?
+:::
+
+
 Much more in a few weeks.
 
 ### More on vectorization
@@ -404,6 +423,7 @@ x + x
 x .> 5.0
 x .== 3.1
 ```
+
 
 ### Reduction
 
@@ -481,7 +501,7 @@ x[ind]
 
 ### Tuples
 
-Tuples are are similar to 1-dimensional arrays but they are immutable (they can't be modified)
+Tuples are are similar to 1-dimensional arrays but they are *immutable* (they can't be modified)
 and can have named elements.
 
 ```{julia}
@@ -524,6 +544,7 @@ Here we create a function that can take an arbitrary number of inputs.
 ```{julia}
 function flexsum(args...)
    println("The first value is $(args[1]).")
+   x = args[1]*2
    return sum(args)
 end
 
@@ -544,16 +565,19 @@ mydiv(vals...)
 We use tuples to have a function return multiple values.
 
 ```{julia}
-function test()
-  return 3, 5, [3,7]
+function flexsum(args...)
+   println("The first value is $(args[1]).")
+   x = args[1]*2
+   return args, x, sum(args)
 end
 
-test()
+flexsum(5, 7, 9)
+
 ```
 
 ### Structs
 
-A struct is a "composite type", a collection of named fields, useful for holding information of a particular structure. 
+A struct is a "composite type", a collection of named fields, useful for holding information with a particular structure. 
 
 ```{julia}
 struct Person
@@ -591,7 +615,9 @@ end
 pi_estimate = 4 * in_circle / numThrows
 ```
 
-Variables defined in the loop are local variables accessible only in the scope of the loop (more on this soon). This avoids clutter in the global scope.
+If you were using R or Python, what would the value of `xPos` be at the end of the loop execution?
+
+In Julia, variables defined in the loop are local variables accessible only in the scope of the loop (more on this soon). This avoids clutter in the global scope.
 
 ```{julia}
 #| eval: false
@@ -600,6 +626,11 @@ xPos
 ```
 ERROR: UndefVarError: `xPos` not defined
 ```
+
+:::{.callout-tip title="Exercise"}
+I used different naming conventions for my variables (`numThrows` and `in_circle`). Look online to see what the recommended style is. 
+:::
+
 
 We can iterate over elements of an object like this:
 
