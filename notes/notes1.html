@@ -371,7 +371,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>This document is the first of a set of notes giving an overview of key syntax, tools, and concepts for using Julia. The notes are not meant to be particularly complete in terms of useful functions (Google and LLMs can now provide that quite well), but rather to introduce the language and consider key programming concepts in the context of Julia.</p>
 <p>Given that, the document heavily relies on demos, with interpretation in some cases left to the reader.</p>
-<p>This document covers basic syntax, basic types, data structures, and functions.</p>
+<p>This document covers basic syntax, basic types, data structures, and functions. For more information, Think Julia Chapters 1-12 is a good reference.</p>
 </section>
 <section id="variables-and-types" class="level2">
 <h2 class="anchored" data-anchor-id="variables-and-types">Variables and types</h2>
@@ -1165,37 +1165,37 @@ Exercise
 <div class="sourceCode cell-code" id="cb199"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb199-1"><a href="#cb199-1" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">4</span>, <span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>4×5 Matrix{Float64}:
- 0.566326  0.665429  0.232865  0.863195  0.837511
- 0.536394  0.294649  0.21201   0.11783   0.302697
- 0.995038  0.382405  0.807111  0.854033  0.564639
- 0.652888  0.838671  0.671059  0.641998  0.905781</code></pre>
+ 0.628037  0.994955  0.910135  0.121906  0.521179
+ 0.713555  0.557916  0.300433  0.788926  0.14236
+ 0.204263  0.386334  0.600474  0.202375  0.00762547
+ 0.930353  0.88537   0.191942  0.988921  0.190445</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb201"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb201-1"><a href="#cb201-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>11.942529004457418</code></pre>
+<pre><code>10.267504564824216</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb203"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb203-1"><a href="#cb203-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(A, dims <span class="op">=</span> <span class="fl">1</span>)  <span class="co"># 2D array result</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>1×5 Matrix{Float64}:
- 2.75065  2.18115  1.92304  2.47706  2.61063</code></pre>
+ 2.47621  2.82457  2.00298  2.10213  0.861609</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb205"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb205-1"><a href="#cb205-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(A, dims <span class="op">=</span> <span class="fl">1</span>)[<span class="op">:</span>]  <span class="co"># 1D array result</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>5-element Vector{Float64}:
- 2.7506461881041515
- 2.181154794825394
- 1.923044686847329
- 2.4770554076768567
- 2.6106279270036863</code></pre>
+ 2.4762090891169883
+ 2.8245749296244185
+ 2.0029833247331834
+ 2.1021282310717084
+ 0.8616089902779159</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb207"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb207-1"><a href="#cb207-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb207-2"><a href="#cb207-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(A, dims <span class="op">=</span> <span class="fl">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>4×1 Matrix{Float64}:
- 3.1653262228186567
- 1.4635802115252066
- 3.60322573862643
- 3.7103968314871234</code></pre>
+ 3.1762126499520003
+ 2.503189161452731
+ 1.4010717188965292
+ 3.1870310345229544</code></pre>
 </div>
 </div>
 </section>
