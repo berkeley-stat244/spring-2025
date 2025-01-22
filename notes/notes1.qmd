@@ -24,7 +24,7 @@ This document is the first of a set of notes giving an overview of key syntax, t
 
 Given that, the document heavily relies on demos, with interpretation in some cases left to the reader.
 
-This document covers basic syntax, basic types, data structures, and functions.
+This document covers basic syntax, basic types, data structures, and functions. For more information, Think Julia Chapters 1-12 is a good reference.
 
 ## Variables and types
 
