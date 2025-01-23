@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Chris Paciorek">
-<meta name="dcterms.date" content="2025-01-14">
+<meta name="dcterms.date" content="2025-01-21">
 
 <title>Notes Set 1: Introduction</title>
 <style>
@@ -215,6 +215,12 @@ window.Quarto = {
  <span class="menu-text">Notes Set 1: Introduction</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Notes Set 2: Memory and scope</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -355,7 +361,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">January 14, 2025</p>
+      <p class="date">January 21, 2025</p>
     </div>
   </div>
   
@@ -720,18 +726,19 @@ For element-wise addition, use broadcasting with dot syntax: array .+ scalar</co
 <span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> verbose  <span class="co"># We'll see that "logging" is a better way to do this.</span></span>
 <span id="cb103-3"><a href="#cb103-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">println</span>(<span class="st">"Executing </span><span class="sc">$</span>(p)<span class="st">-norm."</span>)</span>
 <span id="cb103-4"><a href="#cb103-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">end</span></span>
-<span id="cb103-5"><a href="#cb103-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> !<span class="fu">isfinite</span>(p) and p <span class="op">&gt;</span> <span class="fl">0</span></span>
+<span id="cb103-5"><a href="#cb103-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> !<span class="fu">isfinite</span>(p) <span class="op">&amp;&amp;</span> p <span class="op">&gt;</span> <span class="fl">0</span></span>
 <span id="cb103-6"><a href="#cb103-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">maximum</span>(<span class="fu">abs</span>.(x))</span>
-<span id="cb103-7"><a href="#cb103-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="fu">sum</span>(x <span class="op">.^</span> p)<span class="op">^</span>(<span class="fl">1</span><span class="op">/</span>p)</span>
-<span id="cb103-8"><a href="#cb103-8" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
-<span id="cb103-9"><a href="#cb103-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb103-10"><a href="#cb103-10" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> [<span class="fl">3.3</span>, <span class="fl">4.7</span>, <span class="op">-</span><span class="fl">2.2</span>]</span>
-<span id="cb103-11"><a href="#cb103-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb103-12"><a href="#cb103-12" aria-hidden="true" tabindex="-1"></a><span class="fu">norm</span>(z, <span class="fl">2</span>, verbose<span class="op">=</span><span class="cn">false</span>, extra<span class="op">=</span><span class="fl">0</span>)</span>
-<span id="cb103-13"><a href="#cb103-13" aria-hidden="true" tabindex="-1"></a><span class="fu">norm</span>(z, <span class="fl">2</span>; verbose<span class="op">=</span><span class="cn">false</span>, extra<span class="op">=</span><span class="fl">0</span>)</span>
-<span id="cb103-14"><a href="#cb103-14" aria-hidden="true" tabindex="-1"></a><span class="fu">norm</span>(z, <span class="fl">2</span>, <span class="cn">false</span>, <span class="fl">0</span>)</span>
-<span id="cb103-15"><a href="#cb103-15" aria-hidden="true" tabindex="-1"></a><span class="fu">norm</span>(z, p<span class="op">=</span><span class="fl">1</span>; verbose<span class="op">=</span><span class="cn">false</span>, extra<span class="op">=</span><span class="fl">0</span>)</span>
-<span id="cb103-16"><a href="#cb103-16" aria-hidden="true" tabindex="-1"></a><span class="fu">norm</span>(z, <span class="fl">1</span>, extra<span class="op">=</span><span class="fl">0</span>, verbose<span class="op">=</span><span class="cn">false</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb103-7"><a href="#cb103-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">end</span> </span>
+<span id="cb103-8"><a href="#cb103-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="fu">sum</span>(x <span class="op">.^</span> p)<span class="op">^</span>(<span class="fl">1</span><span class="op">/</span>p)</span>
+<span id="cb103-9"><a href="#cb103-9" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb103-10"><a href="#cb103-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb103-11"><a href="#cb103-11" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> [<span class="fl">3.3</span>, <span class="fl">4.7</span>, <span class="op">-</span><span class="fl">2.2</span>]</span>
+<span id="cb103-12"><a href="#cb103-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb103-13"><a href="#cb103-13" aria-hidden="true" tabindex="-1"></a><span class="fu">norm</span>(z, <span class="fl">2</span>, verbose<span class="op">=</span><span class="cn">false</span>, extra<span class="op">=</span><span class="fl">0</span>)</span>
+<span id="cb103-14"><a href="#cb103-14" aria-hidden="true" tabindex="-1"></a><span class="fu">norm</span>(z, <span class="fl">2</span>; verbose<span class="op">=</span><span class="cn">false</span>, extra<span class="op">=</span><span class="fl">0</span>)</span>
+<span id="cb103-15"><a href="#cb103-15" aria-hidden="true" tabindex="-1"></a><span class="fu">norm</span>(z, <span class="fl">2</span>, <span class="cn">false</span>, <span class="fl">0</span>)</span>
+<span id="cb103-16"><a href="#cb103-16" aria-hidden="true" tabindex="-1"></a><span class="fu">norm</span>(z, p<span class="op">=</span><span class="fl">1</span>; verbose<span class="op">=</span><span class="cn">false</span>, extra<span class="op">=</span><span class="fl">0</span>)</span>
+<span id="cb103-17"><a href="#cb103-17" aria-hidden="true" tabindex="-1"></a><span class="fu">norm</span>(z, <span class="fl">1</span>, extra<span class="op">=</span><span class="fl">0</span>, verbose<span class="op">=</span><span class="cn">false</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Arguments can have defaults:</p>
 <div class="cell">
@@ -829,7 +836,10 @@ Exercise
 <div class="cell-output cell-output-stdout">
 <pre><code>[1.1, 2.1, 3.2, 4.3, 5.7]</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(y[<span class="fl">1</span><span class="op">:</span><span class="fl">3</span>])          <span class="co"># First 3 elements</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Slicing by index sequence:</span></span>
+<span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(y[<span class="fl">1</span><span class="op">:</span><span class="fl">3</span>])          <span class="co"># First 3 elements</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1.1, 2.1, 3.2]</code></pre>
 </div>
@@ -854,11 +864,15 @@ Exercise
  4.3
  5.7</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb131"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb131-1"><a href="#cb131-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(y[[<span class="fl">4</span>,<span class="fl">2</span>,<span class="fl">4</span>,<span class="fl">3</span>,<span class="fl">3</span>]])  <span class="co"># Slice by index</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb131"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb131-1"><a href="#cb131-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb131-2"><a href="#cb131-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Slicing by arbitrary index vector</span></span>
+<span id="cb131-3"><a href="#cb131-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(y[[<span class="fl">4</span>,<span class="fl">2</span>,<span class="fl">4</span>,<span class="fl">3</span>,<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">4</span>]])  <span class="co"># Slice by index</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[4.3, 2.1, 4.3, 3.2, 3.2]</code></pre>
+<pre><code>[4.3, 2.1, 4.3, 3.2, 3.2, 4.3, 4.3]</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb133"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb133-1"><a href="#cb133-1" aria-hidden="true" tabindex="-1"></a>y[[<span class="cn">true</span>,<span class="cn">false</span>,<span class="cn">true</span>,<span class="cn">false</span>,<span class="cn">true</span>]]   <span class="co"># Slice by boolean array</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb133"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb133-1"><a href="#cb133-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb133-2"><a href="#cb133-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Slicing by boolean array</span></span>
+<span id="cb133-3"><a href="#cb133-3" aria-hidden="true" tabindex="-1"></a>y[[<span class="cn">true</span>,<span class="cn">false</span>,<span class="cn">true</span>,<span class="cn">false</span>,<span class="cn">true</span>]]   <span class="co"># Slice by boolean array</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>3-element Vector{Float64}:
  1.1
@@ -876,10 +890,10 @@ Exercise
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Experiment more with slicing/indexing to make sure you get it, and what errors can occur. (As an example what happens if you index beyond the extent of the object?)</p>
+<p>Experiment more with slicing/indexing to make sure you get it, and what errors can occur. (As an example what happens if you index beyond the extent of the object?) See also Problems 2 and 3 on PS1.</p>
 </div>
 </div>
-<p>Note that the discussion of <code>fruits[len]</code> in Section 7 of Think Julia is incorrect.</p>
+<p>Note that the discussion of <code>fruits[len]</code> in Section 7 of <em>Think Julia</em> is incorrect.</p>
 </section>
 <section id="arrays-i.e.-lists" class="level3">
 <h3 class="anchored" data-anchor-id="arrays-i.e.-lists">Arrays (i.e., lists)</h3>
@@ -1078,10 +1092,10 @@ Exercise
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>What do you expect to happen if you try to do matrix multiplication with a matrix with a mix of reals and integers? What if an element is a string?</p>
+<p>What do you expect to happen if you try to do matrix multiplication with a matrix with a mix of reals and integers? What would you expect if an element is a string?</p>
 </div>
 </div>
-<p>Much more in a few weeks.</p>
+<p>Much more on linear algebra in a few weeks.</p>
 </section>
 <section id="more-on-vectorization" class="level3">
 <h3 class="anchored" data-anchor-id="more-on-vectorization">More on vectorization</h3>
@@ -1165,37 +1179,37 @@ Exercise
 <div class="sourceCode cell-code" id="cb199"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb199-1"><a href="#cb199-1" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">4</span>, <span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>4×5 Matrix{Float64}:
- 0.628037  0.994955  0.910135  0.121906  0.521179
- 0.713555  0.557916  0.300433  0.788926  0.14236
- 0.204263  0.386334  0.600474  0.202375  0.00762547
- 0.930353  0.88537   0.191942  0.988921  0.190445</code></pre>
+ 0.827187  0.251753  0.10782    0.367276  0.95969
+ 0.98375   0.554912  0.45273    0.245777  0.395389
+ 0.823281  0.668835  0.364899   0.449475  0.582744
+ 0.862182  0.128589  0.0351906  0.528751  0.0357815</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb201"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb201-1"><a href="#cb201-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>10.267504564824216</code></pre>
+<pre><code>9.626014439402127</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb203"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb203-1"><a href="#cb203-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(A, dims <span class="op">=</span> <span class="fl">1</span>)  <span class="co"># 2D array result</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>1×5 Matrix{Float64}:
- 2.47621  2.82457  2.00298  2.10213  0.861609</code></pre>
+ 3.4964  1.60409  0.96064  1.59128  1.9736</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb205"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb205-1"><a href="#cb205-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(A, dims <span class="op">=</span> <span class="fl">1</span>)[<span class="op">:</span>]  <span class="co"># 1D array result</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>5-element Vector{Float64}:
- 2.4762090891169883
- 2.8245749296244185
- 2.0029833247331834
- 2.1021282310717084
- 0.8616089902779159</code></pre>
+ 3.496400328918156
+ 1.6040891647840871
+ 0.9606402453454161
+ 1.5912797536924068
+ 1.9736049466620615</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb207"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb207-1"><a href="#cb207-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb207-2"><a href="#cb207-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(A, dims <span class="op">=</span> <span class="fl">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>4×1 Matrix{Float64}:
- 3.1762126499520003
- 2.503189161452731
- 1.4010717188965292
- 3.1870310345229544</code></pre>
+ 2.513726904829798
+ 2.632559032047382
+ 2.889234292550287
+ 1.59049420997466</code></pre>
 </div>
 </div>
 </section>
@@ -1203,15 +1217,21 @@ Exercise
 <h3 class="anchored" data-anchor-id="list-comprehension-comprehension-syntax">List comprehension (comprehension syntax)</h3>
 <p>Similar to Python.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb209"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb209-1"><a href="#cb209-1" aria-hidden="true" tabindex="-1"></a>ysq <span class="op">=</span> [ w<span class="op">^</span><span class="fl">2</span> for w <span class="kw">in</span> y ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb209"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb209-1"><a href="#cb209-1" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> [<span class="fl">1.0</span>, <span class="fl">2.0</span>, <span class="fl">2.5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>4-element Vector{Int64}:
-  100
-  400
-  900
- 1600</code></pre>
+<pre><code>3-element Vector{Float64}:
+ 1.0
+ 2.0
+ 2.5</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb211"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb211-1"><a href="#cb211-1" aria-hidden="true" tabindex="-1"></a>xsqu <span class="op">=</span> [ x<span class="op">^</span><span class="fl">2</span> for x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span> ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb211"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb211-1"><a href="#cb211-1" aria-hidden="true" tabindex="-1"></a>ysq <span class="op">=</span> [ w<span class="op">^</span><span class="fl">2</span> for w <span class="kw">in</span> y ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>3-element Vector{Float64}:
+ 1.0
+ 4.0
+ 6.25</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb213"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb213-1"><a href="#cb213-1" aria-hidden="true" tabindex="-1"></a>xsqu <span class="op">=</span> [ x<span class="op">^</span><span class="fl">2</span> for x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span> ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>5-element Vector{Int64}:
   1
@@ -1220,15 +1240,15 @@ Exercise
  16
  25</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb213"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb213-1"><a href="#cb213-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb213-2"><a href="#cb213-2" aria-hidden="true" tabindex="-1"></a>xsqu_even <span class="op">=</span> [ x<span class="op">^</span><span class="fl">2</span> for x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span> if <span class="fu">iseven</span>(x)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb215"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb215-1"><a href="#cb215-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb215-2"><a href="#cb215-2" aria-hidden="true" tabindex="-1"></a>xsqu_even <span class="op">=</span> [ x<span class="op">^</span><span class="fl">2</span> for x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span> if <span class="fu">iseven</span>(x)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>2-element Vector{Int64}:
   4
  16</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb215"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb215-1"><a href="#cb215-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb215-2"><a href="#cb215-2" aria-hidden="true" tabindex="-1"></a>norm2 <span class="op">=</span> [ x<span class="op">^</span><span class="fl">2</span> <span class="op">+</span> y<span class="op">^</span><span class="fl">2</span> for x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, y <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span> ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb217"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb217-1"><a href="#cb217-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb217-2"><a href="#cb217-2" aria-hidden="true" tabindex="-1"></a>norm2 <span class="op">=</span> [ x<span class="op">^</span><span class="fl">2</span> <span class="op">+</span> y<span class="op">^</span><span class="fl">2</span> for x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, y <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span> ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>5×5 Matrix{Int64}:
   2   5  10  17  26
@@ -1248,26 +1268,26 @@ Exercise
 <h3 class="anchored" data-anchor-id="dictionaries">Dictionaries</h3>
 <p>Key-value pairs like Python dictionaries (and somewhat like named R lists).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb217"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb217-1"><a href="#cb217-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"test"</span> <span class="op">=&gt;</span> <span class="fl">3</span>, <span class="st">"tmp"</span> <span class="op">=&gt;</span> [<span class="fl">2.1</span>, <span class="fl">3.5</span>], <span class="fl">7</span> <span class="op">=&gt;</span> <span class="st">"weird"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb219"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb219-1"><a href="#cb219-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fu">Dict</span>(<span class="st">"test"</span> <span class="op">=&gt;</span> <span class="fl">3</span>, <span class="st">"tmp"</span> <span class="op">=&gt;</span> [<span class="fl">2.1</span>, <span class="fl">3.5</span>], <span class="fl">7</span> <span class="op">=&gt;</span> <span class="st">"weird"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Dict{Any, Any} with 3 entries:
   7      =&gt; "weird"
   "test" =&gt; 3
   "tmp"  =&gt; [2.1, 3.5]</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb219"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb219-1"><a href="#cb219-1" aria-hidden="true" tabindex="-1"></a>x[<span class="st">"tmp"</span>][<span class="fl">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb221"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb221-1"><a href="#cb221-1" aria-hidden="true" tabindex="-1"></a>x[<span class="st">"tmp"</span>][<span class="fl">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>3.5</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb221"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb221-1"><a href="#cb221-1" aria-hidden="true" tabindex="-1"></a>x[<span class="fl">7</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb223"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb223-1"><a href="#cb223-1" aria-hidden="true" tabindex="-1"></a>x[<span class="fl">7</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>"weird"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb223"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb223-1"><a href="#cb223-1" aria-hidden="true" tabindex="-1"></a>x[<span class="st">"newkey"</span>] <span class="op">=</span> <span class="ch">'a'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb225"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb225-1"><a href="#cb225-1" aria-hidden="true" tabindex="-1"></a>x[<span class="st">"newkey"</span>] <span class="op">=</span> <span class="ch">'a'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb225"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb225-1"><a href="#cb225-1" aria-hidden="true" tabindex="-1"></a><span class="fu">keys</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb227"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb227-1"><a href="#cb227-1" aria-hidden="true" tabindex="-1"></a><span class="fu">keys</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>KeySet for a Dict{Any, Any} with 4 entries. Keys:
   7
@@ -1277,90 +1297,108 @@ Exercise
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb227"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb227-1"><a href="#cb227-1" aria-hidden="true" tabindex="-1"></a>x[<span class="st">"hello"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb229"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb229-1"><a href="#cb229-1" aria-hidden="true" tabindex="-1"></a>x[<span class="st">"hello"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>ERROR: KeyError: key "hello" not found</code></pre>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb229"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb229-1"><a href="#cb229-1" aria-hidden="true" tabindex="-1"></a><span class="fu">get</span>(x, <span class="st">"hello"</span>, <span class="fl">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb231"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb231-1"><a href="#cb231-1" aria-hidden="true" tabindex="-1"></a><span class="fu">get</span>(x, <span class="st">"hello"</span>, <span class="fl">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>0</code></pre>
 </div>
 </div>
 <p>Note that the keys don’t have to be strings! This could be good for caching/memoizing/lookup:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb231"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb231-1"><a href="#cb231-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fu">Dict</span>([<span class="st">"foo"</span>, <span class="st">"bar"</span>] <span class="op">=&gt;</span> <span class="fl">3</span>, <span class="st">"tmp"</span> <span class="op">=&gt;</span> [<span class="fl">2.1</span>, <span class="fl">3.5</span>], <span class="fl">7</span> <span class="op">=&gt;</span> <span class="st">"weird"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb233"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb233-1"><a href="#cb233-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fu">Dict</span>([<span class="st">"foo"</span>, <span class="st">"bar"</span>] <span class="op">=&gt;</span> <span class="fl">3</span>, <span class="st">"tmp"</span> <span class="op">=&gt;</span> [<span class="fl">2.1</span>, <span class="fl">3.5</span>], <span class="fl">7</span> <span class="op">=&gt;</span> <span class="st">"weird"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Dict{Any, Any} with 3 entries:
   7              =&gt; "weird"
   ["foo", "bar"] =&gt; 3
   "tmp"          =&gt; [2.1, 3.5]</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb233"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb233-1"><a href="#cb233-1" aria-hidden="true" tabindex="-1"></a>x[[<span class="st">"foo"</span>, <span class="st">"bar"</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb235"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb235-1"><a href="#cb235-1" aria-hidden="true" tabindex="-1"></a>x[[<span class="st">"foo"</span>, <span class="st">"bar"</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>3</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb235"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb235-1"><a href="#cb235-1" aria-hidden="true" tabindex="-1"></a>ind <span class="op">=</span> <span class="fl">7</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb237"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb237-1"><a href="#cb237-1" aria-hidden="true" tabindex="-1"></a>ind <span class="op">=</span> <span class="fl">7</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>7</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb237"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb237-1"><a href="#cb237-1" aria-hidden="true" tabindex="-1"></a>x[ind]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb239"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb239-1"><a href="#cb239-1" aria-hidden="true" tabindex="-1"></a>x[ind]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>"weird"</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb241"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb241-1"><a href="#cb241-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(ind)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Int64</code></pre>
 </div>
+</div>
+<p>It would be interesting to know how it’s implemented that arbitrary objects can be keys. Perhaps using hashing?</p>
 <p>What do you think will happen here?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb239"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb239-1"><a href="#cb239-1" aria-hidden="true" tabindex="-1"></a>ind <span class="op">=</span> <span class="fu">Int32</span>(<span class="fl">7</span>)  <span class="co"># What do you expect?</span></span>
-<span id="cb239-2"><a href="#cb239-2" aria-hidden="true" tabindex="-1"></a>x[ind]</span>
-<span id="cb239-3"><a href="#cb239-3" aria-hidden="true" tabindex="-1"></a>ind <span class="op">=</span> <span class="fl">7.0</span>       <span class="co"># What do you expect?</span></span>
-<span id="cb239-4"><a href="#cb239-4" aria-hidden="true" tabindex="-1"></a>x[ind]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb243"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb243-1"><a href="#cb243-1" aria-hidden="true" tabindex="-1"></a>ind <span class="op">=</span> <span class="fu">Int32</span>(<span class="fl">7</span>)  <span class="co"># What do you expect?</span></span>
+<span id="cb243-2"><a href="#cb243-2" aria-hidden="true" tabindex="-1"></a>x[ind]</span>
+<span id="cb243-3"><a href="#cb243-3" aria-hidden="true" tabindex="-1"></a>ind <span class="op">=</span> <span class="fl">7.0</span>       <span class="co"># What do you expect?</span></span>
+<span id="cb243-4"><a href="#cb243-4" aria-hidden="true" tabindex="-1"></a>x[ind]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="tuples" class="level3">
 <h3 class="anchored" data-anchor-id="tuples">Tuples</h3>
 <p>Tuples are are similar to 1-dimensional arrays but they are <em>immutable</em> (they can’t be modified) and can have named elements.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb240"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb240-1"><a href="#cb240-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> (<span class="fl">3</span>, <span class="fl">5</span>, <span class="st">"hello"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb244"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb244-1"><a href="#cb244-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> (<span class="fl">3</span>, <span class="fl">5</span>, <span class="st">"hello"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(3, 5, "hello")</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb242"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb242-1"><a href="#cb242-1" aria-hidden="true" tabindex="-1"></a>x[<span class="fl">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb246"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb246-1"><a href="#cb246-1" aria-hidden="true" tabindex="-1"></a>x[<span class="fl">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>5</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb244"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb244-1"><a href="#cb244-1" aria-hidden="true" tabindex="-1"></a>x[<span class="fl">2</span>] <span class="op">=</span> <span class="fl">7</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb248"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb248-1"><a href="#cb248-1" aria-hidden="true" tabindex="-1"></a>x[<span class="fl">2</span>] <span class="op">=</span> <span class="fl">7</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>ERROR: MethodError: no method matching setindex!(::Tuple{Int64, Int64, String}, ::Int64, ::Int64)</code></pre>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb246"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb246-1"><a href="#cb246-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fl">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb250"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb250-1"><a href="#cb250-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fl">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>3</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb248"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb248-1"><a href="#cb248-1" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> <span class="fl">9</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb252"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb252-1"><a href="#cb252-1" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> <span class="fl">9</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>9</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb250"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb250-1"><a href="#cb250-1" aria-hidden="true" tabindex="-1"></a>y,x <span class="op">=</span> x,y</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb254"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb254-1"><a href="#cb254-1" aria-hidden="true" tabindex="-1"></a>y,x <span class="op">=</span> x,y</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(3, 9)</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb252"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb252-1"><a href="#cb252-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb252-2"><a href="#cb252-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Named tuple:</span></span>
-<span id="cb252-3"><a href="#cb252-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> (a<span class="op">=</span><span class="fl">3</span>, b<span class="op">=</span><span class="fl">5</span>, other<span class="op">=</span><span class="st">"hello"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb256"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb256-1"><a href="#cb256-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb256-2"><a href="#cb256-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Named tuple:</span></span>
+<span id="cb256-3"><a href="#cb256-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> (a<span class="op">=</span><span class="fl">3</span>, b<span class="op">=</span><span class="fl">5</span>, other<span class="op">=</span><span class="st">"hello"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(a = 3, b = 5, other = "hello")</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb254"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb254-1"><a href="#cb254-1" aria-hidden="true" tabindex="-1"></a>x.b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb258"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb258-1"><a href="#cb258-1" aria-hidden="true" tabindex="-1"></a>x.b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>5</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Functions with ! in their names">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Functions with ! in their names
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>What’s the deal with the “!” in <code>setindex</code>? We’ll see this more shortly, but functions that modify their inputs should have their name end in “!”.</p>
 </div>
 </div>
 <p>What do you think will happen here?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb256"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb256-1"><a href="#cb256-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> (a<span class="op">=</span><span class="fl">3</span>, b<span class="op">=</span><span class="fl">5</span>, other<span class="op">=</span><span class="st">"hello"</span>, b<span class="op">=</span><span class="st">"foo"</span>)</span>
-<span id="cb256-2"><a href="#cb256-2" aria-hidden="true" tabindex="-1"></a>x.b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb260"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb260-1"><a href="#cb260-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> (a<span class="op">=</span><span class="fl">3</span>, b<span class="op">=</span><span class="fl">5</span>, other<span class="op">=</span><span class="st">"hello"</span>, b<span class="op">=</span><span class="st">"foo"</span>)</span>
+<span id="cb260-2"><a href="#cb260-2" aria-hidden="true" tabindex="-1"></a>x.b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Tuples come in handy for providing flexibility in function inputs and outputs, as seen next.</p>
 </section>
@@ -1368,16 +1406,16 @@ Exercise
 <h3 class="anchored" data-anchor-id="tuples-and-functions">Tuples and functions</h3>
 <p>Here we create a function that can take an arbitrary number of inputs.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb257"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb257-1"><a href="#cb257-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">flexsum</span>(args<span class="op">...</span>)</span>
-<span id="cb257-2"><a href="#cb257-2" aria-hidden="true" tabindex="-1"></a>   <span class="fu">println</span>(<span class="st">"The first value is </span><span class="sc">$</span>(args[<span class="fl">1</span>])<span class="st">."</span>)</span>
-<span id="cb257-3"><a href="#cb257-3" aria-hidden="true" tabindex="-1"></a>   x <span class="op">=</span> args[<span class="fl">1</span>]<span class="op">*</span><span class="fl">2</span></span>
-<span id="cb257-4"><a href="#cb257-4" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> <span class="fu">sum</span>(args)</span>
-<span id="cb257-5"><a href="#cb257-5" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb261"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb261-1"><a href="#cb261-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">flexsum</span>(args<span class="op">...</span>)</span>
+<span id="cb261-2"><a href="#cb261-2" aria-hidden="true" tabindex="-1"></a>   <span class="fu">println</span>(<span class="st">"The first value is </span><span class="sc">$</span>(args[<span class="fl">1</span>])<span class="st">."</span>)</span>
+<span id="cb261-3"><a href="#cb261-3" aria-hidden="true" tabindex="-1"></a>   x <span class="op">=</span> args[<span class="fl">1</span>]<span class="op">*</span><span class="fl">2</span></span>
+<span id="cb261-4"><a href="#cb261-4" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> <span class="fu">sum</span>(args)</span>
+<span id="cb261-5"><a href="#cb261-5" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>flexsum (generic function with 1 method)</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb259"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb259-1"><a href="#cb259-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb259-2"><a href="#cb259-2" aria-hidden="true" tabindex="-1"></a><span class="fu">flexsum</span>(<span class="fl">5</span>, <span class="fl">7</span>, <span class="fl">9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb263"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb263-1"><a href="#cb263-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb263-2"><a href="#cb263-2" aria-hidden="true" tabindex="-1"></a><span class="fu">flexsum</span>(<span class="fl">5</span>, <span class="fl">7</span>, <span class="fl">9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>The first value is 5.</code></pre>
 </div>
@@ -1387,36 +1425,36 @@ Exercise
 </div>
 <p>Here’s how to call a function that takes multiple inputs, but pass as a tuple:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb262"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb262-1"><a href="#cb262-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">mydiv</span>(x, y)</span>
-<span id="cb262-2"><a href="#cb262-2" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> x <span class="op">/</span> y</span>
-<span id="cb262-3"><a href="#cb262-3" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb266"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb266-1"><a href="#cb266-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">mydiv</span>(x, y)</span>
+<span id="cb266-2"><a href="#cb266-2" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> x <span class="op">/</span> y</span>
+<span id="cb266-3"><a href="#cb266-3" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>mydiv (generic function with 1 method)</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb264"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb264-1"><a href="#cb264-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb264-2"><a href="#cb264-2" aria-hidden="true" tabindex="-1"></a>vals <span class="op">=</span> [<span class="fl">3</span>,<span class="fl">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb268"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb268-1"><a href="#cb268-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb268-2"><a href="#cb268-2" aria-hidden="true" tabindex="-1"></a>vals <span class="op">=</span> [<span class="fl">3</span>,<span class="fl">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>2-element Vector{Int64}:
  3
  5</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb266"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb266-1"><a href="#cb266-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mydiv</span>(vals<span class="op">...</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb270"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb270-1"><a href="#cb270-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mydiv</span>(vals<span class="op">...</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>0.6</code></pre>
 </div>
 </div>
 <p>We use tuples to have a function return multiple values.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb268"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb268-1"><a href="#cb268-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">flexsum</span>(args<span class="op">...</span>)</span>
-<span id="cb268-2"><a href="#cb268-2" aria-hidden="true" tabindex="-1"></a>   <span class="fu">println</span>(<span class="st">"The first value is </span><span class="sc">$</span>(args[<span class="fl">1</span>])<span class="st">."</span>)</span>
-<span id="cb268-3"><a href="#cb268-3" aria-hidden="true" tabindex="-1"></a>   x <span class="op">=</span> args[<span class="fl">1</span>]<span class="op">*</span><span class="fl">2</span></span>
-<span id="cb268-4"><a href="#cb268-4" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> args, x, <span class="fu">sum</span>(args)</span>
-<span id="cb268-5"><a href="#cb268-5" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb272"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb272-1"><a href="#cb272-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">flexsum</span>(args<span class="op">...</span>)</span>
+<span id="cb272-2"><a href="#cb272-2" aria-hidden="true" tabindex="-1"></a>   <span class="fu">println</span>(<span class="st">"The first value is </span><span class="sc">$</span>(args[<span class="fl">1</span>])<span class="st">."</span>)</span>
+<span id="cb272-3"><a href="#cb272-3" aria-hidden="true" tabindex="-1"></a>   x <span class="op">=</span> args[<span class="fl">1</span>]<span class="op">*</span><span class="fl">2</span></span>
+<span id="cb272-4"><a href="#cb272-4" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> args, x, <span class="fu">sum</span>(args)</span>
+<span id="cb272-5"><a href="#cb272-5" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>flexsum (generic function with 1 method)</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb270"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb270-1"><a href="#cb270-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb270-2"><a href="#cb270-2" aria-hidden="true" tabindex="-1"></a><span class="fu">flexsum</span>(<span class="fl">5</span>, <span class="fl">7</span>, <span class="fl">9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb274"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb274-1"><a href="#cb274-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb274-2"><a href="#cb274-2" aria-hidden="true" tabindex="-1"></a><span class="fu">flexsum</span>(<span class="fl">5</span>, <span class="fl">7</span>, <span class="fl">9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>The first value is 5.</code></pre>
 </div>
@@ -1429,51 +1467,53 @@ Exercise
 <h3 class="anchored" data-anchor-id="structs">Structs</h3>
 <p>A struct is a “composite type”, a collection of named fields, useful for holding information with a particular structure.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb273"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb273-1"><a href="#cb273-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> Person</span>
-<span id="cb273-2"><a href="#cb273-2" aria-hidden="true" tabindex="-1"></a>  name</span>
-<span id="cb273-3"><a href="#cb273-3" aria-hidden="true" tabindex="-1"></a>  age</span>
-<span id="cb273-4"><a href="#cb273-4" aria-hidden="true" tabindex="-1"></a>  occupation</span>
-<span id="cb273-5"><a href="#cb273-5" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb273-6"><a href="#cb273-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb273-7"><a href="#cb273-7" aria-hidden="true" tabindex="-1"></a>lincoln <span class="op">=</span> <span class="fu">Person</span>(<span class="st">"Abraham Lincoln"</span>, <span class="fl">203</span>, <span class="st">"politician"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb277"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb277-1"><a href="#cb277-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> Person</span>
+<span id="cb277-2"><a href="#cb277-2" aria-hidden="true" tabindex="-1"></a>  name</span>
+<span id="cb277-3"><a href="#cb277-3" aria-hidden="true" tabindex="-1"></a>  age</span>
+<span id="cb277-4"><a href="#cb277-4" aria-hidden="true" tabindex="-1"></a>  occupation</span>
+<span id="cb277-5"><a href="#cb277-5" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb277-6"><a href="#cb277-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb277-7"><a href="#cb277-7" aria-hidden="true" tabindex="-1"></a>lincoln <span class="op">=</span> <span class="fu">Person</span>(<span class="st">"Abraham Lincoln"</span>, <span class="fl">203</span>, <span class="st">"politician"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Person("Abraham Lincoln", 203, "politician")</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb275"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb275-1"><a href="#cb275-1" aria-hidden="true" tabindex="-1"></a>lincoln.age</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb279"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb279-1"><a href="#cb279-1" aria-hidden="true" tabindex="-1"></a>lincoln.age</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>203</code></pre>
 </div>
 </div>
 <p>We’ll see much more on structs next week when we talk more about using types for robust code.</p>
+<p>Let’s discuss how these are similar to and different from objects in object-oriented languages like Python, Java, and C++.</p>
 </section>
 </section>
 <section id="loops" class="level2">
 <h2 class="anchored" data-anchor-id="loops">Loops</h2>
+<p>We’ll illustrate for loop syntax by using Monte Carlo simulation to estimate <span class="math inline">\(\pi\)</span> by generating points in a square and then finding the number that are inside the unit circle.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb277"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb277-1"><a href="#cb277-1" aria-hidden="true" tabindex="-1"></a>numThrows <span class="op">=</span> <span class="fl">1000</span>;</span>
-<span id="cb277-2"><a href="#cb277-2" aria-hidden="true" tabindex="-1"></a>in_circle <span class="op">=</span> <span class="fl">0</span>;</span>
-<span id="cb277-3"><a href="#cb277-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb277-4"><a href="#cb277-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Run Monte Carlo simulation</span></span>
-<span id="cb277-5"><a href="#cb277-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>numThrows</span>
-<span id="cb277-6"><a href="#cb277-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Generate random points on 2x2 square.</span></span>
-<span id="cb277-7"><a href="#cb277-7" aria-hidden="true" tabindex="-1"></a>  xPos <span class="op">=</span> <span class="fu">rand</span>() <span class="op">*</span> <span class="fl">2</span> <span class="op">-</span> <span class="fl">1.0</span>  <span class="co"># Equivalent to random.uniform(-1.0, 1.0)</span></span>
-<span id="cb277-8"><a href="#cb277-8" aria-hidden="true" tabindex="-1"></a>  yPos <span class="op">=</span> <span class="fu">rand</span>() <span class="op">*</span> <span class="fl">2</span> <span class="op">-</span> <span class="fl">1.0</span></span>
-<span id="cb277-9"><a href="#cb277-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb277-10"><a href="#cb277-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Is point inside unit circle?</span></span>
-<span id="cb277-11"><a href="#cb277-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="fu">sqrt</span>(xPos<span class="op">^</span><span class="fl">2</span> <span class="op">+</span> yPos<span class="op">^</span><span class="fl">2</span>) <span class="op">&lt;=</span> <span class="fl">1.0</span>  <span class="co"># Equivalent to math.hypot()</span></span>
-<span id="cb277-12"><a href="#cb277-12" aria-hidden="true" tabindex="-1"></a>    in_circle <span class="op">+=</span> <span class="fl">1</span></span>
-<span id="cb277-13"><a href="#cb277-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">end</span></span>
-<span id="cb277-14"><a href="#cb277-14" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
-<span id="cb277-15"><a href="#cb277-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb277-16"><a href="#cb277-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate PI</span></span>
-<span id="cb277-17"><a href="#cb277-17" aria-hidden="true" tabindex="-1"></a>pi_estimate <span class="op">=</span> <span class="fl">4</span> <span class="op">*</span> in_circle <span class="op">/</span> numThrows</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb281"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb281-1"><a href="#cb281-1" aria-hidden="true" tabindex="-1"></a>numThrows <span class="op">=</span> <span class="fl">1000</span>;</span>
+<span id="cb281-2"><a href="#cb281-2" aria-hidden="true" tabindex="-1"></a>in_circle <span class="op">=</span> <span class="fl">0</span>;</span>
+<span id="cb281-3"><a href="#cb281-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb281-4"><a href="#cb281-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Run Monte Carlo simulation</span></span>
+<span id="cb281-5"><a href="#cb281-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>numThrows</span>
+<span id="cb281-6"><a href="#cb281-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Generate random points on 2x2 square.</span></span>
+<span id="cb281-7"><a href="#cb281-7" aria-hidden="true" tabindex="-1"></a>  xPos <span class="op">=</span> <span class="fu">rand</span>() <span class="op">*</span> <span class="fl">2</span> <span class="op">-</span> <span class="fl">1.0</span>  <span class="co"># Equivalent to random.uniform(-1.0, 1.0)</span></span>
+<span id="cb281-8"><a href="#cb281-8" aria-hidden="true" tabindex="-1"></a>  yPos <span class="op">=</span> <span class="fu">rand</span>() <span class="op">*</span> <span class="fl">2</span> <span class="op">-</span> <span class="fl">1.0</span></span>
+<span id="cb281-9"><a href="#cb281-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb281-10"><a href="#cb281-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Is point inside unit circle?</span></span>
+<span id="cb281-11"><a href="#cb281-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="fu">sqrt</span>(xPos<span class="op">^</span><span class="fl">2</span> <span class="op">+</span> yPos<span class="op">^</span><span class="fl">2</span>) <span class="op">&lt;=</span> <span class="fl">1.0</span>  <span class="co"># Equivalent to math.hypot()</span></span>
+<span id="cb281-12"><a href="#cb281-12" aria-hidden="true" tabindex="-1"></a>    in_circle <span class="op">+=</span> <span class="fl">1</span></span>
+<span id="cb281-13"><a href="#cb281-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">end</span></span>
+<span id="cb281-14"><a href="#cb281-14" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb281-15"><a href="#cb281-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb281-16"><a href="#cb281-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate PI</span></span>
+<span id="cb281-17"><a href="#cb281-17" aria-hidden="true" tabindex="-1"></a>pi_estimate <span class="op">=</span> <span class="fl">4</span> <span class="op">*</span> in_circle <span class="op">/</span> numThrows</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>If you were using R or Python, what would the value of <code>xPos</code> be at the end of the loop execution?</p>
-<p>In Julia, variables defined in the loop are local variables accessible only in the scope of the loop (more on this soon). This avoids clutter in the global scope.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb278"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb278-1"><a href="#cb278-1" aria-hidden="true" tabindex="-1"></a>xPos</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb282"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb282-1"><a href="#cb282-1" aria-hidden="true" tabindex="-1"></a>xPos</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>ERROR: UndefVarError: `xPos` not defined</code></pre>
+<p>In Julia, variables defined in the loop are local variables accessible only in the scope of the loop (more on scoping soon). This avoids clutter in the global scope.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Exercise">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1489,9 +1529,9 @@ Exercise
 </div>
 <p>We can iterate over elements of an object like this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb280"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb280-1"><a href="#cb280-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="fu">eachindex</span>(x)</span>
-<span id="cb280-2"><a href="#cb280-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">println</span>(i)</span>
-<span id="cb280-3"><a href="#cb280-3" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb284"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb284-1"><a href="#cb284-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="fu">eachindex</span>(x)</span>
+<span id="cb284-2"><a href="#cb284-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">println</span>(i)</span>
+<span id="cb284-3"><a href="#cb284-3" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>a
 b
@@ -1502,48 +1542,48 @@ other</code></pre>
 <section id="string-processing-and-regular-expressions" class="level2">
 <h2 class="anchored" data-anchor-id="string-processing-and-regular-expressions">String processing and regular expressions</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb282"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb282-1"><a href="#cb282-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="st">"The cat in the hat."</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb286"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb286-1"><a href="#cb286-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="st">"The cat in the hat."</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>"The cat in the hat."</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb284"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb284-1"><a href="#cb284-1" aria-hidden="true" tabindex="-1"></a><span class="fu">replace</span>(x, <span class="st">"at"</span><span class="op">=&gt;</span><span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb288"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb288-1"><a href="#cb288-1" aria-hidden="true" tabindex="-1"></a><span class="fu">replace</span>(x, <span class="st">"at"</span><span class="op">=&gt;</span><span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>"The c in the h."</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb286"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb286-1"><a href="#cb286-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb286-2"><a href="#cb286-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="st">"We found 999 red balloons."</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb290"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb290-1"><a href="#cb290-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb290-2"><a href="#cb290-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="st">"We found 999 red balloons."</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>"We found 999 red balloons."</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb288"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb288-1"><a href="#cb288-1" aria-hidden="true" tabindex="-1"></a><span class="fu">replace</span>(x, <span class="st">r"</span><span class="ch">[</span><span class="st">0-9</span><span class="ch">]</span><span class="sc">+</span><span class="st">"</span><span class="op">=&gt;</span><span class="st">"some"</span>)  <span class="co"># Regular expression.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb292"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb292-1"><a href="#cb292-1" aria-hidden="true" tabindex="-1"></a><span class="fu">replace</span>(x, <span class="st">r"</span><span class="ch">[</span><span class="st">0-9</span><span class="ch">]</span><span class="sc">+</span><span class="st">"</span><span class="op">=&gt;</span><span class="st">"some"</span>)  <span class="co"># Regular expression.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>"We found some red balloons."</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb290"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb290-1"><a href="#cb290-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb290-2"><a href="#cb290-2" aria-hidden="true" tabindex="-1"></a><span class="ch">'a'</span> <span class="op">∈</span> <span class="st">"banana"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb294"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb294-1"><a href="#cb294-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb294-2"><a href="#cb294-2" aria-hidden="true" tabindex="-1"></a><span class="ch">'a'</span> <span class="op">∈</span> <span class="st">"banana"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>true</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb292"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb292-1"><a href="#cb292-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="st">"We found 99 red balloons."</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb296"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb296-1"><a href="#cb296-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="st">"We found 99 red balloons."</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>"We found 99 red balloons."</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb294"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb294-1"><a href="#cb294-1" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> <span class="fu">match</span>(<span class="st">r"</span><span class="ch">[</span><span class="st">0-9</span><span class="ch">]</span><span class="sc">+</span><span class="st"> </span><span class="ch">([</span><span class="st">a-z</span><span class="ch">]</span><span class="sc">+</span><span class="ch">)</span><span class="st">"</span>, x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb298"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb298-1"><a href="#cb298-1" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> <span class="fu">match</span>(<span class="st">r"</span><span class="ch">[</span><span class="st">0-9</span><span class="ch">]</span><span class="sc">+</span><span class="st"> </span><span class="ch">([</span><span class="st">a-z</span><span class="ch">]</span><span class="sc">+</span><span class="ch">)</span><span class="st">"</span>, x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>RegexMatch("99 red", 1="red")</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb296"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb296-1"><a href="#cb296-1" aria-hidden="true" tabindex="-1"></a>m.match</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb300"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb300-1"><a href="#cb300-1" aria-hidden="true" tabindex="-1"></a>m.match</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>"99 red"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb298"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb298-1"><a href="#cb298-1" aria-hidden="true" tabindex="-1"></a>m.captures</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb302"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb302-1"><a href="#cb302-1" aria-hidden="true" tabindex="-1"></a>m.captures</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>1-element Vector{Union{Nothing, SubString{String}}}:
  "red"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb300"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb300-1"><a href="#cb300-1" aria-hidden="true" tabindex="-1"></a>m.offset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb304"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb304-1"><a href="#cb304-1" aria-hidden="true" tabindex="-1"></a>m.offset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>10</code></pre>
 </div>

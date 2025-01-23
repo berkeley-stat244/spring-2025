@@ -30,183 +30,146 @@
     ]
   },
   {
-    "objectID": "howtos/accessSCF.html",
-    "href": "howtos/accessSCF.html",
-    "title": "Accessing the SCF",
+    "objectID": "notes/notes2.html",
+    "href": "notes/notes2.html",
+    "title": "Notes Set 2: Memory and scope",
     "section": "",
-    "text": "The SCF is the Statistical Computing Facility, which provides computational resources for the Department of Statistics.\nFor our purposes, the SCF provides access to all the software and resources we will need for class. For much of what we do, it will serve as an alternative to your laptop if you run into problems. For GPU work and for some of the parallelization work it will be the primary resource.",
+    "text": "This document is the second of a set of notes, this document focusing on memory, storage of objects, and variable scope. The notes are not meant to be particularly complete in terms of useful functions (Google and LLMs can now provide that quite well), but rather to introduce the language and consider key programming concepts in the context of Julia.\nGiven that, the document heavily relies on demos, with interpretation in some cases left to the reader.",
+    "crumbs": [
+      "Course Notes",
+      "Notes Set 2: Memory and scope"
+    ]
+  },
+  {
+    "objectID": "notes/notes2.html#introduction",
+    "href": "notes/notes2.html#introduction",
+    "title": "Notes Set 2: Memory and scope",
+    "section": "",
+    "text": "This document is the second of a set of notes, this document focusing on memory, storage of objects, and variable scope. The notes are not meant to be particularly complete in terms of useful functions (Google and LLMs can now provide that quite well), but rather to introduce the language and consider key programming concepts in the context of Julia.\nGiven that, the document heavily relies on demos, with interpretation in some cases left to the reader.",
+    "crumbs": [
+      "Course Notes",
+      "Notes Set 2: Memory and scope"
+    ]
+  },
+  {
+    "objectID": "notes/notes2.html#memory-use-and-variable-scope",
+    "href": "notes/notes2.html#memory-use-and-variable-scope",
+    "title": "Notes Set 2: Memory and scope",
+    "section": "Memory use and variable scope",
+    "text": "Memory use and variable scope\n\nMutable objects\nLet’s see if Julia behaves as we would expect if we try to change objects in different ways.\n\nx = \"hello\"\nx[1] = \"a\" \n\nx = [3.1, 2.1]\nx[2] = 5.5\n\nconst tmpVar = [3.1, 2.1]\ntmpVar[2] = 5.5 \ntmpVar = \"foo\"   \n\nx = (3, 5, \"hello\")\nx[2] = 7  \n\nconst tmpVarTuple = (3, 5, \"hello\")\ntmpVarTuple = (5, 9)\n\nBe careful as const objects cannot be deleted or reassigned.\nOne nice aspect of this is that you can define a variable without fear that it will be used in some other way.\n\n\nModifying objects in place\nUse of &lt;function_name&gt;!() indicates the function operates on the inputs in place and modifies arguments (non-black box execution).\n\nt = ['a', 'b', 'c'];\npush!(t, 'd')\n\n4-element Vector{Char}:\n 'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)\n 'b': ASCII/Unicode U+0062 (category Ll: Letter, lowercase)\n 'c': ASCII/Unicode U+0063 (category Ll: Letter, lowercase)\n 'd': ASCII/Unicode U+0064 (category Ll: Letter, lowercase)\n\npop!(t)\n\n'd': ASCII/Unicode U+0064 (category Ll: Letter, lowercase)\n\n\n\npush(t, 'e')\n\nUndefVarError: `push` not defined\n\nx = Dict(\"test\" =&gt; 3, \"tmp\" =&gt; [2.1, 3.5], 7 =&gt; \"weird\")\n\nDict{Any, Any} with 3 entries:\n  7      =&gt; \"weird\"\n  \"test\" =&gt; 3\n  \"tmp\"  =&gt; [2.1, 3.5]\n\npop!(x, \"tmp\");\npush!(x, 'b' =&gt; 3);\nx\n\nDict{Any, Any} with 3 entries:\n  7      =&gt; \"weird\"\n  \"test\" =&gt; 3\n  'b'    =&gt; 3\n\n\n\n\n\n\n\n\nExercise\n\n\n\nSee if you can create a function that does not have “!” at the end of the name that modifies an input argument.",
+    "crumbs": [
+      "Course Notes",
+      "Notes Set 2: Memory and scope"
+    ]
+  },
+  {
+    "objectID": "notes/notes2.html#memory-use-and-copying",
+    "href": "notes/notes2.html#memory-use-and-copying",
+    "title": "Notes Set 2: Memory and scope",
+    "section": "Memory use and copying",
+    "text": "Memory use and copying\nWe can use === to see if objects are identical. For mutable objects this involves looking at whether the data is stored at the same place in memory.\n\na = \"banana\"\n\n\"banana\"\n\nb = \"banana\"\n\n\"banana\"\n\na === b\n\ntrue\n\na ≡ b\n\ntrue\n\n\na = [1, 2, 3];\nb = a;\nc = [1, 2, 3];\n\na === b\n\ntrue\n\na === c\n\nfalse\n\na == c\n\ntrue\n\n\na = [1, 2, [4,7]]\n\n3-element Vector{Any}:\n 1\n 2\n  [4, 7]\n\nc = [1, 2, [3]]\n\n3-element Vector{Any}:\n 1\n 2\n  [3]\n\n\nc[3] = a[3]\n\n2-element Vector{Int64}:\n 4\n 7\n\n\na === c\n\nfalse\n\na[3] === c[3]\n\ntrue\n\n\n\nAliasing\nThis avoids copying but can be dangerous. The behavior is like Python, but not like R.\n\na = [1, 2, 3]\n\n3-element Vector{Int64}:\n 1\n 2\n 3\n\nb = a\n\n3-element Vector{Int64}:\n 1\n 2\n 3\n\na[1] = 99\n\n99\n\nb\n\n3-element Vector{Int64}:\n 99\n  2\n  3\n\n\n\n\nUsing copies rather than aliases\n\nx = [1, 2, 3]\n\n3-element Vector{Int64}:\n 1\n 2\n 3\n\ny = x[:]\n\n3-element Vector{Int64}:\n 1\n 2\n 3\n\npop!(x)\n\n3\n\ny\n\n3-element Vector{Int64}:\n 1\n 2\n 3\n\n\n\n\n\n\n\n\nQuestion\n\n\n\nIt would be useful to know if there’s a way to make a copy of an array without having to know its dimension.\n\n\n\n\nObjects in memory\nIf we want to see the memory address of an object, you can use pointer_from_objref.\nIn which of these cases do you expect that the same object in memory is referenced?\n\na = [1, 2, 3]\nb = a\nc = [1, 2, 3]\npointer_from_objref(a)\npointer_from_objref(b)\npointer_from_objref(c)\n\ntmp = [4,7]\na = [1, 2, tmp, [4,7]]\npointer_from_objref(tmp)\npointer_from_objref(a[3])\npointer_from_objref(a[4])\n\nWhat happens with pointer_from_objref on immutable objects?\n\nx = (3,5)\npointer_from_objref(x)\n\nERROR: pointer_from_objref cannot be used on immutable objects\n\ny = \"hello\"\n\n\"hello\"\n\npointer_from_objref(y)\n\nPtr{Nothing} @0x00007fb6d4c39c80\n\n\nThere’s a bit more info in the help for pointer_from_objref.\n\n\nExample\nConsider this function, modified from a Python function that was modified from an R function that I was looking at with a student who wanted to reduce the memory use of his code.\n\nfunction fastcount(xvar, yvar)\n    naline = isnan.(xvar)\n    naline[isnan.(yvar)] .= 1\n    localx = xvar[:]\n    localy = yvar[:]\n    localx[naline] .= 0\n    localy[naline] .= 0\n    useline = .!naline\n    # Rest of code...\nend\n\nfastcount (generic function with 1 method)\n\n\nusing Random, Distributions\nn = 20;\nx = rand(Normal(), n);\ny = rand(Normal(), n);\nx[[3, 5]] .= NaN;\ny[[1, 7]] .= NaN;\nfastcount(x, y);\n\n\n\n\n\n\n\nExercise\n\n\n\nDetermine all the places where additional memory is allocated (including for any temporary arrays).",
+    "crumbs": [
+      "Course Notes",
+      "Notes Set 2: Memory and scope"
+    ]
+  },
+  {
+    "objectID": "notes/notes2.html#arrays-and-pointers",
+    "href": "notes/notes2.html#arrays-and-pointers",
+    "title": "Notes Set 2: Memory and scope",
+    "section": "Arrays and pointers",
+    "text": "Arrays and pointers\nIf we have an array made of numbers all of the same type, the values can be stored contiguously in memory.\n\nn = Int(1e7);\nx = randn(Float32, n);\nsizeof(x)\n\n40000000\n\ntypeof(x)\n\nVector{Float32} (alias for Array{Float32, 1})\n\n\nWhat about an array where the elements are not all the same type?\n\n\n\n\n\n\nExercise\n\n\n\nWhat does the following code indicate about how arrays of heterogeneous elements are stored? And how many bytes is a pointer?\n\n\n\nx = [1.3, 2.5, 7.4, \"hello\"]\n\n4-element Vector{Any}:\n 1.3\n 2.5\n 7.4\n  \"hello\"\n\nsizeof(x)\n\n32\n\ntypeof(x)\n\nVector{Any} (alias for Array{Any, 1})\n\ndevs = randn(n);\nx[1] = devs;\nsizeof(x)\n\n32\n\n\n\npointer_from_objref(devs)\n\nPtr{Nothing} @0x00007fb6a27cc040\n\npointer_from_objref(x[1])\n\nPtr{Nothing} @0x00007fb6a27cc040\n\ndevs[1]\n\n-1.0012941247729419\n\nx[1][1]\n\n-1.0012941247729419\n\ndevs[1] = 3.0\n\n3.0\n\nx[1][1]\n\n3.0\n\n\n\n\n\n\n\n\nExercise\n\n\n\nCheck your understanding by creating an array of matrices where each of the individual matrices are just pointers to the same underlying matrix. Modify the underlying matrix. Modify one of the matrices. See what happens.\nSide note: suppose x is a matrix. What’s the difference between [x, x], [x x], and [x; x]?",
+    "crumbs": [
+      "Course Notes",
+      "Notes Set 2: Memory and scope"
+    ]
+  },
+  {
+    "objectID": "notes/notes2.html#pass-by-reference",
+    "href": "notes/notes2.html#pass-by-reference",
+    "title": "Notes Set 2: Memory and scope",
+    "section": "Pass by reference",
+    "text": "Pass by reference\nJulia uses pass by reference. If you pass a mutable object into a function and modify it, that affects the state of the object outside of the function; no local copy of the object is made. This is efficient in terms of copying and memory use, but it does not following functional programming principles.\n\nfunction array_modifier(x)\n    push!(x, 12)\n    return Nothing\nend\n\narray_modifier (generic function with 1 method)\n\n\ny = [1, 2, 3]\n\n3-element Vector{Int64}:\n 1\n 2\n 3\n\narray_modifier(y)\n\nNothing\n\ny\n\n4-element Vector{Int64}:\n  1\n  2\n  3\n 12\n\n\nWe should instead define the function as array_modifier! to be consistent with Julia’s syntax.\n\nfunction array_modifier!(x)\n    push!(x, 12)\n    return Nothing\nend\n\narray_modifier! (generic function with 1 method)\n\n\ny = [1, 2, 3]\n\n3-element Vector{Int64}:\n 1\n 2\n 3\n\narray_modifier!(y)\n\nNothing\n\ny\n\n4-element Vector{Int64}:\n  1\n  2\n  3\n 12\n\n\n\n\n\n\n\n\nUsing tuples to prevent side effects\n\n\n\nIf we use a tuple as input to a function, we don’t have to worry about the input being modified; any attempt at modification will throw an error.",
+    "crumbs": [
+      "Course Notes",
+      "Notes Set 2: Memory and scope"
+    ]
+  },
+  {
+    "objectID": "notes/notes2.html#scope",
+    "href": "notes/notes2.html#scope",
+    "title": "Notes Set 2: Memory and scope",
+    "section": "Scope",
+    "text": "Scope\n\nLexical scoping\nJulia uses lexical scoping, which means that lookup of non-local variables occurs in the scope in which a function is defined, not the scope from which it was called. This means that code is easier to reason about (where the behavior of a function doesn’t depend on where it is called from) and is modular.\n\n\n\n\n\n\nExercise: Lexical scoping\n\n\n\nExperiment with the following cases and make sure you understand how the lookup / scoping is working. Predict the result before running the code.\n\n\n\n# Case 1\nx = 3\nfunction f2()\n    print(x)\nend\n\nfunction f()\n    x = 7\n    f2()\nend\n\nf() # what will happen?\n\n## Case 2\nx = 3\nfunction f2()\n    print(x)\nend\n\nfunction f()\n    x = 7\n    f2()\nend\n\nx = 100\nf() # what will happen?\n\n## Case 3\nx = 3\nfunction f()\n    function f2()\n        print(x)\n    end\n    x = 7\n    f2()\nend\n\nx = 100\nf() # what will happen?\n\n\n\n## Case 4\nx = 3\nfunction f()\n    function f2()\n        print(x)\n    end\n    f2()\nend\n\nx = 100\nf() # what will happen?\n\n\n\nClosures\nHere’s a tricky example:\n\ny = 100\nfunction fun_constructor()\n    y = 10\n    function g(x)\n        return x + y\n    end\n    return g\nend\n\n## fun_constructor() creates functions\nmyfun = fun_constructor()\nmyfun(3)\n\n\n\n\n\n\n\nExercise: Lexical scoping\n\n\n\nTry to understand what is going on with fun_constructor. What do you expect myfun(3) to return? Where is myfun defined?\nExtra: modify fun_constructor in such a way that you can determine if g can modify y in the enclosing scope.\n\n\nThis is an example of a closure, a useful concept in functional programming that provides functionality similar to object-oriented programming. y is “bound” up/captured in the enclosing scope of g/myfun.",
+    "crumbs": [
+      "Course Notes",
+      "Notes Set 2: Memory and scope"
+    ]
+  },
+  {
+    "objectID": "notes/notes2.html#global-and-local-scopes",
+    "href": "notes/notes2.html#global-and-local-scopes",
+    "title": "Notes Set 2: Memory and scope",
+    "section": "Global and local scopes",
+    "text": "Global and local scopes\n\nGlobal and local variables\nWe can access global variables from within functions via Julia’s scoping rules, as seen previously.\nTo modify global variables, we need to use global.\n\nx = 100\n\n100\n\n\nfunction test()\n  global x\n  println(x)\n  x = 3;\n  return nothing\nend\n\ntest (generic function with 1 method)\n\n\ntest()\n\n100\n\nprint(x)\n\n3\n\n\nThis is like Python. Also note the difference in behavior compared to being able to modify the captured variable in the closure without any explicit syntax.\nInterestingly, this doesn’t work to be able to access both a local and global variable of the same name.\n\ny = 100\n\nfunction test()\n  println(y)\n  y = 3;\n  return nothing\nend\n\ntest()\n\nERROR: UndefVarError: `y` not defined\nNote that use of global in Section 8 (Looping and Counting) of Think Julia seems incorrect/unnecessary.\n\n\nModules\nYou can isolate code from your working context using module.\n\nx = 0;\n\nmodule testmod\n  x = 99;\nend\n\ntestmod.x\n\n99\n\nx\n\n0\nEach module has its own global scope. And each code block has its own local scope (as we saw with the for loop in Notes 1).\n\nfor i in 1:3\n  tmp = i*7\nend\n\nprint(tmp)\n\nERROR: UndefVarError: `tmp` not defined\n\nprint(i)\n\nERROR: UndefVarError: `tmp` not defined\nScoping gets rather more complicated.\nThe use of using adds variables from a package/module to the current scope.\n\nA = rand(3, 3);\neigvals(A)\n\nERROR: UndefVarError: `eigvals` not defined\n\nA = rand(3, 3);\nusing LinearAlgebra\neigvals(A)\n\n3-element Vector{Float64}:\n -0.08655122105007222\n  0.5551952912865288\n  1.4311155329465537\n\n\n\n\nLet\nYou can also use let to create a new scope:\n\nx = 0\n\n0\n\n\nlet x = 5\n  print(x)\nend\n\n5\n\n\nprint(x)\n\n0",
+    "crumbs": [
+      "Course Notes",
+      "Notes Set 2: Memory and scope"
+    ]
+  },
+  {
+    "objectID": "howtos/accessJulia.html",
+    "href": "howtos/accessJulia.html",
+    "title": "Accessing Julia",
+    "section": "",
+    "text": "Julia should be straightforward to install on your own computer.\nJulia is also available on all the SCF machines. If you’re in a shell/terminal, you’ll first need to run module load julia.",
     "crumbs": [
       "How tos",
-      "Accessing the SCF"
+      "Accessing Julia"
     ]
   },
   {
-    "objectID": "howtos/accessSCF.html#get-an-scf-account",
-    "href": "howtos/accessSCF.html#get-an-scf-account",
-    "title": "Accessing the SCF",
-    "section": "Get an SCF account",
-    "text": "Get an SCF account\nIf you don’t already have an account, please request one, indicating you are a student in Statistics 244.",
+    "objectID": "howtos/accessJulia.html#installing-and-accessing-julia",
+    "href": "howtos/accessJulia.html#installing-and-accessing-julia",
+    "title": "Accessing Julia",
+    "section": "",
+    "text": "Julia should be straightforward to install on your own computer.\nJulia is also available on all the SCF machines. If you’re in a shell/terminal, you’ll first need to run module load julia.",
     "crumbs": [
       "How tos",
-      "Accessing the SCF"
+      "Accessing Julia"
     ]
   },
   {
-    "objectID": "howtos/accessSCF.html#access-to-the-statistical-computing-facility-scf",
-    "href": "howtos/accessSCF.html#access-to-the-statistical-computing-facility-scf",
-    "title": "Accessing the SCF",
-    "section": "Access to the Statistical Computing Facility (SCF)",
-    "text": "Access to the Statistical Computing Facility (SCF)\nThere are two main ways to access the SCF machines.\n\nYou can login to our various Linux servers and access a terminal/bash shell that way. Please see http://statistics.berkeley.edu/computing/access.\nThe SCF JupyterHub provides browser-based access to a terminal/bash shell, Jupyter notebooks, and more. From a Jupyter notebook, you can select to use Julia as the kernel (the language used for processing code cells).",
+    "objectID": "howtos/accessJulia.html#using-julia-packages",
+    "href": "howtos/accessJulia.html#using-julia-packages",
+    "title": "Accessing Julia",
+    "section": "Using Julia packages",
+    "text": "Using Julia packages\nOne gets access to a Julia package using using &lt;packageName&gt; (or import &lt;packageName).\nIf the package is not part of your project (all Julia work is done in a project), you’ll need to add it like this, using the BenchmarkTools package as an example:\nusing Pkg\nPkg.add(\"BenchmarkTools\")\nIf the package is not installed on the machine, Julia will prompt you to install it. Packages will generally be installed in ~/.julia/packages (where ~ is shorthand for the location of your home directory).",
     "crumbs": [
       "How tos",
-      "Accessing the SCF"
+      "Accessing Julia"
     ]
   },
   {
-    "objectID": "howtos/accessSCF.html#software",
-    "href": "howtos/accessSCF.html#software",
-    "title": "Accessing the SCF",
-    "section": "Software",
-    "text": "Software\nJulia (possibly not with all needed packages at the moment), Python (with all needed packages), Git, and Quarto are all available from any SCF machine.",
+    "objectID": "howtos/accessJulia.html#using-julia-in-jupyter-notebooks",
+    "href": "howtos/accessJulia.html#using-julia-in-jupyter-notebooks",
+    "title": "Accessing Julia",
+    "section": "Using Julia in Jupyter notebooks",
+    "text": "Using Julia in Jupyter notebooks\nTo use Julia in a notebook on the SCF JupyterHub, you can just select Julia as the kernel from the dropdown in the top right.\nTo use Julia in a notebook on your own machine, you need to install the Julia kernel for Jupyter.\nusing Pkg\nPkg.add(\"IJulia\")\ninstallkernel(\"Julia\")\nThat should create a kernel called “Julia” that you can select as the kernel when you are in a Jupyter notebook.",
     "crumbs": [
       "How tos",
-      "Accessing the SCF"
+      "Accessing Julia"
     ]
   },
   {
-    "objectID": "howtos/installPython.html",
-    "href": "howtos/installPython.html",
-    "title": "Installing Python",
+    "objectID": "howtos/installGit.html",
+    "href": "howtos/installGit.html",
+    "title": "Installing Git",
     "section": "",
-    "text": "The focus of the course is Julia, but I plan to spend a small amount of time on the use of GPUs via Python. You can use Python through the SCF (and you’ll need to do so for GPU access), but if you do want install Python on your own machine, here is some information\nWe recommend using the Miniforge distribution as your Python 3.12 installation.\nOnce you’ve installed Python, please install the following packages:\n\nnumpy\nscipy\npandas\njax\npytorch\n\nAssuming you installed Miniforge, you should be able to do this from the command line:\nconda install -c conda-forge numpy scipy pandas jax\nconda install pytorch torchvision torchaudio pytorch-cuda=12.4 -c pytorch -c nvidia",
+    "text": "Here are some instructions for installing Git on your computer. You should use Git to manage your work on your final project. You may also want to use it for your problem set and presentation work.\nYou can install Git by downloading and installing the correct binary from here.\nFor macOS, we recommend using the Homebrew option.\nGit comes installed on the SCF, so if you login to an SCF machine and want to use Git there, you don’t need to install Git.",
     "crumbs": [
       "How tos",
-      "Installing Python"
-    ]
-  },
-  {
-    "objectID": "howtos/useQuarto.html",
-    "href": "howtos/useQuarto.html",
-    "title": "Using Quarto",
-    "section": "",
-    "text": "Unless you plan to generate your problem set solutions on the SCF, you’ll need to install Quarto.\nOnce installed, you should be able to run commands such as quarto render FILE and quarto preview FILE from the command line.\nTo render to PDF, you’ll need a LaTeX engine installed. A good minimal solution if don’t already have LaTeX installed (e.g., via MicTeX in Windows or MacTeX on MacOS) is to install tinytex: quarto install tinytex.\nQuarto also runs from the Windows Command shell or PowerShell.\nquarto convert converts back and forth between the Jupyter notebook (.ipynb) and Quarto Markdown (.qmd) formats. So if you prefer, you can develop in a notebook and then convert to qmd and then render to prepare a nice-looking pdf for problem set/project/presentation submission.\nBy default, quarto uses Jupyter to process code chunks. While this generally works well, for Julia, I think that using the R-based knitr will be a better choice (e.g., the output from running code prints out more nicely). To do so, add engine: knitr to the YAML metadata at the top of the file (if you happen to have an execute stanza, you’ll need to have engine: knitr nested within that stanza). For the knitr engine, you’ll need to have R installed on your computer, with the rmarkdown R package installed. If you do want to use Jupyter, you will probably need to add jupyter: julia to the YAML metadata at the top of the file (jupyter: julia-1.10 on the SCF), and you will need a the IJulia kernel installed – see the howto on accessing Julia.\nFor Python chunks when using the default jupyter engine, if you want all output from multiple commands in a chunk to be printed (without explicitly using print()), you can add the following syntax to the YAML metadata at the top of the file. (Note that, unfortunately, the output will be printed out below the code chunk rather than interspersed with the code, as that is how Jupyter notebooks chunks work.)\nipynb-shell-interactivity: all\nThere is also now a Julia engine for Quarto. I think it has the same downside as the Jupyter engine (all chunk output is printed together after the code chunk and only the last output is printed automatically), but you can try it like this.\nFirst, install the QuartoNotebookRunner Julia package:\n]add QuartoNotebookRunner#main\nThen put engine: julia in the YAML metadata at the top of your Quarto document.",
-    "crumbs": [
-      "How tos",
-      "Using Quarto"
-    ]
-  },
-  {
-    "objectID": "office_hours.html",
-    "href": "office_hours.html",
-    "title": "Office hours",
-    "section": "",
-    "text": "Chris (Evans 495 or Zoom [email in advance])\n\nSpecific hours TBD\nBy appoinment\nFeel free to drop by if my door is open, though I won’t always be able to help at the time.",
-    "crumbs": [
-      "Office Hours"
-    ]
-  },
-  {
-    "objectID": "ps/tmp.html",
-    "href": "ps/tmp.html",
-    "title": "Problem Set 1",
-    "section": "",
-    "text": "Please submit as a PDF to Gradescope.\nPlease generate the PDF using Quarto. Feel free to work in a Jupyter notebook and then convert to Quarto before rendering to PDF. If you’d like to use some other format, please check with me.\nRemember to note at the start of your document the names of any other students that you worked with on the problem set (or indicating you didn’t work with anyone if that was the case) and then indicate in the text or in code comments any specific ideas or code you borrowed from another student or any online reference (including ChatGPT or the like).\nYour solution should not just be code - you should have text describing how you approached the problem and what the various steps were, though for simple problems, this can be quite short. Your code should have comments indicating what each function or block of code does, and for any lines of code or code constructs that may be hard to understand, a comment indicating what that code does.\nYou do not need to (and should not) show exhaustive output, but in general you should show short examples of what your code does to demonstrate its functionality. The output should be produced as a result of the code chunks being run during the rendering process, not by copy-pasting of output from running the code separately (and definitely not as screenshots)."
-  },
-  {
-    "objectID": "ps/tmp.html#comments",
-    "href": "ps/tmp.html#comments",
-    "title": "Problem Set 1",
-    "section": "",
-    "text": "Please submit as a PDF to Gradescope.\nPlease generate the PDF using Quarto. Feel free to work in a Jupyter notebook and then convert to Quarto before rendering to PDF. If you’d like to use some other format, please check with me.\nRemember to note at the start of your document the names of any other students that you worked with on the problem set (or indicating you didn’t work with anyone if that was the case) and then indicate in the text or in code comments any specific ideas or code you borrowed from another student or any online reference (including ChatGPT or the like).\nYour solution should not just be code - you should have text describing how you approached the problem and what the various steps were, though for simple problems, this can be quite short. Your code should have comments indicating what each function or block of code does, and for any lines of code or code constructs that may be hard to understand, a comment indicating what that code does.\nYou do not need to (and should not) show exhaustive output, but in general you should show short examples of what your code does to demonstrate its functionality. The output should be produced as a result of the code chunks being run during the rendering process, not by copy-pasting of output from running the code separately (and definitely not as screenshots)."
-  },
-  {
-    "objectID": "ps/tmp.html#problems",
-    "href": "ps/tmp.html#problems",
-    "title": "Problem Set 1",
-    "section": "Problems",
-    "text": "Problems\n\nWrite a function that implements a basic version of Newton’s method for minimizing a function of one variable.\n\nStart with a simple implementation. Use an existing Julia package to implement the finite difference estimates for the gradient and Hessian. Think about the arguments and any defaults, as well as the type of the output. For the moment don’t set the types of the input arguments. You can start by assuming the function takes only one argument and simply returns the value at which the function is minimized.\nNow consider returning richer output. Consider using a named tuple, a dictionary, or a struct. What seem like the advantages/disadvantages? Choose one and implement it.\nSet up an array and save the progression of values along the optimization path.\nUse a ChatBot to write the code. Compare it to your code and indicate strengths/weaknesses.\n\nDefine the matrix A = [1:4  5:8  ones(Int64,4)].\n\nPredict the result of performing the following operations in Julia (before checking your answers by running them). Note that the lines are meant to be run one-by-one in the same workspace, so when you change an array, this will affect the subsequent statements.\n\nx = A[3,:]\nB = A[2:2,1:3]\n\n\nA[1,1] = 9 + A[2,3]\nA[1:3,2:3] = [0 0; 0 0; 0 0]\nA[1:2,2:3] = [1 3; 1 3]\ny = A[1:4, 3]\nA = [A [2 1 7; 7 4 5; ones(Int64,2,3)]]\nC = A[[1,3],2]\nD = A[[1,2,4],[1,3,4]]"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Statistics 244: Computing for Statistics and Data Science with Julia",
-    "section": "",
-    "text": "Ed\n\n  Gradescope\n\n  Tutorials\n\n  PollEV\n\n\nNo matching items",
-    "crumbs": [
-      "Home"
-    ]
-  },
-  {
-    "objectID": "index.html#course-description",
-    "href": "index.html#course-description",
-    "title": "Statistics 244: Computing for Statistics and Data Science with Julia",
-    "section": "Course description",
-    "text": "Course description\nProgramming and computation for applications in statistics, data science and related fields, focusing on the use of Julia, a modern language that offers interactivity with high performance based on just-in-time compilation. The course will also cover the use of co-processors, in particular GPUs, through Julia and Python packages such as Jax and PyTorch. Topics will include data types, functional programming, multiple argument dispatch, memory use, efficiency, parallelization, robustness and testing.",
-    "crumbs": [
-      "Home"
-    ]
-  },
-  {
-    "objectID": "index.html#course-materials",
-    "href": "index.html#course-materials",
-    "title": "Statistics 244: Computing for Statistics and Data Science with Julia",
-    "section": "Course materials",
-    "text": "Course materials\nSee the links above for the key resources for the course.\nMost course content (in particular notes and problem sets) are available through this website via the links in the left sidebar.",
-    "crumbs": [
-      "Home"
-    ]
-  },
-  {
-    "objectID": "index.html#questions-about-taking-the-class",
-    "href": "index.html#questions-about-taking-the-class",
-    "title": "Statistics 244: Computing for Statistics and Data Science with Julia",
-    "section": "Questions about taking the class",
-    "text": "Questions about taking the class\nIf you would like to audit the class, enroll as a UC Berkeley undergraduate, or enroll as a concurrent enrollment student (i.e., for visiting students), or for some other reason are not enrolled, please fill out this survey as soon as possible and, ideally, chat with me before/after the first class. All those enrolled or wishing to take the class should have filled it out by Wednesday January 24 at noon.\nPlease see the syllabus for the computing background I expect.",
-    "crumbs": [
-      "Home"
-    ]
-  },
-  {
-    "objectID": "ps/ps1.html",
-    "href": "ps/ps1.html",
-    "title": "Problem Set 1",
-    "section": "",
-    "text": "I haven’t fully worked these problems myself, so if you run into any strange issues, please post on Ed as there could be mistakes/oversights on my part.\nPlease submit as a PDF to Gradescope.\nPlease generate the PDF using Quarto. Feel free to work in a Jupyter notebook and then convert to Quarto before rendering to PDF. Other formats that look professional and are designed for working with code and math notation may also be fine - just check with me via a public post on Ed first.\nRemember to note at the start of your document the names of any other students that you worked with on the problem set (or indicating you didn’t work with anyone if that was the case) and then indicate in the text or in code comments any specific ideas or code you borrowed from another student or any online reference (including ChatGPT or the like).\nFor problems 1 and 5, your solution should not just be code - you should have text describing how you approached the problem and what decisions/conclusions you made, though for simple problems, this can be quite short. Your code should have comments indicating what each function or block of code does, and for any lines of code or code constructs that may be hard to understand, a comment indicating what that code does.\nYou do not need to (and should not) show exhaustive output, but in general you should show short examples of what your code does to demonstrate its functionality. The output should be produced as a result of the code chunks being run during the rendering process, not by copy-pasting of output from running the code separately (and definitely not as screenshots).\nI do not recommend writing initial answers using a ChatBot, as I think you are likely to fool yourself in terms of how much you are learning about Julia and programming concepts/skills more generally. But it’s up to you to decide how heavily to rely on a ChatBot. And refining your initial answers using a ChatBot seems like a good strategy. Using your own knowledge and information online to check the results of a ChatBot and using a ChatBot to check your own coding can both be important/useful.",
-    "crumbs": [
-      "Problem Sets",
-      "Problem Set 1"
-    ]
-  },
-  {
-    "objectID": "ps/ps1.html#comments",
-    "href": "ps/ps1.html#comments",
-    "title": "Problem Set 1",
-    "section": "",
-    "text": "I haven’t fully worked these problems myself, so if you run into any strange issues, please post on Ed as there could be mistakes/oversights on my part.\nPlease submit as a PDF to Gradescope.\nPlease generate the PDF using Quarto. Feel free to work in a Jupyter notebook and then convert to Quarto before rendering to PDF. Other formats that look professional and are designed for working with code and math notation may also be fine - just check with me via a public post on Ed first.\nRemember to note at the start of your document the names of any other students that you worked with on the problem set (or indicating you didn’t work with anyone if that was the case) and then indicate in the text or in code comments any specific ideas or code you borrowed from another student or any online reference (including ChatGPT or the like).\nFor problems 1 and 5, your solution should not just be code - you should have text describing how you approached the problem and what decisions/conclusions you made, though for simple problems, this can be quite short. Your code should have comments indicating what each function or block of code does, and for any lines of code or code constructs that may be hard to understand, a comment indicating what that code does.\nYou do not need to (and should not) show exhaustive output, but in general you should show short examples of what your code does to demonstrate its functionality. The output should be produced as a result of the code chunks being run during the rendering process, not by copy-pasting of output from running the code separately (and definitely not as screenshots).\nI do not recommend writing initial answers using a ChatBot, as I think you are likely to fool yourself in terms of how much you are learning about Julia and programming concepts/skills more generally. But it’s up to you to decide how heavily to rely on a ChatBot. And refining your initial answers using a ChatBot seems like a good strategy. Using your own knowledge and information online to check the results of a ChatBot and using a ChatBot to check your own coding can both be important/useful.",
-    "crumbs": [
-      "Problem Sets",
-      "Problem Set 1"
-    ]
-  },
-  {
-    "objectID": "ps/ps1.html#problems",
-    "href": "ps/ps1.html#problems",
-    "title": "Problem Set 1",
-    "section": "Problems",
-    "text": "Problems\n\nWrite a function that implements a basic version of Newton’s method for minimizing a function of one variable.\n\nStart with a simple implementation. Use an existing Julia package to implement the finite difference estimates for the gradient and Hessian. Think about the arguments and any defaults, as well as the type of the output. For the moment don’t set the types of the input arguments. You can start by assuming the function takes only one argument and simply returns the value at which the function is minimized.\nNow consider returning richer output. Consider using a named tuple, a dictionary, or a struct. What seem like the advantages/disadvantages? Choose one and implement it.\nSet up an array and save the progression of values along the optimization path.\n(We won’t cover this in class until Tuesday Jan. 28.) Add argument typing to your Newton function. Allow the initial value to be of any numeric type. See what the the type of the return value is for various numeric input types.\nUse a ChatBot (lmarena.ai provides free access if you don’t want to sign up for the free tier of one of the commercial services) to write the code. Compare it to your code and indicate strengths/weaknesses.\n\nDefine the matrix A = [1:4  5:8  ones(Int64,4)]. Predict the result of performing the following operations in Julia (before checking your answers by running them). Note that the lines are meant to be run one-by-one in the same workspace, so when you change an array, this will affect the subsequent statements.\n\nx = A[3,:]\nB = A[2:2,1:3]\nA[1,1] = 9 + A[2,3]\nA[1:3,2:3] = [0 0; 0 0; 0 0]\nA[1:2,2:3] = [1 3; 1 3]\ny = A[1:4, 3]\nA = [A [2 1 7; 7 4 5; ones(Int64,2,3)]]\nC = A[[1,3],2]\nD = A[[1,2,4],[1,3,4]]\n\nExperiment with some ways to extract the elements of a vector that correspond to the even indices, i.e., x[2], x[4],…\nUse array functions and vectorization to solve the problems below using only a single line of code for each problem, where A = reshape((-22:22) .% 11, 9, 5).\n\nCount the number of elements for which \\(A_{i,j}^2&lt;10\\).\nCreate a matrix containing only the columns of A where the first element \\(A_{1,j} &gt;= 0\\).\nModify A such that all elements that are even are multiplied by 3.\n\nConsider dictionaries, named tuples, and structs. Experiment with sizeof and pointer_from_objref to try to understand memory use (including any pointers) of these data structures. Next consider arrays that have homogeneous types and those with heterogeneous types.",
-    "crumbs": [
-      "Problem Sets",
-      "Problem Set 1"
-    ]
-  },
-  {
-    "objectID": "license.html",
-    "href": "license.html",
-    "title": "License",
-    "section": "",
-    "text": "This work is licensed under a Creative Commons Attribution 4.0 International License.",
-    "crumbs": [
-      "License"
+      "Installing Git"
     ]
   },
   {
@@ -310,58 +273,183 @@
     ]
   },
   {
-    "objectID": "howtos/installGit.html",
-    "href": "howtos/installGit.html",
-    "title": "Installing Git",
+    "objectID": "license.html",
+    "href": "license.html",
+    "title": "License",
     "section": "",
-    "text": "Here are some instructions for installing Git on your computer. You should use Git to manage your work on your final project. You may also want to use it for your problem set and presentation work.\nYou can install Git by downloading and installing the correct binary from here.\nFor macOS, we recommend using the Homebrew option.\nGit comes installed on the SCF, so if you login to an SCF machine and want to use Git there, you don’t need to install Git.",
+    "text": "This work is licensed under a Creative Commons Attribution 4.0 International License.",
     "crumbs": [
-      "How tos",
-      "Installing Git"
+      "License"
     ]
   },
   {
-    "objectID": "howtos/accessJulia.html",
-    "href": "howtos/accessJulia.html",
-    "title": "Accessing Julia",
+    "objectID": "ps/ps1.html",
+    "href": "ps/ps1.html",
+    "title": "Problem Set 1",
     "section": "",
-    "text": "Julia should be straightforward to install on your own computer.\nJulia is also available on all the SCF machines. If you’re in a shell/terminal, you’ll first need to run module load julia.",
+    "text": "I haven’t fully worked these problems myself, so if you run into any strange issues, please post on Ed as there could be mistakes/oversights on my part.\nPlease submit as a PDF to Gradescope.\nPlease generate the PDF using Quarto. Feel free to work in a Jupyter notebook and then convert to Quarto before rendering to PDF. Other formats that look professional and are designed for working with code and math notation may also be fine - just check with me via a public post on Ed first.\nRemember to note at the start of your document the names of any other students that you worked with on the problem set (or indicating you didn’t work with anyone if that was the case) and then indicate in the text or in code comments any specific ideas or code you borrowed from another student or any online reference (including ChatGPT or the like).\nFor problems 1 and 5, your solution should not just be code - you should have text describing how you approached the problem and what decisions/conclusions you made, though for simple problems, this can be quite short. Your code should have comments indicating what each function or block of code does, and for any lines of code or code constructs that may be hard to understand, a comment indicating what that code does.\nYou do not need to (and should not) show exhaustive output, but in general you should show short examples of what your code does to demonstrate its functionality. The output should be produced as a result of the code chunks being run during the rendering process, not by copy-pasting of output from running the code separately (and definitely not as screenshots).\nI do not recommend writing initial answers using a ChatBot, as I think you are likely to fool yourself in terms of how much you are learning about Julia and programming concepts/skills more generally. But it’s up to you to decide how heavily to rely on a ChatBot. And refining your initial answers using a ChatBot seems like a good strategy. Using your own knowledge and information online to check the results of a ChatBot and using a ChatBot to check your own coding can both be important/useful.",
     "crumbs": [
-      "How tos",
-      "Accessing Julia"
+      "Problem Sets",
+      "Problem Set 1"
     ]
   },
   {
-    "objectID": "howtos/accessJulia.html#installing-and-accessing-julia",
-    "href": "howtos/accessJulia.html#installing-and-accessing-julia",
-    "title": "Accessing Julia",
+    "objectID": "ps/ps1.html#comments",
+    "href": "ps/ps1.html#comments",
+    "title": "Problem Set 1",
     "section": "",
-    "text": "Julia should be straightforward to install on your own computer.\nJulia is also available on all the SCF machines. If you’re in a shell/terminal, you’ll first need to run module load julia.",
+    "text": "I haven’t fully worked these problems myself, so if you run into any strange issues, please post on Ed as there could be mistakes/oversights on my part.\nPlease submit as a PDF to Gradescope.\nPlease generate the PDF using Quarto. Feel free to work in a Jupyter notebook and then convert to Quarto before rendering to PDF. Other formats that look professional and are designed for working with code and math notation may also be fine - just check with me via a public post on Ed first.\nRemember to note at the start of your document the names of any other students that you worked with on the problem set (or indicating you didn’t work with anyone if that was the case) and then indicate in the text or in code comments any specific ideas or code you borrowed from another student or any online reference (including ChatGPT or the like).\nFor problems 1 and 5, your solution should not just be code - you should have text describing how you approached the problem and what decisions/conclusions you made, though for simple problems, this can be quite short. Your code should have comments indicating what each function or block of code does, and for any lines of code or code constructs that may be hard to understand, a comment indicating what that code does.\nYou do not need to (and should not) show exhaustive output, but in general you should show short examples of what your code does to demonstrate its functionality. The output should be produced as a result of the code chunks being run during the rendering process, not by copy-pasting of output from running the code separately (and definitely not as screenshots).\nI do not recommend writing initial answers using a ChatBot, as I think you are likely to fool yourself in terms of how much you are learning about Julia and programming concepts/skills more generally. But it’s up to you to decide how heavily to rely on a ChatBot. And refining your initial answers using a ChatBot seems like a good strategy. Using your own knowledge and information online to check the results of a ChatBot and using a ChatBot to check your own coding can both be important/useful.",
     "crumbs": [
-      "How tos",
-      "Accessing Julia"
+      "Problem Sets",
+      "Problem Set 1"
     ]
   },
   {
-    "objectID": "howtos/accessJulia.html#using-julia-packages",
-    "href": "howtos/accessJulia.html#using-julia-packages",
-    "title": "Accessing Julia",
-    "section": "Using Julia packages",
-    "text": "Using Julia packages\nOne gets access to a Julia package using using &lt;packageName&gt; (or import &lt;packageName).\nIf the package is not part of your project (all Julia work is done in a project), you’ll need to add it like this, using the BenchmarkTools package as an example:\nusing Pkg\nPkg.add(\"BenchmarkTools\")\nIf the package is not installed on the machine, Julia will prompt you to install it. Packages will generally be installed in ~/.julia/packages (where ~ is shorthand for the location of your home directory).",
+    "objectID": "ps/ps1.html#problems",
+    "href": "ps/ps1.html#problems",
+    "title": "Problem Set 1",
+    "section": "Problems",
+    "text": "Problems\n\nWrite a function that implements a basic version of Newton’s method for minimizing a function of one variable.\n\nStart with a simple implementation. Use an existing Julia package to implement the finite difference estimates for the gradient and Hessian. Think about the arguments and any defaults, as well as the type of the output. For the moment don’t set the types of the input arguments. You can start by assuming the function takes only one argument and simply returns the value at which the function is minimized.\nNow consider returning richer output. Consider using a named tuple, a dictionary, or a struct. What seem like the advantages/disadvantages? Choose one and implement it.\nSet up an array and save the progression of values along the optimization path.\n(We won’t cover this in class until Tuesday Jan. 28.) Add argument typing to your Newton function. Allow the initial value to be of any numeric type. See what the the type of the return value is for various numeric input types.\nUse a ChatBot (lmarena.ai provides free access if you don’t want to sign up for the free tier of one of the commercial services) to write the code. Compare it to your code and indicate strengths/weaknesses.\n\nDefine the matrix A = [1:4  5:8  ones(Int64,4)]. Predict the result of performing the following operations in Julia (before checking your answers by running them). Note that the lines are meant to be run one-by-one in the same workspace, so when you change an array, this will affect the subsequent statements.\n\nx = A[3,:]\nB = A[2:2,1:3]\nA[1,1] = 9 + A[2,3]\nA[1:3,2:3] = [0 0; 0 0; 0 0]\nA[1:2,2:3] = [1 3; 1 3]\ny = A[1:4, 3]\nA = [A [2 1 7; 7 4 5; ones(Int64,2,3)]]\nC = A[[1,3],2]\nD = A[[1,2,4],[1,3,4]]\n\nExperiment with some ways to extract the elements of a vector that correspond to the even indices, i.e., x[2], x[4],…\nUse array functions and vectorization to solve the problems below using only a single line of code for each problem, where A = reshape((-22:22) .% 11, 9, 5).\n\nCount the number of elements for which \\(A_{i,j}^2&lt;10\\).\nCreate a matrix containing only the columns of A where the first element \\(A_{1,j} &gt;= 0\\).\nModify A such that all elements that are even are multiplied by 3.\n\nConsider dictionaries, named tuples, and structs. Experiment with sizeof and pointer_from_objref to try to understand memory use (including any pointers) of these data structures. Next consider arrays that have homogeneous types and those with heterogeneous types.",
     "crumbs": [
-      "How tos",
-      "Accessing Julia"
+      "Problem Sets",
+      "Problem Set 1"
     ]
   },
   {
-    "objectID": "howtos/accessJulia.html#using-julia-in-jupyter-notebooks",
-    "href": "howtos/accessJulia.html#using-julia-in-jupyter-notebooks",
-    "title": "Accessing Julia",
-    "section": "Using Julia in Jupyter notebooks",
-    "text": "Using Julia in Jupyter notebooks\nTo use Julia in a notebook on the SCF JupyterHub, you can just select Julia as the kernel from the dropdown in the top right.\nTo use Julia in a notebook on your own machine, you need to install the Julia kernel for Jupyter.\nusing Pkg\nPkg.add(\"IJulia\")\ninstallkernel(\"Julia\")\nThat should create a kernel called “Julia” that you can select as the kernel when you are in a Jupyter notebook.",
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Statistics 244: Computing for Statistics and Data Science with Julia",
+    "section": "",
+    "text": "Ed\n\n  Gradescope\n\n  Tutorials\n\n  PollEV\n\n\nNo matching items",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#course-description",
+    "href": "index.html#course-description",
+    "title": "Statistics 244: Computing for Statistics and Data Science with Julia",
+    "section": "Course description",
+    "text": "Course description\nProgramming and computation for applications in statistics, data science and related fields, focusing on the use of Julia, a modern language that offers interactivity with high performance based on just-in-time compilation. The course will also cover the use of co-processors, in particular GPUs, through Julia and Python packages such as Jax and PyTorch. Topics will include data types, functional programming, multiple argument dispatch, memory use, efficiency, parallelization, robustness and testing.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#course-materials",
+    "href": "index.html#course-materials",
+    "title": "Statistics 244: Computing for Statistics and Data Science with Julia",
+    "section": "Course materials",
+    "text": "Course materials\nSee the links above for the key resources for the course.\nMost course content (in particular notes and problem sets) are available through this website via the links in the left sidebar.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "index.html#questions-about-taking-the-class",
+    "href": "index.html#questions-about-taking-the-class",
+    "title": "Statistics 244: Computing for Statistics and Data Science with Julia",
+    "section": "Questions about taking the class",
+    "text": "Questions about taking the class\nIf you would like to audit the class, enroll as a UC Berkeley undergraduate, or enroll as a concurrent enrollment student (i.e., for visiting students), or for some other reason are not enrolled, please fill out this survey as soon as possible and, ideally, chat with me before/after the first class. All those enrolled or wishing to take the class should have filled it out by Wednesday January 24 at noon.\nPlease see the syllabus for the computing background I expect.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "ps/tmp.html",
+    "href": "ps/tmp.html",
+    "title": "Problem Set 1",
+    "section": "",
+    "text": "Please submit as a PDF to Gradescope.\nPlease generate the PDF using Quarto. Feel free to work in a Jupyter notebook and then convert to Quarto before rendering to PDF. If you’d like to use some other format, please check with me.\nRemember to note at the start of your document the names of any other students that you worked with on the problem set (or indicating you didn’t work with anyone if that was the case) and then indicate in the text or in code comments any specific ideas or code you borrowed from another student or any online reference (including ChatGPT or the like).\nYour solution should not just be code - you should have text describing how you approached the problem and what the various steps were, though for simple problems, this can be quite short. Your code should have comments indicating what each function or block of code does, and for any lines of code or code constructs that may be hard to understand, a comment indicating what that code does.\nYou do not need to (and should not) show exhaustive output, but in general you should show short examples of what your code does to demonstrate its functionality. The output should be produced as a result of the code chunks being run during the rendering process, not by copy-pasting of output from running the code separately (and definitely not as screenshots)."
+  },
+  {
+    "objectID": "ps/tmp.html#comments",
+    "href": "ps/tmp.html#comments",
+    "title": "Problem Set 1",
+    "section": "",
+    "text": "Please submit as a PDF to Gradescope.\nPlease generate the PDF using Quarto. Feel free to work in a Jupyter notebook and then convert to Quarto before rendering to PDF. If you’d like to use some other format, please check with me.\nRemember to note at the start of your document the names of any other students that you worked with on the problem set (or indicating you didn’t work with anyone if that was the case) and then indicate in the text or in code comments any specific ideas or code you borrowed from another student or any online reference (including ChatGPT or the like).\nYour solution should not just be code - you should have text describing how you approached the problem and what the various steps were, though for simple problems, this can be quite short. Your code should have comments indicating what each function or block of code does, and for any lines of code or code constructs that may be hard to understand, a comment indicating what that code does.\nYou do not need to (and should not) show exhaustive output, but in general you should show short examples of what your code does to demonstrate its functionality. The output should be produced as a result of the code chunks being run during the rendering process, not by copy-pasting of output from running the code separately (and definitely not as screenshots)."
+  },
+  {
+    "objectID": "ps/tmp.html#problems",
+    "href": "ps/tmp.html#problems",
+    "title": "Problem Set 1",
+    "section": "Problems",
+    "text": "Problems\n\nWrite a function that implements a basic version of Newton’s method for minimizing a function of one variable.\n\nStart with a simple implementation. Use an existing Julia package to implement the finite difference estimates for the gradient and Hessian. Think about the arguments and any defaults, as well as the type of the output. For the moment don’t set the types of the input arguments. You can start by assuming the function takes only one argument and simply returns the value at which the function is minimized.\nNow consider returning richer output. Consider using a named tuple, a dictionary, or a struct. What seem like the advantages/disadvantages? Choose one and implement it.\nSet up an array and save the progression of values along the optimization path.\nUse a ChatBot to write the code. Compare it to your code and indicate strengths/weaknesses.\n\nDefine the matrix A = [1:4  5:8  ones(Int64,4)].\n\nPredict the result of performing the following operations in Julia (before checking your answers by running them). Note that the lines are meant to be run one-by-one in the same workspace, so when you change an array, this will affect the subsequent statements.\n\nx = A[3,:]\nB = A[2:2,1:3]\n\n\nA[1,1] = 9 + A[2,3]\nA[1:3,2:3] = [0 0; 0 0; 0 0]\nA[1:2,2:3] = [1 3; 1 3]\ny = A[1:4, 3]\nA = [A [2 1 7; 7 4 5; ones(Int64,2,3)]]\nC = A[[1,3],2]\nD = A[[1,2,4],[1,3,4]]"
+  },
+  {
+    "objectID": "office_hours.html",
+    "href": "office_hours.html",
+    "title": "Office hours",
+    "section": "",
+    "text": "Chris (Evans 495 or Zoom [email in advance])\n\nSpecific hours TBD\nBy appoinment\nFeel free to drop by if my door is open, though I won’t always be able to help at the time.",
+    "crumbs": [
+      "Office Hours"
+    ]
+  },
+  {
+    "objectID": "howtos/useQuarto.html",
+    "href": "howtos/useQuarto.html",
+    "title": "Using Quarto",
+    "section": "",
+    "text": "Unless you plan to generate your problem set solutions on the SCF, you’ll need to install Quarto.\nOnce installed, you should be able to run commands such as quarto render FILE and quarto preview FILE from the command line.\nTo render to PDF, you’ll need a LaTeX engine installed. A good minimal solution if don’t already have LaTeX installed (e.g., via MicTeX in Windows or MacTeX on MacOS) is to install tinytex: quarto install tinytex.\nQuarto also runs from the Windows Command shell or PowerShell.\nquarto convert converts back and forth between the Jupyter notebook (.ipynb) and Quarto Markdown (.qmd) formats. So if you prefer, you can develop in a notebook and then convert to qmd and then render to prepare a nice-looking pdf for problem set/project/presentation submission.\nBy default, quarto uses Jupyter to process code chunks. While this generally works well, for Julia, I think that using the R-based knitr will be a better choice (e.g., the output from running code prints out more nicely). To do so, add engine: knitr to the YAML metadata at the top of the file (if you happen to have an execute stanza, you’ll need to have engine: knitr nested within that stanza). For the knitr engine, you’ll need to have R installed on your computer, with the rmarkdown R package installed. If you do want to use Jupyter, you will probably need to add jupyter: julia to the YAML metadata at the top of the file (jupyter: julia-1.10 on the SCF), and you will need a the IJulia kernel installed – see the howto on accessing Julia.\nFor Python chunks when using the default jupyter engine, if you want all output from multiple commands in a chunk to be printed (without explicitly using print()), you can add the following syntax to the YAML metadata at the top of the file. (Note that, unfortunately, the output will be printed out below the code chunk rather than interspersed with the code, as that is how Jupyter notebooks chunks work.)\nipynb-shell-interactivity: all\nThere is also now a Julia engine for Quarto. I think it has the same downside as the Jupyter engine (all chunk output is printed together after the code chunk and only the last output is printed automatically), but you can try it like this.\nFirst, install the QuartoNotebookRunner Julia package:\n]add QuartoNotebookRunner#main\nThen put engine: julia in the YAML metadata at the top of your Quarto document.",
     "crumbs": [
       "How tos",
-      "Accessing Julia"
+      "Using Quarto"
+    ]
+  },
+  {
+    "objectID": "howtos/installPython.html",
+    "href": "howtos/installPython.html",
+    "title": "Installing Python",
+    "section": "",
+    "text": "The focus of the course is Julia, but I plan to spend a small amount of time on the use of GPUs via Python. You can use Python through the SCF (and you’ll need to do so for GPU access), but if you do want install Python on your own machine, here is some information\nWe recommend using the Miniforge distribution as your Python 3.12 installation.\nOnce you’ve installed Python, please install the following packages:\n\nnumpy\nscipy\npandas\njax\npytorch\n\nAssuming you installed Miniforge, you should be able to do this from the command line:\nconda install -c conda-forge numpy scipy pandas jax\nconda install pytorch torchvision torchaudio pytorch-cuda=12.4 -c pytorch -c nvidia",
+    "crumbs": [
+      "How tos",
+      "Installing Python"
+    ]
+  },
+  {
+    "objectID": "howtos/accessSCF.html",
+    "href": "howtos/accessSCF.html",
+    "title": "Accessing the SCF",
+    "section": "",
+    "text": "The SCF is the Statistical Computing Facility, which provides computational resources for the Department of Statistics.\nFor our purposes, the SCF provides access to all the software and resources we will need for class. For much of what we do, it will serve as an alternative to your laptop if you run into problems. For GPU work and for some of the parallelization work it will be the primary resource.",
+    "crumbs": [
+      "How tos",
+      "Accessing the SCF"
+    ]
+  },
+  {
+    "objectID": "howtos/accessSCF.html#get-an-scf-account",
+    "href": "howtos/accessSCF.html#get-an-scf-account",
+    "title": "Accessing the SCF",
+    "section": "Get an SCF account",
+    "text": "Get an SCF account\nIf you don’t already have an account, please request one, indicating you are a student in Statistics 244.",
+    "crumbs": [
+      "How tos",
+      "Accessing the SCF"
+    ]
+  },
+  {
+    "objectID": "howtos/accessSCF.html#access-to-the-statistical-computing-facility-scf",
+    "href": "howtos/accessSCF.html#access-to-the-statistical-computing-facility-scf",
+    "title": "Accessing the SCF",
+    "section": "Access to the Statistical Computing Facility (SCF)",
+    "text": "Access to the Statistical Computing Facility (SCF)\nThere are two main ways to access the SCF machines.\n\nYou can login to our various Linux servers and access a terminal/bash shell that way. Please see http://statistics.berkeley.edu/computing/access.\nThe SCF JupyterHub provides browser-based access to a terminal/bash shell, Jupyter notebooks, and more. From a Jupyter notebook, you can select to use Julia as the kernel (the language used for processing code cells).",
+    "crumbs": [
+      "How tos",
+      "Accessing the SCF"
+    ]
+  },
+  {
+    "objectID": "howtos/accessSCF.html#software",
+    "href": "howtos/accessSCF.html#software",
+    "title": "Accessing the SCF",
+    "section": "Software",
+    "text": "Software\nJulia (possibly not with all needed packages at the moment), Python (with all needed packages), Git, and Quarto are all available from any SCF machine.",
+    "crumbs": [
+      "How tos",
+      "Accessing the SCF"
     ]
   },
   {
@@ -402,7 +490,7 @@
     "href": "notes/notes1.html#functions-and-operators",
     "title": "Notes Set 1: Introduction",
     "section": "Functions and operators",
-    "text": "Functions and operators\n\nOperators (and not just for math/booleans)\n\nvalue = 7;\nvalue *= 3;\nvalue\n\n21\n\n\n\nValue\n\nERROR: UndefVarError: `Value` not defined\n\nx = 3\n\n3\n\ntmp = 7x   # Unlike any other language I know!\n\n21\n\n\ns * \" there\"\n\n\"hello there\"\n\n\ns^4\n\n\"hellohellohellohello\"\n\n\n\n\nGetting help on functions\nType ? to get into help mode, then the name of the function you want help on.\nTo see all the functions/operators available in base Julia, type “Base.” and hit tab.\n\n\nFunction definitions\n\nfunction plus3(x=0)\n  return 3+x\nend\n\nplus3 (generic function with 2 methods)\n\n\nplus3(5)\n\n8\n\n\nWhy are there two methods?\n\nmethods(plus3)\nmethods(+)\n\n\n\nVectorized use\nTo use a function (or operator) in a vectorized way, we (with exceptions) need to use the dot notation.\n\ny = [5.3, 2.5];\n\n\ny + 3\nplus3(y)\n\nERROR: MethodError: no method matching +(::Vector{Float64}, ::Int64)\nFor element-wise addition, use broadcasting with dot syntax: array .+ scalar\n\ny .+ 3\n\n2-element Vector{Float64}:\n 8.3\n 5.5\n\nplus3.(y)\n\n2-element Vector{Float64}:\n 8.3\n 5.5\n\n\n\n## Apparently no general \"recycling\"/broadcasting.\nx = [2.1, 3.1, 5.3, 7.9]\nx .+ [0., 100.]\n\nERROR: DimensionMismatch: arrays could not be broadcast to a common size; got a dimension with lengths 4 and 2\n\n\nPositional and keyword arguments\nPositional arguments (which are matched based on the order they are given) are specified before keyword arguments.\n\nfunction norm(x, p; verbose, extra)\n  if verbose  # We'll see that \"logging\" is a better way to do this.\n     println(\"Executing $(p)-norm.\")\n  end\n  if !isfinite(p) and p &gt; 0\n    return maximum(abs.(x))\n  return sum(x .^ p)^(1/p)\nend\n\nz = [3.3, 4.7, -2.2]\n\nnorm(z, 2, verbose=false, extra=0)\nnorm(z, 2; verbose=false, extra=0)\nnorm(z, 2, false, 0)\nnorm(z, p=1; verbose=false, extra=0)\nnorm(z, 1, extra=0, verbose=false)\n\nArguments can have defaults:\n\nfunction norm(x, p=2; verbose=false)\n  if verbose  # We'll see that \"logging\" is a better way to do this.\n     println(\"Executing $(p)-norm.\")\n  end\n  return sum(x .^ p)^(1/p)\nend\n\nnorm (generic function with 2 methods)\n\n\n\n\n\n\n\n\nExercise\n\n\n\nTry out various argument orders and giving or not giving names or values to the arguments and try to figure out the syntax rules of how Julia behaves. Think about how they are similar/different to your primary language and whether you like the syntax rules.\n\n\nKeyword arguments are generally used for controlling function behavior rather than as core inputs. They are not involved in multiple dispatch (more later).\nLet’s try asking a ChatBot to write a norm function in Julia.\n\n\n\n\n\n\nExercise\n\n\n\nWrite a function that implements the gamma density, \\[ f(x) = \\frac{\\beta^{\\alpha}}{\\Gamma(\\alpha)} x^{\\alpha-1} \\exp(-\\beta x), \\] for shape \\(\\alpha\\) and rate \\(\\beta\\) or scale \\(1/\\beta\\), with \\(x&gt;0, \\alpha&gt;0, \\beta&gt;0\\). Allow it to handle either the rate or scale parameterization and to return either the density or log density. Check that it works in a vectorized way for the random variable value and the parameters. Compare what you wrote to what a ChatBot gives.\n\n\n\n\nShorthand function definitions\nThese can be handy, but as a newcomer to Julia, I find them a bit hard to read.\n\nplus3a(x=1) = 3+x\n\nplus3b = (x=1) -&gt; 3+x\n\n# An anonymous function (useful for maps, functional programming).\n((x) -&gt; 3+x)\n\n((x) -&gt; 3+x)(7)",
+    "text": "Functions and operators\n\nOperators (and not just for math/booleans)\n\nvalue = 7;\nvalue *= 3;\nvalue\n\n21\n\n\n\nValue\n\nERROR: UndefVarError: `Value` not defined\n\nx = 3\n\n3\n\ntmp = 7x   # Unlike any other language I know!\n\n21\n\n\ns * \" there\"\n\n\"hello there\"\n\n\ns^4\n\n\"hellohellohellohello\"\n\n\n\n\nGetting help on functions\nType ? to get into help mode, then the name of the function you want help on.\nTo see all the functions/operators available in base Julia, type “Base.” and hit tab.\n\n\nFunction definitions\n\nfunction plus3(x=0)\n  return 3+x\nend\n\nplus3 (generic function with 2 methods)\n\n\nplus3(5)\n\n8\n\n\nWhy are there two methods?\n\nmethods(plus3)\nmethods(+)\n\n\n\nVectorized use\nTo use a function (or operator) in a vectorized way, we (with exceptions) need to use the dot notation.\n\ny = [5.3, 2.5];\n\n\ny + 3\nplus3(y)\n\nERROR: MethodError: no method matching +(::Vector{Float64}, ::Int64)\nFor element-wise addition, use broadcasting with dot syntax: array .+ scalar\n\ny .+ 3\n\n2-element Vector{Float64}:\n 8.3\n 5.5\n\nplus3.(y)\n\n2-element Vector{Float64}:\n 8.3\n 5.5\n\n\n\n## Apparently no general \"recycling\"/broadcasting.\nx = [2.1, 3.1, 5.3, 7.9]\nx .+ [0., 100.]\n\nERROR: DimensionMismatch: arrays could not be broadcast to a common size; got a dimension with lengths 4 and 2\n\n\nPositional and keyword arguments\nPositional arguments (which are matched based on the order they are given) are specified before keyword arguments.\n\nfunction norm(x, p; verbose, extra)\n  if verbose  # We'll see that \"logging\" is a better way to do this.\n     println(\"Executing $(p)-norm.\")\n  end\n  if !isfinite(p) && p &gt; 0\n    return maximum(abs.(x))\n  end \n  return sum(x .^ p)^(1/p)\nend\n\nz = [3.3, 4.7, -2.2]\n\nnorm(z, 2, verbose=false, extra=0)\nnorm(z, 2; verbose=false, extra=0)\nnorm(z, 2, false, 0)\nnorm(z, p=1; verbose=false, extra=0)\nnorm(z, 1, extra=0, verbose=false)\n\nArguments can have defaults:\n\nfunction norm(x, p=2; verbose=false)\n  if verbose  # We'll see that \"logging\" is a better way to do this.\n     println(\"Executing $(p)-norm.\")\n  end\n  return sum(x .^ p)^(1/p)\nend\n\nnorm (generic function with 2 methods)\n\n\n\n\n\n\n\n\nExercise\n\n\n\nTry out various argument orders and giving or not giving names or values to the arguments and try to figure out the syntax rules of how Julia behaves. Think about how they are similar/different to your primary language and whether you like the syntax rules.\n\n\nKeyword arguments are generally used for controlling function behavior rather than as core inputs. They are not involved in multiple dispatch (more later).\nLet’s try asking a ChatBot to write a norm function in Julia.\n\n\n\n\n\n\nExercise\n\n\n\nWrite a function that implements the gamma density, \\[ f(x) = \\frac{\\beta^{\\alpha}}{\\Gamma(\\alpha)} x^{\\alpha-1} \\exp(-\\beta x), \\] for shape \\(\\alpha\\) and rate \\(\\beta\\) or scale \\(1/\\beta\\), with \\(x&gt;0, \\alpha&gt;0, \\beta&gt;0\\). Allow it to handle either the rate or scale parameterization and to return either the density or log density. Check that it works in a vectorized way for the random variable value and the parameters. Compare what you wrote to what a ChatBot gives.\n\n\n\n\nShorthand function definitions\nThese can be handy, but as a newcomer to Julia, I find them a bit hard to read.\n\nplus3a(x=1) = 3+x\n\nplus3b = (x=1) -&gt; 3+x\n\n# An anonymous function (useful for maps, functional programming).\n((x) -&gt; 3+x)\n\n((x) -&gt; 3+x)(7)",
     "crumbs": [
       "Course Notes",
       "Notes Set 1: Introduction"
@@ -413,7 +501,7 @@
     "href": "notes/notes1.html#arrays-and-subsetting",
     "title": "Notes Set 1: Introduction",
     "section": "Arrays and subsetting",
-    "text": "Arrays and subsetting\n\nSequences (and slicing)\n\nsome_text = \"This is the Greek θ\"\n\n\"This is the Greek θ\"\n\nsome_text[1]\n\n'T': ASCII/Unicode U+0054 (category Lu: Letter, uppercase)\n\nsome_text[19]\n\n'θ': Unicode U+03B8 (category Ll: Letter, lowercase)\n\nsome_text[1:4]\n\n\"This\"\n\nsome_text[17:end]\n\n\"k θ\"\n\n\n\ny = [1.1, 2.1, 3.2, 4.3, 5.7]\n\n5-element Vector{Float64}:\n 1.1\n 2.1\n 3.2\n 4.3\n 5.7\n\nprintln(y)               # Original vector\n\n[1.1, 2.1, 3.2, 4.3, 5.7]\n\nprintln(y[1:3])          # First 3 elements\n\n[1.1, 2.1, 3.2]\n\nprintln(y[1:2:4])        # All odd-numbered elements\n\n[1.1, 3.2]\n\nprintln(y[end:-1:2])     # From end back to second element in reverse\n\n[5.7, 4.3, 3.2, 2.1]\n\nprintln(y[4:3])          # Empty subset\n\nFloat64[]\n\nz = y[:]                 # All elements (copy (not alias) of original vector)\n\n5-element Vector{Float64}:\n 1.1\n 2.1\n 3.2\n 4.3\n 5.7\n\nprintln(y[[4,2,4,3,3]])  # Slice by index\n\n[4.3, 2.1, 4.3, 3.2, 3.2]\n\ny[[true,false,true,false,true]]   # Slice by boolean array\n\n3-element Vector{Float64}:\n 1.1\n 3.2\n 5.7\n\n\n\n\n\n\n\n\nExercise\n\n\n\nExperiment more with slicing/indexing to make sure you get it, and what errors can occur. (As an example what happens if you index beyond the extent of the object?)\n\n\nNote that the discussion of fruits[len] in Section 7 of Think Julia is incorrect.\n\n\nArrays (i.e., lists)\n\nx = [\"spam\", 2.0, 5, Missing, [10, 20], NaN]\n\n6-element Vector{Any}:\n    \"spam\"\n   2.0\n   5\n    Missing\n    [10, 20]\n NaN\n\nlength(x)\n\n6\n\n\ntypeof(x)\n\nVector{Any} (alias for Array{Any, 1})\n\ny = [10, 20, 30, 40]\n\n4-element Vector{Int64}:\n 10\n 20\n 30\n 40\n\ntypeof(y)\n\nVector{Int64} (alias for Array{Int64, 1})\n\nx[1] = 3.3\n\n3.3\n\nx[4] = 2.7\n\n2.7\n\ntypeof(x)   # Mutable, but type doesn't change.\n\nVector{Any} (alias for Array{Any, 1})\n\n\n\n\n\n\n\n\nMath with arrays\n\n\n\nFor computational efficiency, we’d want the array to contain elements all of the same type.\nNote that languages like R and Python distinguish types intended for math (e.g., numpy arrays, R matrices) from more general types (e.g., lists). This is not the case for Julia, where the key thing is the type(s) involved.\n\n\n\n\nMulti-dimensional arrays\n\nA = [1 2 3; 4 5 6; 7 8 9]\n\n3×3 Matrix{Int64}:\n 1  2  3\n 4  5  6\n 7  8  9\n\nA\n\n3×3 Matrix{Int64}:\n 1  2  3\n 4  5  6\n 7  8  9\n\nA[2,2]\n\n5\n\nA[2,:]\n\n3-element Vector{Int64}:\n 4\n 5\n 6\n\n\nsize(A)\n\n(3, 3)\n\nsize(A, 2)\n\n3\n\n\n## Defined column-wise:\nA = [1:4  5:8  ones(Int64,4)]\n\n4×3 Matrix{Int64}:\n 1  5  1\n 2  6  1\n 3  7  1\n 4  8  1\n\n\n\n\nArrays vs. vectors\n\nones(5)\n\n5-element Vector{Float64}:\n 1.0\n 1.0\n 1.0\n 1.0\n 1.0\n\nones(5, 1)\n\n5×1 Matrix{Float64}:\n 1.0\n 1.0\n 1.0\n 1.0\n 1.0\n\nones(1, 5)\n\n1×5 Matrix{Float64}:\n 1.0  1.0  1.0  1.0  1.0\n\nones(5, 5)\n\n5×5 Matrix{Float64}:\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n\n\n## Outer product:\nones(5, 1) * ones(1, 5)\n\n5×5 Matrix{Float64}:\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n\nones(5, 1) .* ones(1, 5)\n\n5×5 Matrix{Float64}:\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n\n\n\n\nA bit of linear algebra\nWe do linear algebra directly on the core Array type.\n\nA = [1 2 3; 4 1 6; 7 8 1]\n\n3×3 Matrix{Int64}:\n 1  2  3\n 4  1  6\n 7  8  1\n\nA * A\n\n3×3 Matrix{Int64}:\n 30  28  18\n 50  57  24\n 46  30  70\n\n\n\n\n\n\n\n\nExercise\n\n\n\nWhat do you expect to happen if you try to do matrix multiplication with a matrix with a mix of reals and integers? What if an element is a string?\n\n\nMuch more in a few weeks.\n\n\nMore on vectorization\n\nx = [\"spam\", 2.0, 5, [10, 20]]\n\n4-element Vector{Any}:\n  \"spam\"\n 2.0\n 5\n  [10, 20]\n\nlength(x)\n\n4\n\nlength.(x)\n\n4-element Vector{Int64}:\n 4\n 1\n 1\n 2\n\nmap(length, x)\n\n4-element Vector{Int64}:\n 4\n 1\n 1\n 2\n\n\nx = [2.1, 3.1, 5.3, 7.9]\n\n4-element Vector{Float64}:\n 2.1\n 3.1\n 5.3\n 7.9\n\nx .+ 10\n\n4-element Vector{Float64}:\n 12.1\n 13.1\n 15.3\n 17.9\n\n\nx + x\n\n4-element Vector{Float64}:\n  4.2\n  6.2\n 10.6\n 15.8\n\n\nx .&gt; 5.0\n\n4-element BitVector:\n 0\n 0\n 1\n 1\n\nx .== 3.1\n\n4-element BitVector:\n 0\n 1\n 0\n 0\n\n\n\n\nReduction\n\nA = rand(4, 5)\n\n4×5 Matrix{Float64}:\n 0.628037  0.994955  0.910135  0.121906  0.521179\n 0.713555  0.557916  0.300433  0.788926  0.14236\n 0.204263  0.386334  0.600474  0.202375  0.00762547\n 0.930353  0.88537   0.191942  0.988921  0.190445\n\nsum(A)\n\n10.267504564824216\n\nsum(A, dims = 1)  # 2D array result\n\n1×5 Matrix{Float64}:\n 2.47621  2.82457  2.00298  2.10213  0.861609\n\nsum(A, dims = 1)[:]  # 1D array result\n\n5-element Vector{Float64}:\n 2.4762090891169883\n 2.8245749296244185\n 2.0029833247331834\n 2.1021282310717084\n 0.8616089902779159\n\n\nsum(A, dims = 2)\n\n4×1 Matrix{Float64}:\n 3.1762126499520003\n 2.503189161452731\n 1.4010717188965292\n 3.1870310345229544\n\n\n\n\nList comprehension (comprehension syntax)\nSimilar to Python.\n\nysq = [ w^2 for w in y ]\n\n4-element Vector{Int64}:\n  100\n  400\n  900\n 1600\n\nxsqu = [ x^2 for x = 1:5 ]\n\n5-element Vector{Int64}:\n  1\n  4\n  9\n 16\n 25\n\n\nxsqu_even = [ x^2 for x = 1:5 if iseven(x)]\n\n2-element Vector{Int64}:\n  4\n 16\n\n\nnorm2 = [ x^2 + y^2 for x = 1:5, y = 1:5 ]\n\n5×5 Matrix{Int64}:\n  2   5  10  17  26\n  5   8  13  20  29\n 10  13  18  25  34\n 17  20  25  32  41\n 26  29  34  41  50\n\n\nA nice terse shorthand but can be hard to read.\n(Some people love it and some people hate it.)",
+    "text": "Arrays and subsetting\n\nSequences (and slicing)\n\nsome_text = \"This is the Greek θ\"\n\n\"This is the Greek θ\"\n\nsome_text[1]\n\n'T': ASCII/Unicode U+0054 (category Lu: Letter, uppercase)\n\nsome_text[19]\n\n'θ': Unicode U+03B8 (category Ll: Letter, lowercase)\n\nsome_text[1:4]\n\n\"This\"\n\nsome_text[17:end]\n\n\"k θ\"\n\n\n\ny = [1.1, 2.1, 3.2, 4.3, 5.7]\n\n5-element Vector{Float64}:\n 1.1\n 2.1\n 3.2\n 4.3\n 5.7\n\nprintln(y)               # Original vector\n\n[1.1, 2.1, 3.2, 4.3, 5.7]\n\n\n# Slicing by index sequence:\n\nprintln(y[1:3])          # First 3 elements\n\n[1.1, 2.1, 3.2]\n\nprintln(y[1:2:4])        # All odd-numbered elements\n\n[1.1, 3.2]\n\nprintln(y[end:-1:2])     # From end back to second element in reverse\n\n[5.7, 4.3, 3.2, 2.1]\n\nprintln(y[4:3])          # Empty subset\n\nFloat64[]\n\nz = y[:]                 # All elements (copy (not alias) of original vector)\n\n5-element Vector{Float64}:\n 1.1\n 2.1\n 3.2\n 4.3\n 5.7\n\n\n# Slicing by arbitrary index vector\nprintln(y[[4,2,4,3,3,4,4]])  # Slice by index\n\n[4.3, 2.1, 4.3, 3.2, 3.2, 4.3, 4.3]\n\n\n# Slicing by boolean array\ny[[true,false,true,false,true]]   # Slice by boolean array\n\n3-element Vector{Float64}:\n 1.1\n 3.2\n 5.7\n\n\n\n\n\n\n\n\nExercise\n\n\n\nExperiment more with slicing/indexing to make sure you get it, and what errors can occur. (As an example what happens if you index beyond the extent of the object?) See also Problems 2 and 3 on PS1.\n\n\nNote that the discussion of fruits[len] in Section 7 of Think Julia is incorrect.\n\n\nArrays (i.e., lists)\n\nx = [\"spam\", 2.0, 5, Missing, [10, 20], NaN]\n\n6-element Vector{Any}:\n    \"spam\"\n   2.0\n   5\n    Missing\n    [10, 20]\n NaN\n\nlength(x)\n\n6\n\n\ntypeof(x)\n\nVector{Any} (alias for Array{Any, 1})\n\ny = [10, 20, 30, 40]\n\n4-element Vector{Int64}:\n 10\n 20\n 30\n 40\n\ntypeof(y)\n\nVector{Int64} (alias for Array{Int64, 1})\n\nx[1] = 3.3\n\n3.3\n\nx[4] = 2.7\n\n2.7\n\ntypeof(x)   # Mutable, but type doesn't change.\n\nVector{Any} (alias for Array{Any, 1})\n\n\n\n\n\n\n\n\nMath with arrays\n\n\n\nFor computational efficiency, we’d want the array to contain elements all of the same type.\nNote that languages like R and Python distinguish types intended for math (e.g., numpy arrays, R matrices) from more general types (e.g., lists). This is not the case for Julia, where the key thing is the type(s) involved.\n\n\n\n\nMulti-dimensional arrays\n\nA = [1 2 3; 4 5 6; 7 8 9]\n\n3×3 Matrix{Int64}:\n 1  2  3\n 4  5  6\n 7  8  9\n\nA\n\n3×3 Matrix{Int64}:\n 1  2  3\n 4  5  6\n 7  8  9\n\nA[2,2]\n\n5\n\nA[2,:]\n\n3-element Vector{Int64}:\n 4\n 5\n 6\n\n\nsize(A)\n\n(3, 3)\n\nsize(A, 2)\n\n3\n\n\n## Defined column-wise:\nA = [1:4  5:8  ones(Int64,4)]\n\n4×3 Matrix{Int64}:\n 1  5  1\n 2  6  1\n 3  7  1\n 4  8  1\n\n\n\n\nArrays vs. vectors\n\nones(5)\n\n5-element Vector{Float64}:\n 1.0\n 1.0\n 1.0\n 1.0\n 1.0\n\nones(5, 1)\n\n5×1 Matrix{Float64}:\n 1.0\n 1.0\n 1.0\n 1.0\n 1.0\n\nones(1, 5)\n\n1×5 Matrix{Float64}:\n 1.0  1.0  1.0  1.0  1.0\n\nones(5, 5)\n\n5×5 Matrix{Float64}:\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n\n\n## Outer product:\nones(5, 1) * ones(1, 5)\n\n5×5 Matrix{Float64}:\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n\nones(5, 1) .* ones(1, 5)\n\n5×5 Matrix{Float64}:\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n 1.0  1.0  1.0  1.0  1.0\n\n\n\n\nA bit of linear algebra\nWe do linear algebra directly on the core Array type.\n\nA = [1 2 3; 4 1 6; 7 8 1]\n\n3×3 Matrix{Int64}:\n 1  2  3\n 4  1  6\n 7  8  1\n\nA * A\n\n3×3 Matrix{Int64}:\n 30  28  18\n 50  57  24\n 46  30  70\n\n\n\n\n\n\n\n\nExercise\n\n\n\nWhat do you expect to happen if you try to do matrix multiplication with a matrix with a mix of reals and integers? What would you expect if an element is a string?\n\n\nMuch more on linear algebra in a few weeks.\n\n\nMore on vectorization\n\nx = [\"spam\", 2.0, 5, [10, 20]]\n\n4-element Vector{Any}:\n  \"spam\"\n 2.0\n 5\n  [10, 20]\n\nlength(x)\n\n4\n\nlength.(x)\n\n4-element Vector{Int64}:\n 4\n 1\n 1\n 2\n\nmap(length, x)\n\n4-element Vector{Int64}:\n 4\n 1\n 1\n 2\n\n\nx = [2.1, 3.1, 5.3, 7.9]\n\n4-element Vector{Float64}:\n 2.1\n 3.1\n 5.3\n 7.9\n\nx .+ 10\n\n4-element Vector{Float64}:\n 12.1\n 13.1\n 15.3\n 17.9\n\n\nx + x\n\n4-element Vector{Float64}:\n  4.2\n  6.2\n 10.6\n 15.8\n\n\nx .&gt; 5.0\n\n4-element BitVector:\n 0\n 0\n 1\n 1\n\nx .== 3.1\n\n4-element BitVector:\n 0\n 1\n 0\n 0\n\n\n\n\nReduction\n\nA = rand(4, 5)\n\n4×5 Matrix{Float64}:\n 0.827187  0.251753  0.10782    0.367276  0.95969\n 0.98375   0.554912  0.45273    0.245777  0.395389\n 0.823281  0.668835  0.364899   0.449475  0.582744\n 0.862182  0.128589  0.0351906  0.528751  0.0357815\n\nsum(A)\n\n9.626014439402127\n\nsum(A, dims = 1)  # 2D array result\n\n1×5 Matrix{Float64}:\n 3.4964  1.60409  0.96064  1.59128  1.9736\n\nsum(A, dims = 1)[:]  # 1D array result\n\n5-element Vector{Float64}:\n 3.496400328918156\n 1.6040891647840871\n 0.9606402453454161\n 1.5912797536924068\n 1.9736049466620615\n\n\nsum(A, dims = 2)\n\n4×1 Matrix{Float64}:\n 2.513726904829798\n 2.632559032047382\n 2.889234292550287\n 1.59049420997466\n\n\n\n\nList comprehension (comprehension syntax)\nSimilar to Python.\n\ny = [1.0, 2.0, 2.5]\n\n3-element Vector{Float64}:\n 1.0\n 2.0\n 2.5\n\nysq = [ w^2 for w in y ]\n\n3-element Vector{Float64}:\n 1.0\n 4.0\n 6.25\n\nxsqu = [ x^2 for x = 1:5 ]\n\n5-element Vector{Int64}:\n  1\n  4\n  9\n 16\n 25\n\n\nxsqu_even = [ x^2 for x = 1:5 if iseven(x)]\n\n2-element Vector{Int64}:\n  4\n 16\n\n\nnorm2 = [ x^2 + y^2 for x = 1:5, y = 1:5 ]\n\n5×5 Matrix{Int64}:\n  2   5  10  17  26\n  5   8  13  20  29\n 10  13  18  25  34\n 17  20  25  32  41\n 26  29  34  41  50\n\n\nA nice terse shorthand but can be hard to read.\n(Some people love it and some people hate it.)",
     "crumbs": [
       "Course Notes",
       "Notes Set 1: Introduction"
@@ -424,7 +512,7 @@
     "href": "notes/notes1.html#dictionaries-tuples-and-structs",
     "title": "Notes Set 1: Introduction",
     "section": "Dictionaries, tuples, and structs",
-    "text": "Dictionaries, tuples, and structs\n\nDictionaries\nKey-value pairs like Python dictionaries (and somewhat like named R lists).\n\nx = Dict(\"test\" =&gt; 3, \"tmp\" =&gt; [2.1, 3.5], 7 =&gt; \"weird\")\n\nDict{Any, Any} with 3 entries:\n  7      =&gt; \"weird\"\n  \"test\" =&gt; 3\n  \"tmp\"  =&gt; [2.1, 3.5]\n\nx[\"tmp\"][2]\n\n3.5\n\nx[7]\n\n\"weird\"\n\nx[\"newkey\"] = 'a'\n\n'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)\n\nkeys(x)\n\nKeySet for a Dict{Any, Any} with 4 entries. Keys:\n  7\n  \"test\"\n  \"tmp\"\n  \"newkey\"\n\n\n\nx[\"hello\"]\n\nERROR: KeyError: key \"hello\" not found\n\nget(x, \"hello\", 0)\n\n0\n\n\nNote that the keys don’t have to be strings! This could be good for caching/memoizing/lookup:\n\nx = Dict([\"foo\", \"bar\"] =&gt; 3, \"tmp\" =&gt; [2.1, 3.5], 7 =&gt; \"weird\")\n\nDict{Any, Any} with 3 entries:\n  7              =&gt; \"weird\"\n  [\"foo\", \"bar\"] =&gt; 3\n  \"tmp\"          =&gt; [2.1, 3.5]\n\nx[[\"foo\", \"bar\"]]\n\n3\n\nind = 7\n\n7\n\nx[ind]\n\n\"weird\"\n\n\nWhat do you think will happen here?\n\nind = Int32(7)  # What do you expect?\nx[ind]\nind = 7.0       # What do you expect?\nx[ind]\n\n\n\nTuples\nTuples are are similar to 1-dimensional arrays but they are immutable (they can’t be modified) and can have named elements.\n\nx = (3, 5, \"hello\")\n\n(3, 5, \"hello\")\n\nx[2]\n\n5\n\n\n\nx[2] = 7\n\nERROR: MethodError: no method matching setindex!(::Tuple{Int64, Int64, String}, ::Int64, ::Int64)\n\nx = 3\n\n3\n\ny = 9\n\n9\n\ny,x = x,y\n\n(3, 9)\n\n\n# Named tuple:\nx = (a=3, b=5, other=\"hello\")\n\n(a = 3, b = 5, other = \"hello\")\n\nx.b\n\n5\n\n\nWhat do you think will happen here?\n\nx = (a=3, b=5, other=\"hello\", b=\"foo\")\nx.b\n\nTuples come in handy for providing flexibility in function inputs and outputs, as seen next.\n\n\nTuples and functions\nHere we create a function that can take an arbitrary number of inputs.\n\nfunction flexsum(args...)\n   println(\"The first value is $(args[1]).\")\n   x = args[1]*2\n   return sum(args)\nend\n\nflexsum (generic function with 1 method)\n\n\nflexsum(5, 7, 9)\n\nThe first value is 5.\n\n\n21\n\n\nHere’s how to call a function that takes multiple inputs, but pass as a tuple:\n\nfunction mydiv(x, y)\n   return x / y\nend\n\nmydiv (generic function with 1 method)\n\n\nvals = [3,5]\n\n2-element Vector{Int64}:\n 3\n 5\n\nmydiv(vals...)\n\n0.6\n\n\nWe use tuples to have a function return multiple values.\n\nfunction flexsum(args...)\n   println(\"The first value is $(args[1]).\")\n   x = args[1]*2\n   return args, x, sum(args)\nend\n\nflexsum (generic function with 1 method)\n\n\nflexsum(5, 7, 9)\n\nThe first value is 5.\n\n\n((5, 7, 9), 10, 21)\n\n\n\n\nStructs\nA struct is a “composite type”, a collection of named fields, useful for holding information with a particular structure.\n\nstruct Person\n  name\n  age\n  occupation\nend\n\nlincoln = Person(\"Abraham Lincoln\", 203, \"politician\")\n\nPerson(\"Abraham Lincoln\", 203, \"politician\")\n\nlincoln.age\n\n203\n\n\nWe’ll see much more on structs next week when we talk more about using types for robust code.",
+    "text": "Dictionaries, tuples, and structs\n\nDictionaries\nKey-value pairs like Python dictionaries (and somewhat like named R lists).\n\nx = Dict(\"test\" =&gt; 3, \"tmp\" =&gt; [2.1, 3.5], 7 =&gt; \"weird\")\n\nDict{Any, Any} with 3 entries:\n  7      =&gt; \"weird\"\n  \"test\" =&gt; 3\n  \"tmp\"  =&gt; [2.1, 3.5]\n\nx[\"tmp\"][2]\n\n3.5\n\nx[7]\n\n\"weird\"\n\nx[\"newkey\"] = 'a'\n\n'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)\n\nkeys(x)\n\nKeySet for a Dict{Any, Any} with 4 entries. Keys:\n  7\n  \"test\"\n  \"tmp\"\n  \"newkey\"\n\n\n\nx[\"hello\"]\n\nERROR: KeyError: key \"hello\" not found\n\nget(x, \"hello\", 0)\n\n0\n\n\nNote that the keys don’t have to be strings! This could be good for caching/memoizing/lookup:\n\nx = Dict([\"foo\", \"bar\"] =&gt; 3, \"tmp\" =&gt; [2.1, 3.5], 7 =&gt; \"weird\")\n\nDict{Any, Any} with 3 entries:\n  7              =&gt; \"weird\"\n  [\"foo\", \"bar\"] =&gt; 3\n  \"tmp\"          =&gt; [2.1, 3.5]\n\nx[[\"foo\", \"bar\"]]\n\n3\n\nind = 7\n\n7\n\nx[ind]\n\n\"weird\"\n\ntypeof(ind)\n\nInt64\n\n\nIt would be interesting to know how it’s implemented that arbitrary objects can be keys. Perhaps using hashing?\nWhat do you think will happen here?\n\nind = Int32(7)  # What do you expect?\nx[ind]\nind = 7.0       # What do you expect?\nx[ind]\n\n\n\nTuples\nTuples are are similar to 1-dimensional arrays but they are immutable (they can’t be modified) and can have named elements.\n\nx = (3, 5, \"hello\")\n\n(3, 5, \"hello\")\n\nx[2]\n\n5\n\n\n\nx[2] = 7\n\nERROR: MethodError: no method matching setindex!(::Tuple{Int64, Int64, String}, ::Int64, ::Int64)\n\nx = 3\n\n3\n\ny = 9\n\n9\n\ny,x = x,y\n\n(3, 9)\n\n\n# Named tuple:\nx = (a=3, b=5, other=\"hello\")\n\n(a = 3, b = 5, other = \"hello\")\n\nx.b\n\n5\n\n\n\n\n\n\n\n\nFunctions with ! in their names\n\n\n\nWhat’s the deal with the “!” in setindex? We’ll see this more shortly, but functions that modify their inputs should have their name end in “!”.\n\n\nWhat do you think will happen here?\n\nx = (a=3, b=5, other=\"hello\", b=\"foo\")\nx.b\n\nTuples come in handy for providing flexibility in function inputs and outputs, as seen next.\n\n\nTuples and functions\nHere we create a function that can take an arbitrary number of inputs.\n\nfunction flexsum(args...)\n   println(\"The first value is $(args[1]).\")\n   x = args[1]*2\n   return sum(args)\nend\n\nflexsum (generic function with 1 method)\n\n\nflexsum(5, 7, 9)\n\nThe first value is 5.\n\n\n21\n\n\nHere’s how to call a function that takes multiple inputs, but pass as a tuple:\n\nfunction mydiv(x, y)\n   return x / y\nend\n\nmydiv (generic function with 1 method)\n\n\nvals = [3,5]\n\n2-element Vector{Int64}:\n 3\n 5\n\nmydiv(vals...)\n\n0.6\n\n\nWe use tuples to have a function return multiple values.\n\nfunction flexsum(args...)\n   println(\"The first value is $(args[1]).\")\n   x = args[1]*2\n   return args, x, sum(args)\nend\n\nflexsum (generic function with 1 method)\n\n\nflexsum(5, 7, 9)\n\nThe first value is 5.\n\n\n((5, 7, 9), 10, 21)\n\n\n\n\nStructs\nA struct is a “composite type”, a collection of named fields, useful for holding information with a particular structure.\n\nstruct Person\n  name\n  age\n  occupation\nend\n\nlincoln = Person(\"Abraham Lincoln\", 203, \"politician\")\n\nPerson(\"Abraham Lincoln\", 203, \"politician\")\n\nlincoln.age\n\n203\n\n\nWe’ll see much more on structs next week when we talk more about using types for robust code.\nLet’s discuss how these are similar to and different from objects in object-oriented languages like Python, Java, and C++.",
     "crumbs": [
       "Course Notes",
       "Notes Set 1: Introduction"
@@ -435,7 +523,7 @@
     "href": "notes/notes1.html#loops",
     "title": "Notes Set 1: Introduction",
     "section": "Loops",
-    "text": "Loops\n\nnumThrows = 1000;\nin_circle = 0;\n\n# Run Monte Carlo simulation\nfor _ in 1:numThrows\n  # Generate random points on 2x2 square.\n  xPos = rand() * 2 - 1.0  # Equivalent to random.uniform(-1.0, 1.0)\n  yPos = rand() * 2 - 1.0\n\n  # Is point inside unit circle?\n  if sqrt(xPos^2 + yPos^2) &lt;= 1.0  # Equivalent to math.hypot()\n    in_circle += 1\n  end\nend\n\n# Estimate PI\npi_estimate = 4 * in_circle / numThrows\n\nIf you were using R or Python, what would the value of xPos be at the end of the loop execution?\nIn Julia, variables defined in the loop are local variables accessible only in the scope of the loop (more on this soon). This avoids clutter in the global scope.\n\nxPos\n\nERROR: UndefVarError: `xPos` not defined\n\n\n\n\n\n\nExercise\n\n\n\nI used different naming conventions for my variables (numThrows and in_circle). Look online to see what the recommended style is.\n\n\nWe can iterate over elements of an object like this:\n\nfor i in eachindex(x)\n  println(i)\nend\n\na\nb\nother",
+    "text": "Loops\nWe’ll illustrate for loop syntax by using Monte Carlo simulation to estimate \\(\\pi\\) by generating points in a square and then finding the number that are inside the unit circle.\n\nnumThrows = 1000;\nin_circle = 0;\n\n# Run Monte Carlo simulation\nfor _ in 1:numThrows\n  # Generate random points on 2x2 square.\n  xPos = rand() * 2 - 1.0  # Equivalent to random.uniform(-1.0, 1.0)\n  yPos = rand() * 2 - 1.0\n\n  # Is point inside unit circle?\n  if sqrt(xPos^2 + yPos^2) &lt;= 1.0  # Equivalent to math.hypot()\n    in_circle += 1\n  end\nend\n\n# Estimate PI\npi_estimate = 4 * in_circle / numThrows\n\nIf you were using R or Python, what would the value of xPos be at the end of the loop execution?\n\nxPos\n\nERROR: UndefVarError: `xPos` not defined\nIn Julia, variables defined in the loop are local variables accessible only in the scope of the loop (more on scoping soon). This avoids clutter in the global scope.\n\n\n\n\n\n\nExercise\n\n\n\nI used different naming conventions for my variables (numThrows and in_circle). Look online to see what the recommended style is.\n\n\nWe can iterate over elements of an object like this:\n\nfor i in eachindex(x)\n  println(i)\nend\n\na\nb\nother",
     "crumbs": [
       "Course Notes",
       "Notes Set 1: Introduction"
