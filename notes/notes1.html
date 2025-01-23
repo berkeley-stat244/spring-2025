@@ -9,7 +9,7 @@
 <meta name="author" content="Chris Paciorek">
 <meta name="dcterms.date" content="2025-01-21">
 
-<title>Notes Set 1: Introduction</title>
+<title>Notes 1: Introduction</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -145,7 +145,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notes/notes1.html">Course Notes</a></li><li class="breadcrumb-item"><a href="../notes/notes1.html">Notes Set 1: Introduction</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notes/notes1.html">Course Notes</a></li><li class="breadcrumb-item"><a href="../notes/notes1.html">Notes 1: Introduction</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -212,13 +212,13 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notes/notes1.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Notes Set 1: Introduction</span></a>
+ <span class="menu-text">Notes 1: Introduction</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notes/notes2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Notes Set 2: Memory and scope</span></a>
+ <span class="menu-text">Notes 2: Memory and scope</span></a>
   </div>
 </li>
       </ul>
@@ -342,9 +342,9 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notes/notes1.html">Course Notes</a></li><li class="breadcrumb-item"><a href="../notes/notes1.html">Notes Set 1: Introduction</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notes/notes1.html">Course Notes</a></li><li class="breadcrumb-item"><a href="../notes/notes1.html">Notes 1: Introduction</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Notes Set 1: Introduction</h1>
+<h1 class="title">Notes 1: Introduction</h1>
 </div>
 
 
@@ -375,7 +375,7 @@ window.Quarto = {
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>This document is the first of a set of notes giving an overview of key syntax, tools, and concepts for using Julia. The notes are not meant to be particularly complete in terms of useful functions (Google and LLMs can now provide that quite well), but rather to introduce the language and consider key programming concepts in the context of Julia.</p>
+<p>This document is the first of a set of notes. It gives an overview of key syntax, tools, and concepts for using Julia. The notes are not meant to be particularly complete in terms of useful functions (Google and LLMs can now provide that quite well), but rather to introduce the language and consider key programming concepts in the context of Julia.</p>
 <p>Given that, the document heavily relies on demos, with interpretation in some cases left to the reader.</p>
 <p>This document covers basic syntax, basic types, data structures, and functions. For more information, Think Julia Chapters 1-12 is a good reference.</p>
 </section>
@@ -1179,37 +1179,37 @@ Exercise
 <div class="sourceCode cell-code" id="cb199"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb199-1"><a href="#cb199-1" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">4</span>, <span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>4×5 Matrix{Float64}:
- 0.827187  0.251753  0.10782    0.367276  0.95969
- 0.98375   0.554912  0.45273    0.245777  0.395389
- 0.823281  0.668835  0.364899   0.449475  0.582744
- 0.862182  0.128589  0.0351906  0.528751  0.0357815</code></pre>
+ 0.360548  0.977159  0.538394  0.496837   0.653227
+ 0.834878  0.405001  0.681093  0.0775547  0.644302
+ 0.367613  0.469112  0.156794  0.834769   0.187698
+ 0.677675  0.158351  0.266035  0.2962     0.457075</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb201"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb201-1"><a href="#cb201-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>9.626014439402127</code></pre>
+<pre><code>9.54031607460034</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb203"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb203-1"><a href="#cb203-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(A, dims <span class="op">=</span> <span class="fl">1</span>)  <span class="co"># 2D array result</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>1×5 Matrix{Float64}:
- 3.4964  1.60409  0.96064  1.59128  1.9736</code></pre>
+ 2.24071  2.00962  1.64232  1.70536  1.9423</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb205"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb205-1"><a href="#cb205-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(A, dims <span class="op">=</span> <span class="fl">1</span>)[<span class="op">:</span>]  <span class="co"># 1D array result</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>5-element Vector{Float64}:
- 3.496400328918156
- 1.6040891647840871
- 0.9606402453454161
- 1.5912797536924068
- 1.9736049466620615</code></pre>
+ 2.240713463913335
+ 2.0096246078231363
+ 1.6423151889625889
+ 1.7053613606225357
+ 1.942301453278744</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb207"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb207-1"><a href="#cb207-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb207-2"><a href="#cb207-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(A, dims <span class="op">=</span> <span class="fl">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>4×1 Matrix{Float64}:
- 2.513726904829798
- 2.632559032047382
- 2.889234292550287
- 1.59049420997466</code></pre>
+ 3.0261646600712138
+ 2.6428286392594984
+ 2.015986989916776
+ 1.8553357853528516</code></pre>
 </div>
 </div>
 </section>

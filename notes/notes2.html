@@ -9,7 +9,7 @@
 <meta name="author" content="Chris Paciorek">
 <meta name="dcterms.date" content="2025-01-23">
 
-<title>Notes Set 2: Memory and scope</title>
+<title>Notes 2: Memory and scope</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -116,7 +116,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notes/notes1.html">Course Notes</a></li><li class="breadcrumb-item"><a href="../notes/notes2.html">Notes Set 2: Memory and scope</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notes/notes1.html">Course Notes</a></li><li class="breadcrumb-item"><a href="../notes/notes2.html">Notes 2: Memory and scope</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -183,13 +183,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notes/notes1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Notes Set 1: Introduction</span></a>
+ <span class="menu-text">Notes 1: Introduction</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notes/notes2.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Notes Set 2: Memory and scope</span></a>
+ <span class="menu-text">Notes 2: Memory and scope</span></a>
   </div>
 </li>
       </ul>
@@ -300,9 +300,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notes/notes1.html">Course Notes</a></li><li class="breadcrumb-item"><a href="../notes/notes2.html">Notes Set 2: Memory and scope</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notes/notes1.html">Course Notes</a></li><li class="breadcrumb-item"><a href="../notes/notes2.html">Notes 2: Memory and scope</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Notes Set 2: Memory and scope</h1>
+<h1 class="title">Notes 2: Memory and scope</h1>
 </div>
 
 
@@ -590,7 +590,7 @@ Question
 </div>
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pointer_from_objref</span>(y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Ptr{Nothing} @0x00007fb6d4c39c80</code></pre>
+<pre><code>Ptr{Nothing} @0x00007f4a79839c80</code></pre>
 </div>
 </div>
 <p>There’s a bit more info in the help for <code>pointer_from_objref</code>.</p>
@@ -692,19 +692,19 @@ Exercise
 <div class="cell">
 <div class="sourceCode cell-code" id="cb74"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pointer_from_objref</span>(devs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Ptr{Nothing} @0x00007fb6a27cc040</code></pre>
+<pre><code>Ptr{Nothing} @0x00007f4a781b4040</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb76"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pointer_from_objref</span>(x[<span class="fl">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Ptr{Nothing} @0x00007fb6a27cc040</code></pre>
+<pre><code>Ptr{Nothing} @0x00007f4a781b4040</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb78"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>devs[<span class="fl">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>-1.0012941247729419</code></pre>
+<pre><code>0.34509981674941087</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb80"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>x[<span class="fl">1</span>][<span class="fl">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>-1.0012941247729419</code></pre>
+<pre><code>0.34509981674941087</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb82"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>devs[<span class="fl">1</span>] <span class="op">=</span> <span class="fl">3.0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1003,10 +1003,10 @@ Exercise: Lexical scoping
 <span id="cb124-2"><a href="#cb124-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">LinearAlgebra</span></span>
 <span id="cb124-3"><a href="#cb124-3" aria-hidden="true" tabindex="-1"></a><span class="fu">eigvals</span>(A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>3-element Vector{Float64}:
- -0.08655122105007222
-  0.5551952912865288
-  1.4311155329465537</code></pre>
+<pre><code>3-element Vector{ComplexF64}:
+ -0.1524167175424642 - 0.09898770634805823im
+ -0.1524167175424642 + 0.09898770634805823im
+  1.5100410026973055 + 0.0im</code></pre>
 </div>
 </div>
 </section>
