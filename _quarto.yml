@@ -34,7 +34,7 @@ website:
         contents:
           - href: howtos/accessJulia.md
           - href: howtos/accessSCF.md
-          - href: howtos/useQuarto.md
+          - href: howtos/useQuarto.qmd
           - href: howtos/installPython.md
           - href: howtos/installGit.md
       - href: license.qmd

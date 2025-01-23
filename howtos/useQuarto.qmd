@@ -1,5 +1,6 @@
 ---
 title: Using Quarto
+engine: knitr
 ---
 
 Quarto is a system for publishing technical content. We'll use with source files written in the Quarto flavor of Markdown, which can include mathematical notation using LaTeX syntax and code chunks that are evaluated during the publishing process. One then "renders" the source file into either HTML or PDF.
@@ -22,7 +23,7 @@ The Quarto manual has [more details on using Quarto specifically in the context 
 
 Here's example content of a Quarto document. The first part is the YAML header/metadata giving details of how the document should be processed.
 
-```
+````{verbatim}
 ---
 title: "Problem Set 1 Solutions"
 author: "Chris Paciorek"
@@ -34,11 +35,11 @@ Here's some math: $\int \pi(\theta)d\theta = 1$.
 
 Here's a code chunk that is evaluated.
 
-```{julia}
+```{{julia}}
 x = 3;
 println("The result is $(x*7).")
 ```
-```
+````
 
 More details are available in the [Quarto manual](https://quarto.org/docs/authoring/markdown-basics.html), including [options for controlling the output from code chunks](https://quarto.org/docs/computations/execution-options.html).
 
