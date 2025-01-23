@@ -1,5 +1,5 @@
 ---
-title: "Notes Set 1: Introduction"
+title: "Notes 1: Introduction"
 author: "Chris Paciorek"
 date: "2025-01-21"
 format:
@@ -20,7 +20,7 @@ ipynb-shell-interactivity: all
 
 ## Introduction
 
-This document is the first of a set of notes giving an overview of key syntax, tools, and concepts for using Julia. The notes are not meant to be particularly complete in terms of useful functions (Google and LLMs can now provide that quite well), but rather to introduce the language and consider key programming concepts in the context of Julia.
+This document is the first of a set of notes. It gives an overview of key syntax, tools, and concepts for using Julia. The notes are not meant to be particularly complete in terms of useful functions (Google and LLMs can now provide that quite well), but rather to introduce the language and consider key programming concepts in the context of Julia.
 
 Given that, the document heavily relies on demos, with interpretation in some cases left to the reader.
 

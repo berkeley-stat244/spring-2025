@@ -1,5 +1,5 @@
 ---
-title: "Notes Set 2: Memory and scope"
+title: "Notes 2: Memory and scope"
 author: "Chris Paciorek"
 date: "2025-01-23"
 format:
