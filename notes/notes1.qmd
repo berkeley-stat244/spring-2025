@@ -1,7 +1,7 @@
 ---
 title: "Notes Set 1: Introduction"
 author: "Chris Paciorek"
-date: "2025-01-14"
+date: "2025-01-21"
 format:
   pdf:
     documentclass: article
@@ -252,8 +252,9 @@ function norm(x, p; verbose, extra)
   if verbose  # We'll see that "logging" is a better way to do this.
      println("Executing $(p)-norm.")
   end
-  if !isfinite(p) and p > 0
+  if !isfinite(p) && p > 0
     return maximum(abs.(x))
+  end 
   return sum(x .^ p)^(1/p)
 end
 
@@ -326,20 +327,27 @@ some_text[17:end]
 ```{julia}
 y = [1.1, 2.1, 3.2, 4.3, 5.7]
 println(y)               # Original vector
+
+# Slicing by index sequence:
+
 println(y[1:3])          # First 3 elements
 println(y[1:2:4])        # All odd-numbered elements
 println(y[end:-1:2])     # From end back to second element in reverse
 println(y[4:3])          # Empty subset
 z = y[:]                 # All elements (copy (not alias) of original vector)
-println(y[[4,2,4,3,3]])  # Slice by index
+
+# Slicing by arbitrary index vector
+println(y[[4,2,4,3,3,4,4]])  # Slice by index
+
+# Slicing by boolean array
 y[[true,false,true,false,true]]   # Slice by boolean array
 ```
 
 :::{.callout-tip title="Exercise"}
-Experiment more with slicing/indexing to make sure you get it, and what errors can occur. (As an example what happens if you index beyond the extent of the object?)
+Experiment more with slicing/indexing to make sure you get it, and what errors can occur. (As an example what happens if you index beyond the extent of the object?) See also Problems 2 and 3 on PS1.
 :::
 
-Note that the discussion of `fruits[len]` in Section 7 of Think Julia is incorrect.
+Note that the discussion of `fruits[len]` in Section 7 of *Think Julia* is incorrect.
 
 ### Arrays (i.e., lists)
 
@@ -401,11 +409,11 @@ A * A
 ```
 
 :::{.callout-tip title="Exercise"}
-What do you expect to happen if you try to do matrix multiplication with a matrix with a mix of reals and integers? What if an element is a string?
+What do you expect to happen if you try to do matrix multiplication with a matrix with a mix of reals and integers? What would you expect if an element is a string?
 :::
 
 
-Much more in a few weeks.
+Much more on linear algebra in a few weeks.
 
 ### More on vectorization
 
@@ -441,6 +449,7 @@ sum(A, dims = 2)
 Similar to Python. 
 
 ```{julia, comp}
+y = [1.0, 2.0, 2.5]
 ysq = [ w^2 for w in y ]
 xsqu = [ x^2 for x = 1:5 ]
 
@@ -487,7 +496,10 @@ x = Dict(["foo", "bar"] => 3, "tmp" => [2.1, 3.5], 7 => "weird")
 x[["foo", "bar"]]
 ind = 7
 x[ind]
+typeof(ind)
 ```
+
+It would be interesting to know how it's implemented that arbitrary objects can be keys. Perhaps using hashing?
 
 What do you think will happen here?
 
@@ -526,6 +538,11 @@ y,x = x,y
 x = (a=3, b=5, other="hello")
 x.b
 ```
+
+:::{.callout-note title="Functions with ! in their names"}
+What's the deal with the "!" in `setindex`? We'll see this more shortly, but functions that modify their inputs should have their name end in "!".
+:::
+
 
 What do you think will happen here?
 
@@ -592,7 +609,11 @@ lincoln.age
 
 We'll see much more on structs next week when we talk more about using types for robust code.
 
+Let's discuss how these are similar to and different from objects in object-oriented languages like Python, Java, and C++.
+
 ## Loops
+
+We'll illustrate for loop syntax by using Monte Carlo simulation to estimate $\pi$ by generating points in a square and then finding the number that are inside the unit circle. 
 
 ```{julia}
 #| eval: false
@@ -617,8 +638,6 @@ pi_estimate = 4 * in_circle / numThrows
 
 If you were using R or Python, what would the value of `xPos` be at the end of the loop execution?
 
-In Julia, variables defined in the loop are local variables accessible only in the scope of the loop (more on this soon). This avoids clutter in the global scope.
-
 ```{julia}
 #| eval: false
 xPos
@@ -626,6 +645,10 @@ xPos
 ```
 ERROR: UndefVarError: `xPos` not defined
 ```
+
+In Julia, variables defined in the loop are local variables accessible only in the scope of the loop (more on scoping soon). This avoids clutter in the global scope.
+
+
 
 :::{.callout-tip title="Exercise"}
 I used different naming conventions for my variables (`numThrows` and `in_circle`). Look online to see what the recommended style is. 
