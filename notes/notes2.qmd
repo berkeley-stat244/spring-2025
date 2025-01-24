@@ -24,7 +24,7 @@ This document is the second of a set of notes, this document focusing on memory,
 
 Given that, the document heavily relies on demos, with interpretation in some cases left to the reader.
 
-## Memory use and variable scope
+## Memory use
 
 ### Mutable objects
 
@@ -84,7 +84,7 @@ See if you can create a function that does not have "!" at the end of the name t
 :::
 
 
-## Memory use and copying
+### Memory use and copying
 
 We can use `===` to see if objects are identical. For mutable objects this involves looking at whether the data is stored at the same place in memory.
 
@@ -179,6 +179,38 @@ pointer_from_objref(y)
 There's a bit more info in the help for `pointer_from_objref`.
 
 
+### Pass by reference
+
+Julia uses pass by reference. If you pass a mutable object into a function and modify it, that affects the state of the object outside of the function; no local copy of the object is made. This is efficient in terms of copying and memory use, but it does not following functional programming principles.
+
+```{julia}
+function array_modifier(x)
+    push!(x, 12)
+    return Nothing
+end
+
+y = [1, 2, 3]
+array_modifier(y)
+y
+```
+
+We should instead define the function as `array_modifier!` to be consistent with Julia's syntax.
+
+
+```{julia}
+function array_modifier!(x)
+    push!(x, 12)
+    return Nothing
+end
+
+y = [1, 2, 3]
+array_modifier!(y)
+y
+```
+
+:::{.callout-note title="Using tuples to prevent side effects"}
+If we use a tuple as input to a function, we don't have to worry about the input being modified; any attempt at modification will throw an error.
+:::
 
 ### Example
 
@@ -210,7 +242,8 @@ Determine all the places where additional memory is allocated (including for any
 :::
 
 
-## Arrays and pointers
+
+### Arrays and pointers
 
 If we have an array made of numbers all of the same type, the values can be stored contiguously in memory.
 
@@ -250,39 +283,6 @@ x[1][1]
 Check your understanding by creating an array of matrices where each of the individual matrices are just pointers to the same underlying matrix. Modify the underlying matrix. Modify one of the matrices. See what happens.
 
 Side note: suppose `x` is a matrix. What's the difference between `[x, x]`, `[x x]`, and `[x; x]`?
-:::
-
-## Pass by reference
-
-Julia uses pass by reference. If you pass a mutable object into a function and modify it, that affects the state of the object outside of the function; no local copy of the object is made. This is efficient in terms of copying and memory use, but it does not following functional programming principles.
-
-```{julia}
-function array_modifier(x)
-    push!(x, 12)
-    return Nothing
-end
-
-y = [1, 2, 3]
-array_modifier(y)
-y
-```
-
-We should instead define the function as `array_modifier!` to be consistent with Julia's syntax.
-
-
-```{julia}
-function array_modifier!(x)
-    push!(x, 12)
-    return Nothing
-end
-
-y = [1, 2, 3]
-array_modifier!(y)
-y
-```
-
-:::{.callout-note title="Using tuples to prevent side effects"}
-If we use a tuple as input to a function, we don't have to worry about the input being modified; any attempt at modification will throw an error.
 :::
 
 ## Scope
@@ -495,7 +495,7 @@ using LinearAlgebra
 eigvals(A)
 ```
 
-### Let
+### `Let` blocks
 
 You can also use `let` to create a new scope:
 
