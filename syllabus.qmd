@@ -117,18 +117,7 @@ See the "how tos" in the left sidebar for tips on software installation and usag
 
 ### Course grades
 
-Grading will be based on a combination of your general participation (in class and on the discussion forum), completion of several problem sets, and some combination of in-class presentation(s) and a project. The presentation/project topics will be fairly flexible and will be determined based on my surveying of class participants and what you are interested in. I have a number of topics I'd like to see covered by student presentation but I am open to other ideas as well. Projects and in-class presentations can be on your own or in pairs. 
-
-**Tentatively**, I'm anticipating the following requirement for projects/presentations -- with each student selecting one of:
-
-  - an in-depth final project
-  - a short final project plus a presentation
-  - two presentations 
-  - a single presentation on a meaty topic 
-
-I'll need to think more about how that is adjusted if done in pairs. It may simply be an expectation of more in-depth work if a project or presentation is shared.
-
-I will give more details after the first week of class. I think we may want to cover debugging and testing on Thursday January 30, so there is more urgency on settling details there if you are interested in presenting on either of those.
+Grading will be based on a combination of your general participation (in class and on the discussion forum), completion of several problem sets, and either an in-class presentation on a topic or  a project. I have a number of topics I'd like to see covered by student presentation but I am open to other ideas as well. Projects and in-class presentations can be on your own or in pairs. 
 
 Grades will generally be As and Bs, unless I assess a lack of engagement on your part.
 
@@ -163,7 +152,7 @@ You should use Git to manage the code in your project. The result does not have 
 
 #### Presentations
 
-I'm planning for student presentations to be a core part of the content of the course. I have some specific ideas of topics that I think would be good, but I am also open to your ideas of topics you'd be excited to dive into and present.
+Student presentations will be a core part of the content of the course. I have some specific ideas of topics that I think would be good, but I am also open to your ideas of topics you'd be excited to dive into and present.
 
 I expect you to do a deep dive on the topic, and while I don't expect you to be an expert in a week or two, I do expect you to have done a some research and experimentation and pulled together a clear, in-depth presentation focused on examples/demonstration/code syntax, and be ready to answer questions from the class. I will discuss the focus/goal of the presentation/topic with the student(s) when the topic is chosen and then we'll have a quick interim "progress" discussion a few days before the presentation. I'm expecting the presentations would be 15-30 minutes, depending on the topic.
 
