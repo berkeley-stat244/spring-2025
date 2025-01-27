@@ -25,6 +25,7 @@ website:
         contents:
           - href: notes/notes1.qmd
           - href: notes/notes2.qmd
+          - href: notes/notes3.qmd
       - section: "Problem Sets"
         contents:
           - href: ps/ps1.qmd

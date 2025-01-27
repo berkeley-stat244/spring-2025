@@ -295,6 +295,7 @@ Julia uses lexical scoping, which means that lookup of non-local variables occur
 Experiment with the following cases and make sure you understand how the lookup / scoping is working. Predict the result **before** running the code.
 :::
 
+Case 1: Will the code print 3 or 7?
 
 ```{julia}
 #| eval: false
@@ -310,8 +311,12 @@ function f()
 end
 
 f() # what will happen?
+```
 
-## Case 2
+Case 2: Will the code print 3, 7, or 100?
+
+```{julia}
+#| eval: false
 x = 3
 function f2()
     print(x)
@@ -324,8 +329,12 @@ end
 
 x = 100
 f() # what will happen?
+```
 
-## Case 3
+Case 3: Will the code print 3, 7, or 100?
+
+```{julia}
+#| eval: false
 x = 3
 function f()
     function f2()
@@ -337,10 +346,12 @@ end
 
 x = 100
 f() # what will happen?
+```
 
+Case 4: Will the code print 3 or 100 or produce an error?
 
-
-## Case 4
+```{julia}
+#| eval: false
 x = 3
 function f()
     function f2()
@@ -355,7 +366,7 @@ f() # what will happen?
 
 ### Closures
 
-Here's a tricky example:
+Here's a somewhat tricky scoping example:
 
 ```{julia}
 #| eval: false
@@ -379,7 +390,7 @@ Try to understand what is going on with `fun_constructor`. What do you expect `m
 Extra: modify `fun_constructor` in such a way that you can determine if `g` can modify `y` in the enclosing scope.
 :::
 
-This is an example of a *closure*, a useful concept in functional programming that provides functionality similar to object-oriented programming.
+The above is an example of a *closure*, a useful concept in functional programming that provides functionality similar to object-oriented programming.
 `y` is "bound" up/captured in the enclosing scope of `g`/`myfun`.
 
 

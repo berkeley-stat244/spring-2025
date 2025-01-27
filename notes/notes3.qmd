@@ -1,0 +1,453 @@
+---
+title: "Notes 3: Types and dispatch"
+author: "Chris Paciorek"
+date: "2025-01-28"
+format:
+  pdf:
+    documentclass: article
+    margin-left: 30mm
+    margin-right: 30mm
+    toc: true
+  html:
+    theme: cosmo
+    css: ../assets/styles.css
+    toc: true
+    code-copy: true
+    code-block-background: true
+engine: julia-1.10
+ipynb-shell-interactivity: all
+---
+
+## Introduction
+
+This document is the third of a set of notes, this document focusing on types and method dispatch based on types. The notes are not meant to be particularly complete in terms of useful functions (Google and LLMs can now provide that quite well), but rather to introduce the language and consider key programming concepts in the context of Julia.
+
+Given that, the document heavily relies on demos, with interpretation in some cases left to the reader.
+
+## Composite types (structs)
+
+A struct is a collection of named fields, useful for holding information of a particular structure.
+
+Here's a struct meant to contain information about a Gaussian process, with each element in the type also having its own declared type (though that is not required).
+
+Objects of the type are constructed by calling the name of the type with the field values, in order.
+
+```{julia}
+struct GaussianProcess
+  x::Vector
+  covFun::Function
+  params
+end
+
+function expCov(dists, params)
+   return params[2]*exp.(-dists / params[1])
+end
+
+myGP = GaussianProcess([0:0.01:1;], expCov, (1, .5));
+myGP.params
+```
+
+It appears one has to know the exact order of the inputs to the constructor and give them by position rather than by name.
+
+### Struct constructors
+
+We can create an explicit (*outer*) constructor that gives some flexibility in terms of what inputs the user can provide.
+
+```{julia}
+function ExpGaussianProcess(x, params)
+   GaussianProcess(x, expCov, params)
+end
+
+myGP = ExpGaussianProcess([0:0.01:1;], (1, .5));
+```
+
+We can use an *inner* constructor to check inputs. This is a bad example because by defining types for the variables (as seen in the original definition of the `GaussianProcess` struct), this can be handled automatically by Julia.
+
+```{julia}
+#| error: true
+struct GaussianProcess2
+  x
+  covFun
+  params
+  ## Define the constructor using function creation shorthand and if-else shorthand:
+  GaussianProcess2(x, covFun, params) = isa(covFun, Function) ?
+                   new(x, covFun, params) : error("covFun needs to be a function")
+end
+
+myGP = GaussianProcess2([0:0.01:1;], expCov, (1, .5));
+
+myGP = GaussianProcess2([0:0.01:1;], 3, (1, .5))
+```
+
+::: {.callout-warning title="Types can't be redefined"}
+We can't redefine a struct (hence my use of `GaussianProcess2` above). I think this has to do with the fact that this would break methods that have been specialized to the type.
+:::
+
+
+## Type declarations
+
+Type declarations are a good and easy way to make our code robust without including a bunch of manual assertions.
+
+## Type declarations for functions
+
+We can declare types for function arguments. 
+
+```{julia}
+function mysum(x::Float64, y::Float64)
+  return x+y
+end
+
+mysum(3.5, 4.8)
+```
+```{julia}
+#| error: true
+mysum(3, 4.8)
+```
+
+```{julia}
+#| error: true
+mysum("hello", 4.8)
+```
+
+
+### Type declarations with structs
+
+```{julia, struct-with-type}
+#| error: true
+using Random, Distributions, LinearAlgebra, Plots
+
+function simulate(gp::GaussianProcess)
+  n = length(gp.x)
+  dists = abs.(gp.x .- gp.x')
+  cov = gp.covFun(dists, gp.params)
+  L = cholesky(cov).L
+  y = L * rand(Normal(), n)
+  return y
+end
+
+Random.seed!(123)
+myGP = GaussianProcess([0:0.01:1;], expCov, (1, .5));
+f = simulate(myGP);
+
+plot(myGP.x, f)   
+
+tmp = simulate(7) 
+```
+
+
+### Type unions and abstract types
+
+```{julia, union-types}
+IntOrFloat = Union{Float16, Float32, Float64, Int16, Int32, Int64}
+function mysum(x::IntOrFloat, y::IntOrFloat)
+  return x+y
+end
+
+mysum(3.5, 4.8)
+mysum(3, 4.8)
+typeof(mysum(3, 4))
+```
+```{julia}
+#| error: true
+mysum("hello", 4.8)
+```
+
+
+Alternatively (and better as it's provided as part of the language), there is already a *abstract* type of 
+ints and floats. Abstract types help with having a hierarchy of types (more later).
+
+```{julia}
+function mysum(x::Real, y::Real)
+  return x+y
+end
+
+mysum(3.5, 4.8)
+mysum(3, 4.8)
+mysum(3, 4)
+typeof(mysum(3, 4))
+```
+```{julia}
+#| error: true
+mysum("hello", 4.8)
+```
+
+
+### Type declarations for function output
+
+```{julia, type-output}
+function mysum2(x::Real, y::Real)::Float64
+  return x+y
+end
+
+typeof(mysum2(3, 4))
+```
+
+What do you think this will happen if we do this?
+
+```{julia}
+#| eval: false
+function mysum3(x::Real, y::Real)::String
+  return x+y
+end
+
+mysum3(3, 4)
+```
+
+### Types in arrays
+
+We've already seen that one can create arrays of heterogeneous elements, but one can't modify a homogeneous array in a way that would make it heterogeneous.
+
+::: {.callout-tip title="Exercise"}
+ - Experiment with arrays that contain missing values (via `missing`). What happens with computations?
+ - What seems to be the difference between `missing` and `nothing`?
+:::
+
+
+### More on structs and constructors
+
+Here's a slightly more involved example of a struct that ties together some of what we've seen so far.
+(For use later on, we'll make it a *mutable* struct so we can modify the struct elements.)
+
+```{julia}
+mutable struct Person
+  name::String
+  age::Real
+  function Person(name::String, age::Real)
+    @assert(age < 130, "Age exceeds human lifespan.")
+    new(name, age)
+  end
+end
+
+reagan = Person("Ronald Reagan", 120)
+```
+
+These invocations will both fail.
+
+```{julia}
+#| error: true
+lincoln = Person("Abraham Lincoln", "hello")
+```
+
+```{julia}
+#| error: true
+lincoln = Person("Abraham Lincoln", 200)
+```
+
+## Multiple dispatch
+
+We can define different versions of functions or operators (these are called *methods*) that are used depending on the input types.
+
+### Functions and methods
+
+The first time we define a method, it creates the generic function and initial method. When we define further methods, they are added to the existing function.
+
+```{julia}
+function test(x)
+  println("In test, called with arbitrary input: ", x)
+end
+
+function test(x::String)
+  println("In test, called with a string: ", x)
+end
+
+test(7)
+```
+```{julia}
+test("hello")
+```
+
+It's called *multiple* dispatch because the dispatching can depend on multiple arguments and not just the first, which is not generally the case in other languages.
+
+### Operator overloading is multiple dispatch
+
+Multiple dispatch is basically what is called "overloading" in other languages.
+
+Let's illustrate multiple dispatch with a mutable struct so that we can modify the fields of the struct.
+
+```{julia}
+import Base.+
+
+function +(person::Person, incr::Real)
+  person.age += incr
+  return person
+end
+
+barack = Person("Barack Obama", 60)
+barack + 3;
+barack
+```
+
+Now we'll set up another `+` method for adding two `Person`s.
+
+```{julia}
+struct Partnership
+  person1::Person
+  person2::Person
+  year_formed::Int
+end
+
+function +(personA::Person, personB::Person)::Partnership
+  return Partnership(personA, personB, 1990)
+end
+
+michelle = Person("Michelle Obama", 60)
+
+obamas = barack + michelle
+```
+
+
+We've now added a couple more `+` methods to the large number already existing in Julia's `Base` module/library.
+
+Note the similarity to object-oriented programming, but the methods are not part of classes.
+
+::: {.callout-tip title="Extensibility"}
+This an example of *extensibility*. Julia's core functionality will work with user-defined objects.
+:::
+
+
+### Show methods
+
+The same idea extends to other core Julia functions/functionality, such as printing objects.
+
+Here we'll overload the Base `show` function. Before we do so, let's see what existing `show` methods there are:
+
+```{julia}
+Base.show
+# methods(Base.show)
+
+function Base.show(io::IO, gp::GaussianProcess)
+  println("A Gaussian process defined on a grid from $(gp.x[1]) to $(gp.x[end]).")
+end
+
+print(myGP)
+myGP  
+```
+
+## Subtyping
+
+Types can relate to each other. Generally in Julia one groups types as subtypes of an *abstract* type whose purpose is to relate the subtypes.  This is similar to class inheritance in object-oriented programming.
+
+
+```{julia}
+abstract type GeneralPerson end
+
+mutable struct President <: GeneralPerson
+    name::String
+    age::Real
+    inauguration_year::Int64
+end
+
+mutable struct Employee <: GeneralPerson
+    name::String
+    age::Real
+    employer::String
+end
+```
+
+The benefit is that we can define a single function/operator that
+works with multiple subtypes.
+
+```{julia}
+# These will work with both Employee and President
+function +(person::GeneralPerson, incr::Real)
+  person.age += incr
+  return person
+end
+
+function Base.show(io::IO, person::GeneralPerson)
+  println("A person of age $(person.age).")
+end
+
+macron = President("Emmanuel Macron", 48, 2017)
+```
+```{julia}
+macron + 1
+```
+
+Well that worked as an illustration, but in this case it's not clear that `macron` is a special kind of person based on the printout.
+
+::: {.callout-tip title="Use of `:`"}
+Note that `:` appears in various ways related to Julia code structure:
+```{julia}
+#| eval: false
+x::Real        # type declaration
+Int64 <: Real  # type hierarchy
+:x             # manipulating code in meta programming
+```
+:::
+
+### Abstract types vs. concrete types
+
+The purpose of abstract types is to organize types into a hierarchy. In principle, one doesn't create instances of an abstract type (hence "abstract"), only of a concrete type, and yet, one can do `Real(4)` and `Number(4)`, even though those are abstract types, so I'm not fully understanding something here.
+
+
+### Type ordering
+
+We can check if a type is a subtype like this:
+
+```{julia}
+Int64 <: Real
+Real <: Number
+Number <: Any
+
+Employee <: GeneralPerson
+```
+```{julia}
+#| eval: false
+Employee <: Float64
+```
+```
+false
+```
+```{julia}
+#| eval: false
+GeneralPerson >: Employee
+```
+```
+false
+```
+
+### Nested subtypes
+
+For reasons not entirely clear to me, one can't have subtypes of non-abstract (concrete) types.
+
+Here's what [the Julia manual](https://docs.julialang.org/en/v1/manual/types/#man-types) has to say: "It turns out that being able to inherit behavior is much more important than being able to inherit structure, and inheriting both causes significant difficulties in traditional object-oriented languages."
+
+So the idea seems to be that there's not much point to having one type that inherits the fields (structure) of another type.
+
+```{julia}
+#| error: true
+mutable struct Electrician <: Employee
+    name::String
+    age::Real
+    employer::String
+    times_electrocuted::Int
+end
+```
+
+
+###  Parametric types
+
+There's even more flexibility in terms of types, if we parameterize types.
+
+We can use `T` as a parametric type that accommodates various types (in this case only numeric ones).
+
+This is not a particularly realistic example, but it enforces that both the `age` and `inauguration_year` have the same numeric type.
+
+```{julia}
+mutable struct USPresident{T <: Real} <: GeneralPerson
+    name::String
+    age::T
+    inauguration_year::T
+end
+
+USPresident("Grant", 125, 1868)
+```
+```{julia}
+USPresident("Grant", 125.3, 1868.0)
+```
+
+```{julia}
+#| error: true
+USPresident("Grant", 125.3, 1868);
+```
