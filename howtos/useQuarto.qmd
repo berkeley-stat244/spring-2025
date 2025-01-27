@@ -56,6 +56,7 @@ The Jupyter engine requires that the IJulia kernel installed -- see the [howto o
 To use a specific kernel, you can replace `engine: jupyter` with `jupyter: <kernelname>`, where `<kernelname>` is the name of the Jupyter kernel to be used. On the SCF, this could be `jupyter: julia-1.10` as there is a kernel named `julia-1.10`.
 
 Some downsides of this engine are:
+
   - All output from a chunk is printed after the chunk rather than immediately after the line of code causing the output.
   - Only the output from the last line of code in a chunk is printed out (except if `print()` is used explicitly). 
 
@@ -66,6 +67,7 @@ There is also now a [Julia engine for Quarto](https://quarto.org/docs/computatio
 The rendering uses the `QuartoNotebookRunner.jl` package. It will supposedly install it in an isolated way, and that worked on my laptop, but I had package version incompatibilities on the SCF.
 
 Some downsides of this engine, as with the Jupyter engine, are:
+
   - All output from a chunk is printed after the chunk rather than immediately after the line of code causing the output.
   - Only the output from the last line of code in a chunk is printed out (except if `print()` is used explicitly). 
 
@@ -76,10 +78,12 @@ The knitr engine requires that you have R installed on your computer, with the `
 To use it, simply have `engine: knitr` in the metadata.
 
 Some upsides of this engine involve having the output from the code chunks print out nicely:
+
   - Output from a chunk is interspersed with the line of code creating the output.
   - Output from all lines is printed out.
 
 However, I have had some difficulties with the knitr engine, including
+
   - Errors when trying to have plots included in the output.
   - Having output from simply invoking an object name (e.g., `x` rather than `print(x)`) sometimes appear in the terminal/console  rather than in the rendered document.
   - The `#| error: true` chunk execution option does not seem to work (I've filed a bug report about this.).
