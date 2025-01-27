@@ -339,20 +339,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="jupyter-engine">Jupyter engine</h4>
 <p>The Jupyter engine requires that the IJulia kernel installed – see the <a href="./accessJulia.html">howto on accessing Julia</a>.</p>
 <p>To use a specific kernel, you can replace <code>engine: jupyter</code> with <code>jupyter: &lt;kernelname&gt;</code>, where <code>&lt;kernelname&gt;</code> is the name of the Jupyter kernel to be used. On the SCF, this could be <code>jupyter: julia-1.10</code> as there is a kernel named <code>julia-1.10</code>.</p>
-<p>Some downsides of this engine are: - All output from a chunk is printed after the chunk rather than immediately after the line of code causing the output. - Only the output from the last line of code in a chunk is printed out (except if <code>print()</code> is used explicitly).</p>
+<p>Some downsides of this engine are:</p>
+<ul>
+<li>All output from a chunk is printed after the chunk rather than immediately after the line of code causing the output.</li>
+<li>Only the output from the last line of code in a chunk is printed out (except if <code>print()</code> is used explicitly).</li>
+</ul>
 </section>
 <section id="julia-engine" class="level4">
 <h4 class="anchored" data-anchor-id="julia-engine">Julia engine</h4>
 <p>There is also now a <a href="https://quarto.org/docs/computations/julia.html#using-the-julia-engine">Julia engine for Quarto</a>. To use it, simply have <code>engine: julia</code> in the metadata.</p>
 <p>The rendering uses the <code>QuartoNotebookRunner.jl</code> package. It will supposedly install it in an isolated way, and that worked on my laptop, but I had package version incompatibilities on the SCF.</p>
-<p>Some downsides of this engine, as with the Jupyter engine, are: - All output from a chunk is printed after the chunk rather than immediately after the line of code causing the output. - Only the output from the last line of code in a chunk is printed out (except if <code>print()</code> is used explicitly).</p>
+<p>Some downsides of this engine, as with the Jupyter engine, are:</p>
+<ul>
+<li>All output from a chunk is printed after the chunk rather than immediately after the line of code causing the output.</li>
+<li>Only the output from the last line of code in a chunk is printed out (except if <code>print()</code> is used explicitly).</li>
+</ul>
 </section>
 <section id="knitr-engine-via-r" class="level4">
 <h4 class="anchored" data-anchor-id="knitr-engine-via-r">Knitr engine (via R)</h4>
 <p>The knitr engine requires that you have R installed on your computer, with the <code>rmarkdown</code> R package installed.</p>
 <p>To use it, simply have <code>engine: knitr</code> in the metadata.</p>
-<p>Some upsides of this engine involve having the output from the code chunks print out nicely: - Output from a chunk is interspersed with the line of code creating the output. - Output from all lines is printed out.</p>
-<p>However, I have had some difficulties with the knitr engine, including - Errors when trying to have plots included in the output. - Having output from simply invoking an object name (e.g., <code>x</code> rather than <code>print(x)</code>) sometimes appear in the terminal/console rather than in the rendered document. - The <code>#| error: true</code> chunk execution option does not seem to work (I’ve filed a bug report about this.).</p>
+<p>Some upsides of this engine involve having the output from the code chunks print out nicely:</p>
+<ul>
+<li>Output from a chunk is interspersed with the line of code creating the output.</li>
+<li>Output from all lines is printed out.</li>
+</ul>
+<p>However, I have had some difficulties with the knitr engine, including</p>
+<ul>
+<li>Errors when trying to have plots included in the output.</li>
+<li>Having output from simply invoking an object name (e.g., <code>x</code> rather than <code>print(x)</code>) sometimes appear in the terminal/console rather than in the rendered document.</li>
+<li>The <code>#| error: true</code> chunk execution option does not seem to work (I’ve filed a bug report about this.).</li>
+</ul>
 
 
 </section>
