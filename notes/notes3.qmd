@@ -3,18 +3,13 @@ title: "Notes 3: Types and dispatch"
 author: "Chris Paciorek"
 date: "2025-01-28"
 format:
-  pdf:
-    documentclass: article
-    margin-left: 30mm
-    margin-right: 30mm
-    toc: true
   html:
     theme: cosmo
     css: ../assets/styles.css
     toc: true
     code-copy: true
     code-block-background: true
-engine: julia-1.10
+engine: jupyter
 ipynb-shell-interactivity: all
 ---
 
@@ -128,9 +123,14 @@ end
 Random.seed!(123)
 myGP = GaussianProcess([0:0.01:1;], expCov, (1, .5));
 f = simulate(myGP);
+```
 
+```{julia}
 plot(myGP.x, f)   
+```
 
+```{julia}
+#| error: true
 tmp = simulate(7) 
 ```
 
