@@ -594,7 +594,7 @@ Question
 </div>
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pointer_from_objref</span>(y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Ptr{Nothing} @0x00007fb7272f5900</code></pre>
+<pre><code>Ptr{Nothing} @0x00007f2682837a78</code></pre>
 </div>
 </div>
 <p>There’s a bit more info in the help for <code>pointer_from_objref</code>.</p>
@@ -771,19 +771,19 @@ Exercise
 <div class="cell">
 <div class="sourceCode cell-code" id="cb90"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pointer_from_objref</span>(devs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Ptr{Nothing} @0x00007fb726694010</code></pre>
+<pre><code>Ptr{Nothing} @0x00007f267f0cc010</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb92"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pointer_from_objref</span>(x[<span class="fl">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Ptr{Nothing} @0x00007fb726694010</code></pre>
+<pre><code>Ptr{Nothing} @0x00007f267f0cc010</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb94"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>devs[<span class="fl">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>-0.015438367461057737</code></pre>
+<pre><code>0.13862731447680088</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb96"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>x[<span class="fl">1</span>][<span class="fl">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>-0.015438367461057737</code></pre>
+<pre><code>0.13862731447680088</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb98"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>devs[<span class="fl">1</span>] <span class="op">=</span> <span class="fl">3.0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -952,7 +952,7 @@ Exercise: Lexical scoping
 </div>
 </div>
 <p>This is like Python. Also note the difference in behavior compared to being able to modify the captured variable in the closure without any explicit syntax.</p>
-<p>Interestingly, this doesn’t work to be able to access both a local and global variable of the same name.</p>
+<p>Interestingly, this doesn’t work to be able to access both a local and global variable of the same name. Nor does it work in Python, but it does work in R. Clearly there is some processing that determines assignment operations before the code in the function body is evaluated.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb115"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> <span class="fl">100</span></span>
 <span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -996,7 +996,7 @@ Exercise: Lexical scoping
 <div class="cell">
 <div class="sourceCode cell-code" id="cb123"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(i)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<pre><code>ERROR: UndefVarError: `tmp` not defined</code></pre>
+<pre><code>ERROR: UndefVarError: `i` not defined</code></pre>
 <p>Scoping gets rather <a href="https://docs.julialang.org/en/v1/manual/variables-and-scoping/#scope-of-variables">more complicated</a>.</p>
 <p>The use of <code>using</code> adds variables from a package/module to the current scope.</p>
 <div class="cell">
@@ -1010,9 +1010,9 @@ Exercise: Lexical scoping
 <span id="cb127-3"><a href="#cb127-3" aria-hidden="true" tabindex="-1"></a><span class="fu">eigvals</span>(A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>3-element Vector{Float64}:
- -0.19177382716220373
-  0.3502382698335958
-  1.4718500944668516</code></pre>
+ -0.37070516708703843
+ -0.35038525717381275
+  1.5056321634365166</code></pre>
 </div>
 </div>
 </section>
