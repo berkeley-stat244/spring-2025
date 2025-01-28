@@ -418,7 +418,7 @@ print(x)
 
 This is like Python. Also note the difference in behavior compared to being able to modify the captured variable in the closure without any explicit syntax.
 
-Interestingly, this doesn't work to be able to access both a local and global variable of the same name.
+Interestingly, this doesn't work to be able to access both a local and global variable of the same name. Nor does it work in Python, but it does work in R. Clearly there is some processing that determines assignment operations before the code in the function body is evaluated.
 
 ```{julia}
 #| eval: false
@@ -484,7 +484,7 @@ ERROR: UndefVarError: `tmp` not defined
 print(i)
 ```
 ```
-ERROR: UndefVarError: `tmp` not defined
+ERROR: UndefVarError: `i` not defined
 ```
 
 Scoping gets rather [more complicated](https://docs.julialang.org/en/v1/manual/variables-and-scoping/#scope-of-variables).

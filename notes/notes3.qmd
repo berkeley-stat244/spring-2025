@@ -144,7 +144,11 @@ function mysum(x::IntOrFloat, y::IntOrFloat)
 end
 
 mysum(3.5, 4.8)
+```
+```{julia}
 mysum(3, 4.8)
+```
+```{julia}
 typeof(mysum(3, 4))
 ```
 ```{julia}
@@ -162,8 +166,14 @@ function mysum(x::Real, y::Real)
 end
 
 mysum(3.5, 4.8)
+```
+```{julia}
 mysum(3, 4.8)
+```
+```{julia}
 mysum(3, 4)
+```
+```{julia}
 typeof(mysum(3, 4))
 ```
 ```{julia}
@@ -218,7 +228,7 @@ mutable struct Person
   end
 end
 
-reagan = Person("Ronald Reagan", 120)
+biden = Person("Joe Biden", 82)
 ```
 
 These invocations will both fail.
@@ -262,7 +272,7 @@ It's called *multiple* dispatch because the dispatching can depend on multiple a
 
 Multiple dispatch is basically what is called "overloading" in other languages.
 
-Let's illustrate multiple dispatch with a mutable struct so that we can modify the fields of the struct.
+Let's illustrate multiple dispatch with our mutable `Person` struct.
 
 ```{julia}
 import Base.+
@@ -366,15 +376,6 @@ macron + 1
 
 Well that worked as an illustration, but in this case it's not clear that `macron` is a special kind of person based on the printout.
 
-::: {.callout-tip title="Use of `:`"}
-Note that `:` appears in various ways related to Julia code structure:
-```{julia}
-#| eval: false
-x::Real        # type declaration
-Int64 <: Real  # type hierarchy
-:x             # manipulating code in meta programming
-```
-:::
 
 ### Abstract types vs. concrete types
 
@@ -387,25 +388,34 @@ We can check if a type is a subtype like this:
 
 ```{julia}
 Int64 <: Real
+```
+```{julia}
 Real <: Number
+```
+```{julia}
 Number <: Any
-
+```
+```{julia}
 Employee <: GeneralPerson
 ```
 ```{julia}
-#| eval: false
 Employee <: Float64
 ```
-```
-false
-```
+
 ```{julia}
-#| eval: false
 GeneralPerson >: Employee
 ```
+
+
+::: {.callout-tip title="Use of `:`"}
+Note that `:` appears in various ways related to Julia code structure:
+```{julia}
+#| eval: false
+x::Real        # type declaration
+Int64 <: Real  # type hierarchy
+:x             # manipulating code in meta programming
 ```
-false
-```
+:::
 
 ### Nested subtypes
 
