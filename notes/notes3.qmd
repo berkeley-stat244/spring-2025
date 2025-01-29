@@ -3,6 +3,11 @@ title: "Notes 3: Types and dispatch"
 author: "Chris Paciorek"
 date: "2025-01-28"
 format:
+  pdf:
+    documentclass: article
+    margin-left: 30mm
+    margin-right: 30mm
+    toc: true
   html:
     theme: cosmo
     css: ../assets/styles.css
@@ -305,6 +310,7 @@ michelle = Person("Michelle Obama", 60)
 obamas = barack + michelle
 ```
 
+That's a decent illustration of the power of multiple dispatch but it's awkward to hard-code in the "1990" in this case. If we were using multiple dispatch with a function, then we wouldn't be restricted to having two arguments.
 
 We've now added a couple more `+` methods to the large number already existing in Julia's `Base` module/library.
 
