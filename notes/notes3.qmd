@@ -49,6 +49,11 @@ myGP.params
 
 It appears one has to know the exact order of the inputs to the constructor and give them by position rather than by name.
 
+
+::: {.callout-warning title="Naming of types"}
+Type names (including structs) are generally capitalized. One nice thing is that it helps distinguish constructors (e.g., `GaussianProcess`) from regular functions.
+:::
+
 ### Struct constructors
 
 We can create an explicit (*outer*) constructor that gives some flexibility in terms of what inputs the user can provide.
@@ -339,6 +344,8 @@ print(myGP)
 myGP  
 ```
 
+This is similar to combining the `__str__` and `__repr__` "dunder" (double underscore) methods for Python classes.
+
 ## Subtyping
 
 Types can relate to each other. Generally in Julia one groups types as subtypes of an *abstract* type whose purpose is to relate the subtypes.  This is similar to class inheritance in object-oriented programming.
@@ -381,7 +388,7 @@ macron + 1
 ```
 
 Well that worked as an illustration, but in this case it's not clear that `macron` is a special kind of person based on the printout.
-
+So we probably would want special `show` methods for the concrete types.
 
 ### Abstract types vs. concrete types
 
@@ -419,17 +426,17 @@ Note that `:` appears in various ways related to Julia code structure:
 #| eval: false
 x::Real        # type declaration
 Int64 <: Real  # type hierarchy
-:x             # manipulating code in meta programming
+:x             # representing a variable as code in meta programming
 ```
 :::
 
 ### Nested subtypes
 
-For reasons not entirely clear to me, one can't have subtypes of non-abstract (concrete) types.
+One can't have subtypes of non-abstract (concrete) types.
 
 Here's what [the Julia manual](https://docs.julialang.org/en/v1/manual/types/#man-types) has to say: "It turns out that being able to inherit behavior is much more important than being able to inherit structure, and inheriting both causes significant difficulties in traditional object-oriented languages."
 
-So the idea seems to be that there's not much point to having one type that inherits the fields (structure) of another type.
+So the idea seems to be that there's not much point to having one type that inherits the fields (structure) of another type. Though I'm not sure what the difficulties are in inheriting both.
 
 ```{julia}
 #| error: true

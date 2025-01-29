@@ -1,0 +1,548 @@
+---
+title: "Notes 4: Managing Julia"
+author: "Chris Paciorek"
+date: "2025-01-28"
+format:
+  pdf:
+    documentclass: article
+    margin-left: 30mm
+    margin-right: 30mm
+    toc: true
+  html:
+    theme: cosmo
+    css: ../assets/styles.css
+    toc: true
+    code-copy: true
+    code-block-background: true
+engine: jupyter
+ipynb-shell-interactivity: all
+---
+
+## Introduction
+
+This document is the fourth of a set of notes, this document focusing on managing and interacting with Julia, including working with and creating Julia packages. The notes are not meant to be particularly complete in terms of useful functions (Google and LLMs can now provide that quite well), but rather to introduce the language and consider key programming concepts in the context of Julia.
+
+Given that, the document heavily relies on demos, with interpretation in some cases left to the reader.
+
+## Style guide
+
+Some highlights from the [Julia style guide](https://docs.julialang.org/en/v1/manual/style-guide/) include:
+
+ - 4 spaces per indentation level
+ - Append `!` to names of functions that modify inputs. Mutated input(s) should appear first in the arguments.
+ - Use capitalized/UpperCamelCase type and module names.
+ - Use lower-case squashed names (with underscores/snake_case as needed) for function names (e.g., `isequal` or possibly `is_equal`).
+ - Use `isa` and `<:` rather than `==`.
+ - For hard-coded numbers, use `Int`s rather than `Float`s for integer-valued numbers, e.g., `2 * x` rather than `2.0 * x`. (The latter will unnecessarily force conversion to `Float` when `x` is an `Int`.)
+
+## File operations (I/O)
+
+Here are some basic examples of reading data from files. 
+
+```{julia}
+filename = joinpath("..", "data", "cpds.csv")
+lines = readlines(filename)
+
+using CSV, DataFrames
+
+data = CSV.read(filename, DataFrame);
+typeof(data.year)
+typeof(data.country)
+```
+
+## Packages
+
+A package is the way that Julia code is distributed as a bundle of functionality. It contains source code files, tests, documentation, and metadata (e.g., about dependence on other packages).
+
+### Using packages
+
+We can make variables/functions from packages  available with either `using` or `import`. `using` brings all the variables into the current namespace, while `import` makes them available via `module.variable`. So `import` is cleaner and safer in terms of name conflicts.
+
+```{julia}
+#| error: true
+A = rand(3, 3)
+eigvals(A)
+
+import LinearAlgebra
+eigvals(A)
+```
+
+```{julia}
+LinearAlgebra.eigvals(A)
+
+using LinearAlgebra
+eigvals(A)
+```
+
+If we want to access variables/functions from a file, we can use `include`, which will evaluate the file contents in the global scope.
+
+```{julia}
+include("linecount.jl")
+linecount("notes4.qmd")
+```
+
+### Installing and managing packages on your system
+
+There's a lot of detail in this section. It's not critical to absorb it at this point, but it's here for when you need it.
+In part I went into detail as I was trying to understand the details myself.
+
+The examples below show how things work on the SCF Linux machines, but the situation should be similar on your personal machine.
+
+#### Depots
+
+A depot is where installed packages, projects/environments, and various other things are stored.
+
+You can see the various depots via
+
+```{julia}
+Base.DEPOT_PATH
+```
+
+#### Package installation locations
+
+Julia will look in various locations for packages that are available to be used. The locations can be seen via
+
+```{julia}
+Base.load_path()
+```
+
+Note that this includes the standard library, the active project, and (in some cases) a system project.
+
+Julia comes with some packages pre-installed. These include `LinearAlgebra`, `Distributed`, `Random`, and some others.
+
+You can see them in the `stdlib` directory in the main system depot, e.g.,
+
+```{bash}
+ls /usr/local/linux/julia-1.10.4/share/julia/stdlib/v1.10/
+```
+
+Packages that you (or a system administrator) install will be in the `packages` subdirectory of the depots.
+
+For example, for packages you install:
+
+```{bash}
+ls ~/.julia/packages
+```
+
+In some cases (probably not on your personal machine) there will be system-installed packages:
+
+```{bash}
+ls /usr/local/linux/julia-1.10.4/share/julia/packages
+```
+
+As you'd expect, a given package will have various versions, and multiple versions can be installed at the same time.
+
+```{bash}
+grep version ~/.julia/packages/BenchmarkTools/*/Project.toml
+```
+
+In general, Julia will avoid installing multiple copies of the same package version in different locations on a machine/system. 
+
+#### Precompilation
+
+Julia will often precompiled packages. This is separate from Just-in-time (JIT) compilation of code. I have not had a chance to understand what the precompilation is doing. 
+
+### Projects/environments
+
+A *project* (or *environment*) defines a set of packages and their versions. An important aspect of this is reproducibility.
+
+The `Project.toml` file for a project gives high-level information about a project, including the direct package dependencies.
+
+```{bash}
+#| eval: false
+cat ~/.julia/environments/v1.10/Project.toml
+```
+
+The `Manifest.toml` file gives the detailed dependency information, including package versions for all direct and indirect package dependencies.
+
+```{bash}
+#| eval: false
+cat ~/.julia/environments/v1.10/Manifest.toml
+```
+
+These files can be handled via version control to ensure reproducibility.
+
+As noted previously, multiple projects can make use of the same installed package version.
+
+
+### `Pkg`: the Julia package manager
+
+The package manager allows you to activate projects and add packages to projects, among other things.
+
+You can use the package manager either in the `Pkg` REPL by pressing `]`, or by calling the `Pkg` API via `Pkg.`, after `using Pkg`.
+
+Here we'll use the API as I think that makes the demo clearer.
+
+#### Activating a project
+
+Anytime you use Julia, you'll be working in the context of a project. By default this will be your default project, which is located at `~/.julia/environments/<version>`.
+
+```{julia}
+using Pkg
+
+Base.active_project()
+Pkg.status()
+```
+
+We can activate (and create if needed) a project:
+
+```{julia}
+Pkg.activate("MyNewProject")
+Pkg.status()
+```
+
+#### Adding packages to a project
+
+Before you can invoke `using` or `import` to access a package for the first time in the context of a project, you'll need to "add" the package to the project (but see caveats in the next section).
+
+```{julia}
+using Pkg
+Pkg.add("BenchmarkTools")
+# Or to add a specific version:
+# Pkg.add(name = "BenchmarkTools", version = "1.5.0")
+using BenchmarkTools
+```
+
+Julia will prompt you to add a package if it's not part of a project. And if the version of the package is not installed anywhere on your system, it will download and install it (to `~/.julia/packages`). Information about what packages/versions are available and where they are on the internet is contained in a *registry*.
+
+You can see the packages in a project:
+
+```{julia}
+]st
+```
+
+### Isolated projects
+
+I don't fully understand the reasoning, but if you activate a project, you still have access to packages from your default project and (if it exists) the system default project. So this seems to make the project not fully isolated. According to the Julia docs, this is because those default projects are *shared environments*.
+
+In the following, note that I never added `JSON` to the active project, but it's accessible from my default project.
+
+```{julia}
+Base.load_path()
+using JSON
+```
+
+So good practice when trying to isolate a project is probably to use `Pkg.add` to add any packages you use to your project, rather than relying on those packages being available from elsewhere on the load path. Alternatively you may want to avoid adding packages to the default project entirely.
+
+::: {.callout-tip title="Exercise"}
+Create a new project. Add some of the packages that we've used so far to the project (e.g, `Random`, `Distributions`). Figure out where the packages are installed on your filesystem.
+:::
+
+## Creating packages
+
+A package is the way of distributing additional Julia functionality. It generally contains modules (containing code), tests, and documentation. You can also register your package to the [Julia General Registry](https://github.com/JuliaRegistries/General), so that it is easily available via `Pkg.add`.
+
+### Creating your package
+
+The Julia documentation provides a [nice overview of creating a package](https://julialang.org/contribute/developing_package/).
+
+
+```{julia}
+#| eval: false
+using PkgTemplates
+
+t = Template(;
+           user="paciorek",
+           authors=["Christopher Paciorek"],
+           plugins=[
+               License(name="MIT"),
+               Git(),
+               GitHubActions(),
+           ],
+)
+
+t("CPpkg") 
+```
+
+Running `t(CPpkg)` produces this output, indicating what is happening on the filesystem:
+
+```
+julia> t("CPpkg")
+[ Info: Running prehooks
+[ Info: Running hooks
+  Activating project at `~/.julia/dev/CPpkg`
+  No Changes to `~/.julia/dev/CPpkg/Project.toml`
+  No Changes to `~/.julia/dev/CPpkg/Manifest.toml`
+Precompiling project...
+  1 dependency successfully precompiled in 1 seconds
+        Info We haven't cleaned this depot up for a bit, running Pkg.gc()...
+      Active manifest files: 3 found
+      Active artifact files: 139 found
+      Active scratchspaces: 5 found
+     Deleted 5 package installations (1.827 MiB)
+  Activating project at `~/.julia/environments/v1.10`
+[ Info: Running posthooks
+[ Info: New package is at /accounts/vis/paciorek/.julia/dev/CPpkg
+"/accounts/vis/paciorek/.julia/dev/CPpkg"
+```
+
+Then we'll add some functionality to `src/CPpkg.jl` or to another file that we include via `include("functions.jl")`.
+Note that because a Git repository was created, we need to commit any changes to `src` to have them reflected in the package
+as we use it in Julia.
+
+We can try out the (local) package like this:
+
+```{julia}
+#| eval: false
+Pkg.add(path="/accounts/vis/paciorek/.julia/dev/CPpkg")
+using CPpkg
+test()
+```
+
+It looks like we add a package directly from GitHub like this:
+
+```{julia}
+#| eval: false
+Pkg.add(url="https://github.com/JuliaLang/Example.jl", rev="master") 
+```
+
+### Parts of the package
+
+We'll look at the [basic structure of code in `src`](https://julialang.org/contribute/developing_package/#step_3_write_code) as outlined in the documentation.
+
+#### Git repository
+
+Running the template created a Git repository for the package. Nice.
+
+```{bash}
+#| eval: false
+cd ~/.julia/dev/CPpkg
+git status
+ls -l .git
+```
+
+#### Testing
+
+Running the template created a skeleton of a test directory. Also nice.
+
+Even nicer, it created the GitHub Actions workflow (`.github/workflows/CI.yml`) so that your tests would run via continuous integration on GitHub whenever you push changes to the `main` branch of the repository.
+
+### Looking at an example package
+
+Let's look at the `BenchmarkTools` package as an example package whose structure looks fairly straightforward. The file `src/BenchmarkTools.jl` is the entry point that defines the package and pulls in code from the other source files.
+
+#### Documentation
+
+It appears that `?BenchmarkTools` shows the contents of `README.md`. There is also information in `docs`, but I haven't figured out the details.
+
+We can see docstrings in the src files though some are fairly brief. `execution.jl` shows the extensive docstring for `@benchmark` though it uses different syntax than seen earlier in these notes, using `@doc raw"""` and `julia-repl`. 
+
+#### Exported objects
+
+If we look in `BenchmarkTools.jl` (in `~/.julia/packages/BenchmarkTools/<version_hash>/src`), we see that `loadparams!` from `parameters.jl` is exported, but `estimate_overhead` is not. The exports define the user interface or "API" of the package.
+
+```{julia}
+#| error: true
+using BenchmarkTools
+loadparams!
+```
+```{julia}
+#| error: true
+estimate_overhead
+```
+We can access `estimate_overhead` in the BenchmarkTools module: 
+
+```{julia}
+#| error: true
+import BenchmarkTools
+BenchmarkTools.estimate_overhead
+```
+
+
+## Errors and messaging
+
+### Tracebacks
+
+We can see the function frames if we force an error to occur.
+
+Here we use a recursion, but the same thing happens when the nested function calls are not recursive.
+
+```{julia}
+function factorial(x)
+  if x == 0
+    sqrt(-1)
+    return 1
+  else
+    return x*factorial(x-1)
+  end
+end
+
+factorial(3)
+```
+
+### Finding the source code
+
+If I wanted to dig into the source code to better understand an error or try to understand how it works, here's an example of finding the functions indicated in the traceback:
+
+```{bash}
+#| eval: false
+paciorek@gandalf:~> type julia
+julia is /usr/local/linux/julia-1.10.4/bin/julia
+paciorek@gandalf:~> cd /usr/local/linux/julia-1.10.4
+paciorek@gandalf:/usr/local/linux/julia-1.10.4> find . -name math.jl
+./share/julia/base/math.jl
+./share/julia/test/math.jl
+```
+
+### Try-catch
+
+One standard way to make your code more robust is to anticipate where errors may occur and give informative messaging and/or
+proceed despite the error.
+
+```{julia}
+try
+    data = open("bad_file.txt")
+catch exc
+    println("Something went wrong: $exc")
+end
+```
+
+### Warnings and logging
+
+You can print out useful information with `@info`, `@warn`, and `@error`, going from information messages to more serious issues. The latter doesn't actually throw a formal exception (error) and stop execution, it just indicates a less extreme error from which the code can still proceed.
+
+Users can then control the level of logging information that they see. In this example we set the logging level for warnings and more serious messages, so the Info message is not shown.
+
+```{julia}
+using Logging
+
+# Show warning messages and above (this excludes info messages)
+global_logger(ConsoleLogger(stderr, Logging.Warn))
+
+@error "An error"
+```
+```{julia}
+@warn "A warning"
+```
+```{julia}
+@info "Some info"
+```
+
+
+### Debugging statements
+
+```{julia}
+x = (3,5)
+@show x
+
+@debug "The sum of some values $(sum(rand(100)))"
+```
+
+The debug statement is only run if debugging is enabled (e.g., via `JULIA_DEBUG=all` when invoking Julia or in the Julia interactive session).
+
+```{julia}
+ENV["JULIA_DEBUG"] = "all"
+@debug "The sum of some values $(sum(rand(100)))"
+```
+
+We'll see the Julia debugger (and possibly Julia debugging in VS Code) later.
+
+## Assertions
+
+One can use assertions to check values for robustness or as sanity checks while developing code.
+
+```{julia}
+function mysum(x, y)
+  @assert(isa(x, Number) && isa(y, Number), "non-numeric inputs")
+  return x + y
+end
+```
+
+Of course that's not a good example as we can more robustly and elegantly deal with type checking by declaring types for the function arguments!
+
+### Exceptions
+ 
+Julia has a [variety of kinds of runtime errors (aka *exceptions*)](https://docs.julialang.org/en/v1/manual/control-flow/#Exception-Handling).
+
+Here's a `DomainError`.
+
+```{julia}
+#| error: true
+sqrt(-1)
+```
+
+And here's how we can trap an error and throw an exception (again a `DomainError`) ourselves.
+
+```{julia}
+#| error: true
+
+function mysqrt(x)
+   if x < 0
+      throw(DomainError(x, "sqrt: input must be non-negative."))
+   else
+      return sqrt(x)
+   end
+end
+
+mysqrt(-3)
+```
+
+
+## Documentation
+
+Docstrings come before the function in triple quotes. Note that I figured out the syntax below (e.g., use of `jldoctest`) by looking at Julia source code.
+
+```{julia}
+"""
+    times3(x)
+
+Multiplies the input by three.
+
+The return type is the same as the input type.
+
+# Examples
+```jldoctest
+julia> x = 7.5;
+julia> times3(x)
+22.5
+
+julia> x = [7.5, 3];
+julia> times3.(x)
+2-element Vector{Float64}:
+ 22.5
+  9.0
+```
+"""
+function times3(x)
+  return 3*x
+end
+```
+
+If you do that, you can then do `?times3` to see the docstring. Nice.
+
+::: {.callout-tip title="Tips for docstrings"}
+1. As many of you have probably discoverd using a Chatbot is a good way to get a first draft of a doc string.
+2. Following the format/style of docstrings for base Julia functions is a good idea.
+3. Provide examples! (You know that when you look at docstrings, that's often what you want.)
+:::
+
+## Testing
+
+We'll cover testing separately.
+
+You can run the tests for an existing package like this:
+
+```{julia}
+#| eval: false
+Pkg.test("CSV")
+```
+
+## Macros (`@`)
+
+Macros [modify existing code or generate new code](https://jkrumbiegel.com/pages/2021-06-07-macros-for-beginners/). They're a convenient shortcut to do a variety of things. 
+
+Here's a basic example of timing some code:
+
+```{julia}
+@time 3 + 7
+```
+
+The `@.` broadcasting macro 'distributes' the `.` broadcasting to all operations. These two lines of code are equivalent.
+
+```{julia}
+@. x^2 + y^2 ≤ 1
+x.^2 .+ y.^2 .≤ 1
+```
+
+Macros execute when the Julia code is parsed, **before* the code is actually run.
+
