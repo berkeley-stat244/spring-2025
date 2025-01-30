@@ -336,6 +336,8 @@ Here we'll overload the Base `show` function. Before we do so, let's see what ex
 Base.show
 # methods(Base.show)
 
+print(myGP)
+
 function Base.show(io::IO, gp::GaussianProcess)
   println("A Gaussian process defined on a grid from $(gp.x[1]) to $(gp.x[end]).")
 end
