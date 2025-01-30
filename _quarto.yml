@@ -37,6 +37,7 @@ website:
           - href: howtos/useQuarto.qmd
           - href: howtos/installPython.md
           - href: howtos/installGit.md
+          - href: howtos/presentations.md
       - href: license.qmd
         text: License
           
