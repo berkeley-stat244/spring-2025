@@ -163,6 +163,12 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Notes 3: Types and dispatch</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Notes 4: Managing Julia</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -285,7 +291,7 @@ ul.task-list li input[type="checkbox"] {
 <p>Now add a function with the same name that concatenates strings or character literals as the values.</p>
 <ol start="0" type="1">
 <li><p>Enhance your Newton function to allow the objective function to take arbitrary additional arguments, passed along from your function into the objective function.</p></li>
-<li><p>Let’s robustify our Newton method. Add error trapping using Julia’s exception system. This should catch divergence as well as convergence to a local maximum. Add useful messages with <code>@info</code>, <code>@warn</code>, <code>@error</code>. Also handle the following situations: (1) when the next value has a higher value than the current value (use backtracking) and (2) when the next value is outside the range of the previous values (use bisection).</p></li>
+<li><p>Let’s robustify our Newton method. Add error trapping using Julia’s exception system. This should catch divergence as well as convergence to a local maximum. Add useful messaging with <code>@info</code>, <code>@warn</code>, <code>@error</code>. Also handle the following situations: (1) when the next value has a higher value than the current value (use backtracking) and (2) when the next value is outside the range of the previous values (use bisection).</p></li>
 <li><p>Set up a few tests for your Newton function using Julia’s testing framework.</p></li>
 </ol>
 <p>Tip: Here’s a gradient function (written in Python) where Newton’s method can diverge from some starting points:</p>

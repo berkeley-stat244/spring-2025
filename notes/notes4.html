@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Chris Paciorek">
+<meta name="dcterms.date" content="2025-01-30">
+
+<title>Notes 4: Managing Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-e3c2a318547996e22cb8eadf618fd4f6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notes/notes1.html">Course Notes</a></li><li class="breadcrumb-item"><a href="../notes/notes4.html">Notes 4: Managing Julia</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      <img src="../assets/stat_bear.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Stat 244</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/berkeley-stat244/spring-2025" title="" class="quarto-navigation-tool px-1" aria-label="GitHub"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../syllabus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Syllabus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../schedule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Schedule</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../office_hours.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Office Hours</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Course Notes</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Notes 1: Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Notes 2: Memory and scope</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Notes 3: Types and dispatch</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes4.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Notes 4: Managing Julia</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Problem Sets</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ps/ps1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Problem Set 1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ps/ps2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Problem Set 2</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">How tos</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../howtos/accessJulia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Accessing Julia</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../howtos/accessSCF.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Accessing the SCF</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../howtos/useQuarto.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Using Quarto</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../howtos/installPython.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Installing Python</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../howtos/installGit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Installing Git</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../license.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">License</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#style-guide" id="toc-style-guide" class="nav-link" data-scroll-target="#style-guide">Style guide</a></li>
+  <li><a href="#file-operations-io" id="toc-file-operations-io" class="nav-link" data-scroll-target="#file-operations-io">File operations (I/O)</a></li>
+  <li><a href="#packages" id="toc-packages" class="nav-link" data-scroll-target="#packages">Packages</a>
+  <ul class="collapse">
+  <li><a href="#using-packages" id="toc-using-packages" class="nav-link" data-scroll-target="#using-packages">Using packages</a></li>
+  <li><a href="#installing-and-managing-packages-on-your-system" id="toc-installing-and-managing-packages-on-your-system" class="nav-link" data-scroll-target="#installing-and-managing-packages-on-your-system">Installing and managing packages on your system</a></li>
+  <li><a href="#projectsenvironments" id="toc-projectsenvironments" class="nav-link" data-scroll-target="#projectsenvironments">Projects/environments</a></li>
+  <li><a href="#pkg-the-julia-package-manager" id="toc-pkg-the-julia-package-manager" class="nav-link" data-scroll-target="#pkg-the-julia-package-manager"><code>Pkg</code>: the Julia package manager</a></li>
+  <li><a href="#isolated-projects" id="toc-isolated-projects" class="nav-link" data-scroll-target="#isolated-projects">Isolated projects</a></li>
+  </ul></li>
+  <li><a href="#creating-packages" id="toc-creating-packages" class="nav-link" data-scroll-target="#creating-packages">Creating packages</a>
+  <ul class="collapse">
+  <li><a href="#creating-your-package" id="toc-creating-your-package" class="nav-link" data-scroll-target="#creating-your-package">Creating your package</a></li>
+  <li><a href="#parts-of-the-package" id="toc-parts-of-the-package" class="nav-link" data-scroll-target="#parts-of-the-package">Parts of the package</a></li>
+  <li><a href="#looking-at-an-example-package" id="toc-looking-at-an-example-package" class="nav-link" data-scroll-target="#looking-at-an-example-package">Looking at an example package</a></li>
+  </ul></li>
+  <li><a href="#errors-and-messaging" id="toc-errors-and-messaging" class="nav-link" data-scroll-target="#errors-and-messaging">Errors and messaging</a>
+  <ul class="collapse">
+  <li><a href="#tracebacks" id="toc-tracebacks" class="nav-link" data-scroll-target="#tracebacks">Tracebacks</a></li>
+  <li><a href="#finding-the-source-code" id="toc-finding-the-source-code" class="nav-link" data-scroll-target="#finding-the-source-code">Finding the source code</a></li>
+  <li><a href="#try-catch" id="toc-try-catch" class="nav-link" data-scroll-target="#try-catch">Try-catch</a></li>
+  <li><a href="#warnings-and-logging" id="toc-warnings-and-logging" class="nav-link" data-scroll-target="#warnings-and-logging">Warnings and logging</a></li>
+  <li><a href="#debugging-statements" id="toc-debugging-statements" class="nav-link" data-scroll-target="#debugging-statements">Debugging statements</a></li>
+  </ul></li>
+  <li><a href="#assertions" id="toc-assertions" class="nav-link" data-scroll-target="#assertions">Assertions</a>
+  <ul class="collapse">
+  <li><a href="#exceptions" id="toc-exceptions" class="nav-link" data-scroll-target="#exceptions">Exceptions</a></li>
+  </ul></li>
+  <li><a href="#documentation-1" id="toc-documentation-1" class="nav-link" data-scroll-target="#documentation-1">Documentation</a></li>
+  <li><a href="#testing-1" id="toc-testing-1" class="nav-link" data-scroll-target="#testing-1">Testing</a></li>
+  <li><a href="#macros" id="toc-macros" class="nav-link" data-scroll-target="#macros">Macros (<code>@</code>)</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="notes4.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notes/notes1.html">Course Notes</a></li><li class="breadcrumb-item"><a href="../notes/notes4.html">Notes 4: Managing Julia</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Notes 4: Managing Julia</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Chris Paciorek </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 30, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>This document is the fourth of a set of notes, this document focusing on managing and interacting with Julia, including working with and creating Julia packages. The notes are not meant to be particularly complete in terms of useful functions (Google and LLMs can now provide that quite well), but rather to introduce the language and consider key programming concepts in the context of Julia.</p>
+<p>Given that, the document heavily relies on demos, with interpretation in some cases left to the reader. Note that for many of the package/project-related demos, I haven’t run the code as part of the document rendering as the output is large and it affects that state of Julia in ways that are not helpful.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There’s a lot of configuration details in the section on using packages. It’s not critical to absorb it all at this point, but it’s here for when you need it. In part I went into detail as I was trying to understand the details myself.</p>
+</div>
+</div>
+</section>
+<section id="style-guide" class="level2">
+<h2 class="anchored" data-anchor-id="style-guide">Style guide</h2>
+<p>Some highlights from the <a href="https://docs.julialang.org/en/v1/manual/style-guide/">Julia style guide</a> include:</p>
+<ul>
+<li>4 spaces per indentation level</li>
+<li>Append <code>!</code> to names of functions that modify inputs. Mutated input(s) should appear first in the arguments.</li>
+<li>Type and module names: use capitalized/UpperCamelCase.</li>
+<li>Function names: use lower-case squashed names (with underscores/snake_case as needed) (e.g., <code>isequal</code> or possibly <code>is_equal</code>).</li>
+<li>Use <code>isa</code> and <code>&lt;:</code> rather than <code>==</code> for type comparisons.</li>
+<li>For hard-coded numbers, use <code>Int</code>s rather than <code>Float</code>s for integer-valued numbers, e.g., <code>2 * x</code> rather than <code>2.0 * x</code>. (The latter will unnecessarily force conversion to <code>Float</code> when <code>x</code> is an <code>Int</code>.)</li>
+</ul>
+</section>
+<section id="file-operations-io" class="level2">
+<h2 class="anchored" data-anchor-id="file-operations-io">File operations (I/O)</h2>
+<p>Here are some basic examples of reading data from files.</p>
+<div id="73003ad6" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="fu">joinpath</span>(<span class="st">".."</span>, <span class="st">"data"</span>, <span class="st">"cpds.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>lines <span class="op">=</span> <span class="fu">readlines</span>(filename)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CSV</span>, <span class="bu">DataFrames</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> CSV.<span class="fu">read</span>(filename, DataFrame);</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(data.year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div class="ansi-escaped-output">
+<pre>Vector{Int64}<span class="ansi-bright-black-fg"> (alias for </span><span class="ansi-bright-black-fg">Array{Int64, 1}</span><span class="ansi-bright-black-fg">)</span></pre>
+</div>
+</div>
+</div>
+<div id="99e3e0ff" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(data.country)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div class="ansi-escaped-output">
+<pre>PooledVector{String15, UInt32, Vector{UInt32}}<span class="ansi-bright-black-fg"> (alias for </span><span class="ansi-bright-black-fg">PooledArrays.PooledArray{String15, UInt32, 1, Array{UInt32, 1}}</span><span class="ansi-bright-black-fg">)</span></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="packages" class="level2">
+<h2 class="anchored" data-anchor-id="packages">Packages</h2>
+<p>A package is the way that code is distributed as a bundle of add-on functionality to a language. Julia packages contain source code files, tests, documentation, and metadata (e.g., about dependence on other packages).</p>
+<section id="using-packages" class="level3">
+<h3 class="anchored" data-anchor-id="using-packages">Using packages</h3>
+<p>We can make variables/functions from packages available with either <code>using</code> or <code>import</code>. <code>using</code> brings all the variables into the current namespace, while <code>import</code> makes them available via <code>module.variable</code>. So <code>import</code> is cleaner and safer in terms of name conflicts.</p>
+<p>I’m having some trouble getting this to display correctly in the rendered document, so the code chunks below have not been run.</p>
+<div id="068711a6" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">3</span>, <span class="fl">3</span>);</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">eigvals</span>(A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="c9a74dd2" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">LinearAlgebra</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">eigvals</span>(A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="632401d9" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">LinearAlgebra</span>.<span class="fu">eigvals</span>(A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If we want to access variables/functions from a file, we can use <code>include</code>, which will evaluate the file contents in the global scope. This is used a lot in packages to allow the package code to be split up into multiple files.</p>
+<div id="15ec0994" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">include</span>(<span class="st">"linecount.jl"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">linecount</span>(<span class="st">"notes4.qmd"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>592</code></pre>
+</div>
+</div>
+</section>
+<section id="installing-and-managing-packages-on-your-system" class="level3">
+<h3 class="anchored" data-anchor-id="installing-and-managing-packages-on-your-system">Installing and managing packages on your system</h3>
+<p>The examples below show how things work on the SCF Linux machines, but the situation should be similar on your personal machine.</p>
+<section id="depots" class="level4">
+<h4 class="anchored" data-anchor-id="depots">Depots</h4>
+<p>A depot is where installed packages, projects/environments, and various other things are stored.</p>
+<p>You can see the various depots via</p>
+<div id="17e09075" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="cn">DEPOT_PATH</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>3-element Vector{String}:
+ "/accounts/vis/paciorek/.julia"
+ "/system/linux/julia-1.10.4/local/share/julia"
+ "/system/linux/julia-1.10.4/share/julia"</code></pre>
+</div>
+</div>
+</section>
+<section id="package-installation-locations" class="level4">
+<h4 class="anchored" data-anchor-id="package-installation-locations">Package installation locations</h4>
+<p>Julia will look in various locations for packages that are available to be used. The locations can be seen via</p>
+<div id="27739f17" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="fu">load_path</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>3-element Vector{String}:
+ "/accounts/vis/paciorek/.julia/environments/v1.10/Project.toml"
+ "/system/linux/julia-1.10.4/share/julia/stdlib/v1.10"
+ "/usr/local/linux/julia-1.10.4/share/julia/environments/v1.10/Project.toml"</code></pre>
+</div>
+</div>
+<p>Note that this includes the active project, the standard library, and (in some cases) a system project. More on projects in a bit.</p>
+<p>Julia comes with some packages pre-installed. These include <code>LinearAlgebra</code>, <code>Distributed</code>, <code>Random</code>, and some others.</p>
+<p>You can see them in the <code>stdlib</code> directory in the main system depot, e.g.,</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> /usr/local/linux/julia-1.10.4/share/julia/stdlib/v1.10/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Packages that you (or a system administrator) install will be in the <code>packages</code> subdirectory of the depots.</p>
+<p>For example, for packages you install:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> ~/.julia/packages</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In some cases (probably not on your personal machine) there will be system-installed packages:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> /usr/local/linux/julia-1.10.4/share/julia/packages</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>As you’d expect, a given package will have various versions, and multiple versions can be installed at the same time.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> version ~/.julia/packages/BenchmarkTools/<span class="pp">*</span>/Project.toml</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In general, Julia will avoid installing multiple copies of the same package version in different locations on a machine/system.</p>
+</section>
+<section id="precompilation" class="level4">
+<h4 class="anchored" data-anchor-id="precompilation">Precompilation</h4>
+<p>Julia will often precompiled packages. This is separate from runtime just-in-time (JIT) compilation of code. I have not had a chance to understand what the precompilation is doing.</p>
+</section>
+</section>
+<section id="projectsenvironments" class="level3">
+<h3 class="anchored" data-anchor-id="projectsenvironments">Projects/environments</h3>
+<p>A <em>project</em> (or <em>environment</em>) defines a set of packages and their versions. An important aspect of this is reproducibility.</p>
+<p>The <code>Project.toml</code> file for a project gives high-level information about a project, including the direct package dependencies.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> ~/.julia/environments/v1.10/Project.toml</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The <code>Manifest.toml</code> file gives the detailed dependency information, including package versions for all direct and indirect package dependencies.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> ~/.julia/environments/v1.10/Manifest.toml</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>These files can be handled via version control to ensure reproducibility.</p>
+<p>As noted previously, multiple projects can make use of the same installed package version.</p>
+</section>
+<section id="pkg-the-julia-package-manager" class="level3">
+<h3 class="anchored" data-anchor-id="pkg-the-julia-package-manager"><code>Pkg</code>: the Julia package manager</h3>
+<p>The package manager allows you to activate projects and add packages to projects, among other things.</p>
+<p>You can use the package manager either in the <code>Pkg</code> REPL by pressing <code>]</code>, or by calling the <code>Pkg</code> API via <code>Pkg.</code>, after <code>using Pkg</code>. (If you use <code>]</code>, you can use the Backspace key to get back to the regular Julia REPL.)</p>
+<p>Here we’ll use the API as I think that makes the demo clearer.</p>
+<section id="activating-a-project" class="level4">
+<h4 class="anchored" data-anchor-id="activating-a-project">Activating a project</h4>
+<p>Anytime you use Julia, you’ll be working in the context of a project. By default this will be your default project, which is located at <code>~/.julia/environments/&lt;version&gt;</code>.</p>
+<div id="15e17cda" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="fu">active_project</span>()</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">status</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Status `~/.julia/environments/v1.10/Project.toml`
+  [6e4b80f9] BenchmarkTools v1.5.0
+  [078ea971] CPpkg v1.0.0-DEV `/accounts/vis/paciorek/.julia/dev/CPpkg#main`
+  [336ed68f] CSV v0.10.14
+  [052768ef] CUDA v5.4.2
+  [a93c6f00] DataFrames v1.6.1
+  [31a5f54b] Debugger v0.7.9
+  [31c24e10] Distributions v0.25.109
+  [e2ba6199] ExprTools v0.1.10
+  [6a86dc24] FiniteDiff v2.23.1
+  [26cc04aa] FiniteDifferences v0.12.32
+  [7073ff75] IJulia v1.24.2
+⌃ [682c06a0] JSON v0.21.3
+  [14b8a8f1] PkgTemplates v0.7.50
+  [91a5bcdd] Plots v1.40.4
+  [4c0109c6] QuartoNotebookRunner v0.12.0 `https://github.com/PumasAI/QuartoNotebookRunner.jl.git#main`
+  [6f49c342] RCall v0.14.1
+  [276daf66] SpecialFunctions v2.4.0
+  [fd094767] Suppressor v0.2.7
+  [7feac75d] TestPkg v1.0.0-DEV `/accounts/vis/paciorek/.julia/dev/TestPkg#main`
+Info Packages marked with ⌃ have new versions available and may be upgradable.</code></pre>
+</div>
+</div>
+<p>We can activate (and create if needed) a project (results not shown):</p>
+<div id="af5f4729" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">activate</span>(<span class="st">"MyNewProject"</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">status</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="adding-packages-to-a-project" class="level4">
+<h4 class="anchored" data-anchor-id="adding-packages-to-a-project">Adding packages to a project</h4>
+<p>Before you can invoke <code>using</code> or <code>import</code> to access a package for the first time in the context of a project, you’ll need to “add” the package to the project (but see caveats in the next section).</p>
+<div id="5b87514d" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(<span class="st">"BenchmarkTools"</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Or to add a specific version:</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Pkg.add(name = "BenchmarkTools", version = "1.5.0")</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">BenchmarkTools</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Julia will prompt you to add a package if it’s not part of a project. And if the version of the package is not installed anywhere on your system, it will download and install it (to <code>~/.julia/packages</code>). Information about what packages/versions are available and where they are on the internet is contained in a <em>registry</em>.</p>
+</section>
+</section>
+<section id="isolated-projects" class="level3">
+<h3 class="anchored" data-anchor-id="isolated-projects">Isolated projects</h3>
+<p>I don’t fully understand the reasoning, but if you activate a project, you still have access to packages from your default project and (if it exists) the system default project. So this seems to make the project not fully isolated. According to the Julia docs, this is because those default projects are <em>shared environments</em>.</p>
+<p>In the following, note that I never added <code>JSON</code> to the active project, but it’s accessible from my default project.</p>
+<div id="7379ab2a" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="fu">load_path</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>3-element Vector{String}:
+ "/accounts/vis/paciorek/.julia/environments/v1.10/Project.toml"
+ "/system/linux/julia-1.10.4/share/julia/stdlib/v1.10"
+ "/usr/local/linux/julia-1.10.4/share/julia/environments/v1.10/Project.toml"</code></pre>
+</div>
+</div>
+<div id="514d05c4" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JSON</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>So good practice when trying to isolate a project is probably to use <code>Pkg.add</code> to add any packages you use to your project, rather than relying on those packages being available from elsewhere on the load path. Alternatively you may want to avoid adding packages to the default project entirely.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Exercise">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Create a new project. Add some of the packages that we’ve used so far to the project (e.g, <code>Distributions</code> and <code>Plots</code>). Switch back and forth between your new project and the default project. Figure out where the packages are installed on your filesystem.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="creating-packages" class="level2">
+<h2 class="anchored" data-anchor-id="creating-packages">Creating packages</h2>
+<p>A package is the way of distributing additional Julia functionality. It generally contains modules (containing code), tests, and documentation. You can also register your package to the <a href="https://github.com/JuliaRegistries/General">Julia General Registry</a>, so that it is easily available via <code>Pkg.add</code>.</p>
+<section id="creating-your-package" class="level3">
+<h3 class="anchored" data-anchor-id="creating-your-package">Creating your package</h3>
+<p>The Julia documentation provides a <a href="https://julialang.org/contribute/developing_package/">nice overview of creating a package</a>. One standard way is to use the <code>PackageTemplates</code> package.</p>
+<div id="5409671f" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">PkgTemplates</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> <span class="fu">Template</span>(;</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>           user<span class="op">=</span><span class="st">"paciorek"</span>,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>           authors<span class="op">=</span>[<span class="st">"Christopher Paciorek"</span>],</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>           plugins<span class="op">=</span>[</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>               <span class="fu">License</span>(name<span class="op">=</span><span class="st">"MIT"</span>),</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>               <span class="fu">Git</span>(),</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>               <span class="fu">GitHubActions</span>(),</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>           ],</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="fu">t</span>(<span class="st">"CPpkg"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Running <code>t(CPpkg)</code> produces this output, indicating what is happening on the filesystem:</p>
+<pre><code>julia&gt; t("CPpkg")
+[ Info: Running prehooks
+[ Info: Running hooks
+  Activating project at `~/.julia/dev/CPpkg`
+  No Changes to `~/.julia/dev/CPpkg/Project.toml`
+  No Changes to `~/.julia/dev/CPpkg/Manifest.toml`
+Precompiling project...
+  1 dependency successfully precompiled in 1 seconds
+        Info We haven't cleaned this depot up for a bit, running Pkg.gc()...
+      Active manifest files: 3 found
+      Active artifact files: 139 found
+      Active scratchspaces: 5 found
+     Deleted 5 package installations (1.827 MiB)
+  Activating project at `~/.julia/environments/v1.10`
+[ Info: Running posthooks
+[ Info: New package is at /accounts/vis/paciorek/.julia/dev/CPpkg
+"/accounts/vis/paciorek/.julia/dev/CPpkg"</code></pre>
+</section>
+<section id="parts-of-the-package" class="level3">
+<h3 class="anchored" data-anchor-id="parts-of-the-package">Parts of the package</h3>
+<section id="code-in-src." class="level4">
+<h4 class="anchored" data-anchor-id="code-in-src.">Code in <code>src</code>.</h4>
+<p>We’ll look at the <a href="https://julialang.org/contribute/developing_package/#step_3_write_code">basic structure of code in <code>src</code></a> as outlined in the documentation.</p>
+<p>Then we’ll add some functionality to <code>src/CPpkg.jl</code> or to another file that we include via <code>include("functions.jl")</code>.</p>
+</section>
+<section id="git-repository" class="level4">
+<h4 class="anchored" data-anchor-id="git-repository">Git repository</h4>
+<p>Running the template created a Git repository for the package. Nice.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/.julia/dev/CPpkg</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-l</span> .git</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Note that because a Git repository was created, we need to commit any changes to <code>src</code> to have them reflected in the package when we use it in Julia (in a moment).</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add src/CPpkg.jl</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span><span class="st">'Add initial test function.'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="testing" class="level4">
+<h4 class="anchored" data-anchor-id="testing">Testing</h4>
+<p>Running the template created a skeleton of a test directory. Also nice.</p>
+<p>Even nicer, it created the GitHub Actions workflow (<code>.github/workflows/CI.yml</code>) so that your tests would run via continuous integration on GitHub whenever you push changes to the <code>main</code> branch of the repository.</p>
+</section>
+<section id="accessing-a-local-package" class="level4">
+<h4 class="anchored" data-anchor-id="accessing-a-local-package">Accessing a local package</h4>
+<p>We can try out the (local) package like this:</p>
+<div id="72710755" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(path<span class="op">=</span><span class="st">"/accounts/vis/paciorek/.julia/dev/CPpkg"</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CPpkg</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">test</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>It looks like we add a package directly from GitHub like this:</p>
+<div id="075950b9" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(url<span class="op">=</span><span class="st">"https://github.com/JuliaLang/Example.jl"</span>, rev<span class="op">=</span><span class="st">"master"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="looking-at-an-example-package" class="level3">
+<h3 class="anchored" data-anchor-id="looking-at-an-example-package">Looking at an example package</h3>
+<p>Let’s look at the <code>BenchmarkTools</code> package as an example package whose structure looks fairly straightforward. The file <code>src/BenchmarkTools.jl</code> is the entry point that defines the package and pulls in code from the other source files.</p>
+<section id="documentation" class="level4">
+<h4 class="anchored" data-anchor-id="documentation">Documentation</h4>
+<p>It appears that <code>?BenchmarkTools</code> shows the contents of <code>README.md</code>. There is also information in <code>docs</code>, but I haven’t figured out the details.</p>
+<p>We can see docstrings in the src files though some are fairly brief. <code>execution.jl</code> shows the extensive docstring for <code>@benchmark</code> though it uses different syntax than seen earlier in these notes, using <code>@doc raw"""</code> and <code>julia-repl</code>.</p>
+</section>
+<section id="exported-objects" class="level4">
+<h4 class="anchored" data-anchor-id="exported-objects">Exported objects</h4>
+<p>If we look in <code>BenchmarkTools.jl</code> (in <code>~/.julia/packages/BenchmarkTools/&lt;version_hash&gt;/src</code>), we see that <code>loadparams!</code> from <code>parameters.jl</code> is exported, but <code>estimate_overhead</code> is not. The exports define the user interface or “API” of the package.</p>
+<div id="b86ad277" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">BenchmarkTools</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>loadparams!</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>loadparams! (generic function with 3 methods)</code></pre>
+</div>
+</div>
+<div id="e5ebaf6c" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>estimate_overhead</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>LoadError: UndefVarError: `estimate_overhead` not defined
+UndefVarError: `estimate_overhead` not defined</code></pre>
+</div>
+</div>
+<p>We can access <code>estimate_overhead</code> in the BenchmarkTools module:</p>
+<div id="f469f276" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">BenchmarkTools</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>BenchmarkTools.estimate_overhead</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>estimate_overhead (generic function with 1 method)</code></pre>
+</div>
+</div>
+</section>
+<section id="additional-modules" class="level4">
+<h4 class="anchored" data-anchor-id="additional-modules">Additional modules</h4>
+<p>One can organize code within a package into multiple modules nested within the main module for the package.</p>
+<p>For example, in the LinearAlgebra package (part of Julia’s standard library), <code>src/blas.jl</code> contains the <code>BLAS</code> module. To make it available, <code>LinearAlgebra.jl</code> uses <code>include("blas.jl")</code> and <code>export BLAS</code>. Here’s how we can access the BLAS (sub)module:</p>
+<div id="a044bfea" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">LinearAlgebra</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="bu">LinearAlgebra</span>.BLAS.<span class="fu">get_num_threads</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre><code>4</code></pre>
+</div>
+</div>
+<p>or</p>
+<div id="abe8f0e4" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">LinearAlgebra</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>BLAS.<span class="fu">get_num_threads</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>4</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Exercise">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Explore the structure of a package of interest to you in <code>~/.julia/packages</code>. (You’ll need to add the package to invoke installation if it’s not already part of one of your projects.)</p>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="errors-and-messaging" class="level2">
+<h2 class="anchored" data-anchor-id="errors-and-messaging">Errors and messaging</h2>
+<section id="tracebacks" class="level3">
+<h3 class="anchored" data-anchor-id="tracebacks">Tracebacks</h3>
+<p>We can see the function frames if we force an error to occur.</p>
+<p>Here we have a function that uses recursion, but the same thing happens when the nested function calls are not recursive.</p>
+<div id="a9531cc4" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">factorial</span>(x)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> x <span class="op">==</span> <span class="fl">0</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>(<span class="op">-</span><span class="fl">1</span>)</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fl">1</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">x*factorial</span>(x<span class="op">-</span><span class="fl">1</span>)</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">end</span></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a><span class="fu">factorial</span>(<span class="fl">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>LoadError: DomainError with -1.0:
+sqrt was called with a negative real argument but will only return a complex result if called with a complex argument. Try sqrt(Complex(x)).
+DomainError with -1.0:
+sqrt was called with a negative real argument but will only return a complex result if called with a complex argument. Try sqrt(Complex(x)).
+
+Stacktrace:
+ [1] throw_complex_domainerror(f::Symbol, x::Float64)
+   @ Base.Math ./math.jl:33
+ [2] sqrt
+   @ ./math.jl:686 [inlined]
+ [3] sqrt(x::Int64)
+   @ Base.Math ./math.jl:1578
+ [4] factorial(x::Int64)
+   @ Main ./In[15]:3
+ [5] factorial(x::Int64) (repeats 3 times)
+   @ Main ./In[15]:6
+ [6] top-level scope
+   @ In[15]:10</code></pre>
+</div>
+</div>
+</section>
+<section id="finding-the-source-code" class="level3">
+<h3 class="anchored" data-anchor-id="finding-the-source-code">Finding the source code</h3>
+<p>If I wanted to dig into the source code to better understand an error or try to understand how it works, here’s an example of finding the functions indicated in the traceback:</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="ex">paciorek@gandalf:~</span><span class="op">&gt;</span> type julia</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="ex">julia</span> is /usr/local/linux/julia-1.10.4/bin/julia</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="ex">paciorek@gandalf:~</span><span class="op">&gt;</span> cd /usr/local/linux/julia-1.10.4</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="ex">paciorek@gandalf:/usr/local/linux/julia-1.10.4</span><span class="op">&gt;</span> find . <span class="at">-name</span> math.jl</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="ex">./share/julia/base/math.jl</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="ex">./share/julia/test/math.jl</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="try-catch" class="level3">
+<h3 class="anchored" data-anchor-id="try-catch">Try-catch</h3>
+<p>One standard way to make your code more robust is to anticipate where errors may occur and give informative messaging and/or proceed despite the error.</p>
+<div id="118256e2" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>try</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> <span class="fu">open</span>(<span class="st">"bad_file.txt"</span>)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>catch exc</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"Something went wrong: </span><span class="sc">$</span>exc<span class="st">"</span>)</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Something went wrong: SystemError("opening file \"bad_file.txt\"", 2, nothing)</code></pre>
+</div>
+</div>
+</section>
+<section id="warnings-and-logging" class="level3">
+<h3 class="anchored" data-anchor-id="warnings-and-logging">Warnings and logging</h3>
+<p>You can print out useful information with <code>@info</code>, <code>@warn</code>, and <code>@error</code>, going from information messages to more serious issues. The latter doesn’t actually throw a formal exception (error) and stop execution, it just indicates a less extreme error from which the code can still proceed.</p>
+<p>Users can then control the level of logging information that they see. In this example we set the logging level for warnings and more serious messages, so the Info message is not shown. (This code is not run here because the rendering process is causing problems.)</p>
+<div id="8b088a47" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">test</span>() </span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"Hello from test."</span>)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@info</span> <span class="st">"Some info"</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@warn</span> <span class="st">"A warning"</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@error</span> <span class="st">"An error"</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Logging</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Show warning messages and above (this excludes info messages)</span></span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a><span class="fu">global_logger</span>(<span class="fu">ConsoleLogger</span>(<span class="cn">stderr</span>, <span class="bu">Logging</span>.Warn))</span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a><span class="fu">test</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>These are examples of <a href="#macros"><em>macros</em></a>, which start with <code>@</code>.</p>
+</section>
+<section id="debugging-statements" class="level3">
+<h3 class="anchored" data-anchor-id="debugging-statements">Debugging statements</h3>
+<div id="92196d48" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> (<span class="fl">3</span>,<span class="fl">5</span>)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> x</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@debug</span> <span class="st">"The sum of some values </span><span class="sc">$</span>(<span class="fu">sum</span>(<span class="fu">rand</span>(<span class="fl">100</span>)))<span class="st">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>x = (3, 5)</code></pre>
+</div>
+</div>
+<p>The debug statement is only run if debugging is enabled (e.g., via <code>JULIA_DEBUG=all</code> when invoking Julia or in the Julia interactive session).</p>
+<div id="7ee81e99" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="cn">ENV</span>[<span class="st">"JULIA_DEBUG"</span>] <span class="op">=</span> <span class="st">"all"</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@debug</span> <span class="st">"The sum of some values </span><span class="sc">$</span>(<span class="fu">sum</span>(<span class="fu">rand</span>(<span class="fl">100</span>)))<span class="st">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>┌ Debug: The sum of some values 47.96083233911496
+└ @ Main In[18]:2</code></pre>
+</div>
+</div>
+<p>We’ll see the Julia debugger (and possibly Julia debugging in VS Code) later.</p>
+</section>
+</section>
+<section id="assertions" class="level2">
+<h2 class="anchored" data-anchor-id="assertions">Assertions</h2>
+<p>One can use assertions to check values for robustness or as sanity checks while developing code.</p>
+<div id="7de19adf" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">mysum</span>(x, y)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="pp">@assert</span>(<span class="fu">isa</span>(x, <span class="dt">Number</span>) <span class="op">&amp;&amp;</span> <span class="fu">isa</span>(y, <span class="dt">Number</span>), <span class="st">"non-numeric inputs"</span>)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> x <span class="op">+</span> y</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<pre><code>mysum (generic function with 1 method)</code></pre>
+</div>
+</div>
+<p>Of course that’s not a good example as we can more robustly and elegantly deal with type checking by declaring types for the function arguments!</p>
+<section id="exceptions" class="level3">
+<h3 class="anchored" data-anchor-id="exceptions">Exceptions</h3>
+<p>Julia has a <a href="https://docs.julialang.org/en/v1/manual/control-flow/#Exception-Handling">variety of kinds of runtime errors (aka <em>exceptions</em>)</a>.</p>
+<p>Here’s a <code>DomainError</code>.</p>
+<div id="2f4a8c1e" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="op">-</span><span class="fl">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>LoadError: DomainError with -1.0:
+sqrt was called with a negative real argument but will only return a complex result if called with a complex argument. Try sqrt(Complex(x)).
+DomainError with -1.0:
+sqrt was called with a negative real argument but will only return a complex result if called with a complex argument. Try sqrt(Complex(x)).
+
+Stacktrace:
+ [1] throw_complex_domainerror(f::Symbol, x::Float64)
+   @ Base.Math ./math.jl:33
+ [2] sqrt
+   @ ./math.jl:686 [inlined]
+ [3] sqrt(x::Int64)
+   @ Base.Math ./math.jl:1578
+ [4] top-level scope
+   @ In[20]:1</code></pre>
+</div>
+</div>
+<p>And here’s how we can trap an error and throw an exception (again a <code>DomainError</code>) ourselves.</p>
+<div id="031b605b" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">mysqrt</span>(x)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>   <span class="cf">if</span> x <span class="op">&lt;</span> <span class="fl">0</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">throw</span>(<span class="fu">DomainError</span>(x, <span class="st">"sqrt: input must be non-negative."</span>))</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>   <span class="cf">else</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> <span class="fu">sqrt</span>(x)</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>   <span class="cf">end</span></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a><span class="fu">mysqrt</span>(<span class="op">-</span><span class="fl">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>LoadError: DomainError with -3:
+sqrt: input must be non-negative.
+DomainError with -3:
+sqrt: input must be non-negative.
+
+Stacktrace:
+ [1] mysqrt(x::Int64)
+   @ Main ./In[21]:4
+ [2] top-level scope
+   @ In[21]:10</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="documentation-1" class="level2">
+<h2 class="anchored" data-anchor-id="documentation-1">Documentation</h2>
+<p>Docstrings come before the function in triple quotes. Note that I figured out the syntax below (e.g., use of <code>jldoctest</code>) by looking at Julia source code.</p>
+<pre><code>"""
+    times3(x)
+
+Multiplies the input by three.
+
+The return type is the same as the input type.
+
+# Examples
+```jldoctest
+julia&gt; x = 7.5;
+julia&gt; times3(x)
+22.5
+
+julia&gt; x = [7.5, 3];
+julia&gt; times3.(x)
+2-element Vector{Float64}:
+ 22.5
+  9.0
+```
+"""
+function times3(x)
+  return 3*x
+end</code></pre>
+<p>If you do that, you can then do <code>?times3</code> to see the docstring. Nice.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Tips for docstrings">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tips for docstrings
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>As many of you have probably discoverd using a Chatbot is a good way to get a first draft of a doc string.</li>
+<li>Following the format/style of docstrings for base Julia functions is a good idea.</li>
+<li>Provide examples! (You know that when you look at docstrings, that’s often what you want.)</li>
+</ol>
+</div>
+</div>
+</section>
+<section id="testing-1" class="level2">
+<h2 class="anchored" data-anchor-id="testing-1">Testing</h2>
+<p>We’ll cover testing separately.</p>
+<p>You can run the tests for an existing package like this:</p>
+<div id="b80119a5" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">test</span>(<span class="st">"CSV"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="macros" class="level2">
+<h2 class="anchored" data-anchor-id="macros">Macros (<code>@</code>)</h2>
+<p>Macros <a href="https://jkrumbiegel.com/pages/2021-06-07-macros-for-beginners/">modify existing code or generate new code</a>. They’re a convenient shortcut to do a variety of things.</p>
+<p>Here’s a basic example of timing some code:</p>
+<div id="0a9c46e2" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fl">3</span> <span class="op">+</span> <span class="fl">7</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  0.000001 seconds</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<pre><code>10</code></pre>
+</div>
+</div>
+<p>The <code>@.</code> broadcasting macro ‘distributes’ the <code>.</code> broadcasting to all operations. These two lines of code are equivalent.</p>
+<div id="3f88b1b8" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>@. x<span class="op">^</span><span class="fl">2</span> <span class="op">+</span> y<span class="op">^</span><span class="fl">2</span> <span class="op">≤</span> <span class="fl">1</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>x<span class="op">.^</span><span class="fl">2</span> <span class="op">.+</span> y<span class="op">.^</span><span class="fl">2</span> <span class="op">.≤</span> <span class="fl">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Macros execute when the Julia code is parsed, <strong>before</strong> the code is actually run.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/berkeley-stat244\.github\.io\/spring-2025");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
