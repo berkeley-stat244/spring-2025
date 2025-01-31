@@ -16,7 +16,8 @@ format:
     code-block-background: true
 engine: jupyter
 ipynb-shell-interactivity: all
-cache: false
+execute:
+  daemon: false
 ---
 
 ## Introduction
@@ -71,20 +72,17 @@ I'm having some trouble getting this to display correctly in the rendered docume
 
 ```{julia}
 #| error: true
-#| eval: false
 A = rand(3, 3);
 eigvals(A)
 ```
 
 ```{julia}
 #| error: true
-#| eval: false
 import LinearAlgebra
 eigvals(A)
 ```
 
 ```{julia}
-#| eval: false
 #| error: true
 LinearAlgebra.eigvals(A)
 ```
