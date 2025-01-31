@@ -8,9 +8,7 @@ listing:
 
 ## Schedule
 
-UNDER CONSTRUCTION - ignore the date below for now.
-
-## Schedule
+For the moment the schedule only lists the problem sets. Time permitting I may post info on class content.
 
 ::: {#schedule}
 :::
