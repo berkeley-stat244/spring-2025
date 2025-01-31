@@ -221,6 +221,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Problem Set 1</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ps/ps2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Problem Set 2</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -388,7 +394,7 @@ Warning
 <section id="file-operations-io" class="level2">
 <h2 class="anchored" data-anchor-id="file-operations-io">File operations (I/O)</h2>
 <p>Here are some basic examples of reading data from files.</p>
-<div id="73003ad6" class="cell" data-execution_count="1">
+<div id="97e75682" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="fu">joinpath</span>(<span class="st">".."</span>, <span class="st">"data"</span>, <span class="st">"cpds.csv"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>lines <span class="op">=</span> <span class="fu">readlines</span>(filename)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -402,7 +408,7 @@ Warning
 </div>
 </div>
 </div>
-<div id="99e3e0ff" class="cell" data-execution_count="2">
+<div id="b19047e7" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(data.country)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div class="ansi-escaped-output">
@@ -418,23 +424,45 @@ Warning
 <h3 class="anchored" data-anchor-id="using-packages">Using packages</h3>
 <p>We can make variables/functions from packages available with either <code>using</code> or <code>import</code>. <code>using</code> brings all the variables into the current namespace, while <code>import</code> makes them available via <code>module.variable</code>. So <code>import</code> is cleaner and safer in terms of name conflicts.</p>
 <p>I’m having some trouble getting this to display correctly in the rendered document, so the code chunks below have not been run.</p>
-<div id="068711a6" class="cell" data-execution_count="3">
+<div id="f997056b" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">3</span>, <span class="fl">3</span>);</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">eigvals</span>(A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>LoadError: UndefVarError: `eigvals` not defined
+UndefVarError: `eigvals` not defined
+
+Stacktrace:
+ [1] top-level scope
+   @ In[4]:2</code></pre>
 </div>
-<div id="c9a74dd2" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">LinearAlgebra</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">eigvals</span>(A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="632401d9" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">LinearAlgebra</span>.<span class="fu">eigvals</span>(A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="bc848072" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">LinearAlgebra</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">eigvals</span>(A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>LoadError: UndefVarError: `eigvals` not defined
+UndefVarError: `eigvals` not defined
+
+Stacktrace:
+ [1] top-level scope
+   @ In[5]:2</code></pre>
+</div>
+</div>
+<div id="567b8534" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">LinearAlgebra</span>.<span class="fu">eigvals</span>(A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>3-element Vector{ComplexF64}:
+ 0.16690652760687846 - 0.29681173686217804im
+ 0.16690652760687846 + 0.29681173686217804im
+  1.4435666842312067 + 0.0im</code></pre>
+</div>
 </div>
 <p>If we want to access variables/functions from a file, we can use <code>include</code>, which will evaluate the file contents in the global scope. This is used a lot in packages to allow the package code to be split up into multiple files.</p>
-<div id="15ec0994" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">include</span>(<span class="st">"linecount.jl"</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">linecount</span>(<span class="st">"notes4.qmd"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>592</code></pre>
+<div id="5e6c05c4" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">include</span>(<span class="st">"linecount.jl"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">linecount</span>(<span class="st">"notes4.qmd"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>590</code></pre>
 </div>
 </div>
 </section>
@@ -445,9 +473,9 @@ Warning
 <h4 class="anchored" data-anchor-id="depots">Depots</h4>
 <p>A depot is where installed packages, projects/environments, and various other things are stored.</p>
 <p>You can see the various depots via</p>
-<div id="17e09075" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="cn">DEPOT_PATH</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="5">
+<div id="98606d06" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="cn">DEPOT_PATH</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
 <pre><code>3-element Vector{String}:
  "/accounts/vis/paciorek/.julia"
  "/system/linux/julia-1.10.4/local/share/julia"
@@ -458,9 +486,9 @@ Warning
 <section id="package-installation-locations" class="level4">
 <h4 class="anchored" data-anchor-id="package-installation-locations">Package installation locations</h4>
 <p>Julia will look in various locations for packages that are available to be used. The locations can be seen via</p>
-<div id="27739f17" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="fu">load_path</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
+<div id="c2c24dc1" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="fu">load_path</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
 <pre><code>3-element Vector{String}:
  "/accounts/vis/paciorek/.julia/environments/v1.10/Project.toml"
  "/system/linux/julia-1.10.4/share/julia/stdlib/v1.10"
@@ -470,14 +498,14 @@ Warning
 <p>Note that this includes the active project, the standard library, and (in some cases) a system project. More on projects in a bit.</p>
 <p>Julia comes with some packages pre-installed. These include <code>LinearAlgebra</code>, <code>Distributed</code>, <code>Random</code>, and some others.</p>
 <p>You can see them in the <code>stdlib</code> directory in the main system depot, e.g.,</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> /usr/local/linux/julia-1.10.4/share/julia/stdlib/v1.10/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> /usr/local/linux/julia-1.10.4/share/julia/stdlib/v1.10/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Packages that you (or a system administrator) install will be in the <code>packages</code> subdirectory of the depots.</p>
 <p>For example, for packages you install:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> ~/.julia/packages</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> ~/.julia/packages</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>In some cases (probably not on your personal machine) there will be system-installed packages:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> /usr/local/linux/julia-1.10.4/share/julia/packages</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> /usr/local/linux/julia-1.10.4/share/julia/packages</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>As you’d expect, a given package will have various versions, and multiple versions can be installed at the same time.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> version ~/.julia/packages/BenchmarkTools/<span class="pp">*</span>/Project.toml</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> version ~/.julia/packages/BenchmarkTools/<span class="pp">*</span>/Project.toml</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>In general, Julia will avoid installing multiple copies of the same package version in different locations on a machine/system.</p>
 </section>
 <section id="precompilation" class="level4">
@@ -489,9 +517,9 @@ Warning
 <h3 class="anchored" data-anchor-id="projectsenvironments">Projects/environments</h3>
 <p>A <em>project</em> (or <em>environment</em>) defines a set of packages and their versions. An important aspect of this is reproducibility.</p>
 <p>The <code>Project.toml</code> file for a project gives high-level information about a project, including the direct package dependencies.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> ~/.julia/environments/v1.10/Project.toml</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> ~/.julia/environments/v1.10/Project.toml</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The <code>Manifest.toml</code> file gives the detailed dependency information, including package versions for all direct and indirect package dependencies.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> ~/.julia/environments/v1.10/Manifest.toml</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> ~/.julia/environments/v1.10/Manifest.toml</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>These files can be handled via version control to ensure reproducibility.</p>
 <p>As noted previously, multiple projects can make use of the same installed package version.</p>
 </section>
@@ -503,11 +531,11 @@ Warning
 <section id="activating-a-project" class="level4">
 <h4 class="anchored" data-anchor-id="activating-a-project">Activating a project</h4>
 <p>Anytime you use Julia, you’ll be working in the context of a project. By default this will be your default project, which is located at <code>~/.julia/environments/&lt;version&gt;</code>.</p>
-<div id="15e17cda" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="fu">active_project</span>()</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">status</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d4e687fa" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="fu">active_project</span>()</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">status</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Status `~/.julia/environments/v1.10/Project.toml`
   [6e4b80f9] BenchmarkTools v1.5.0
@@ -533,20 +561,20 @@ Info Packages marked with ⌃ have new versions available and may be upgradable.
 </div>
 </div>
 <p>We can activate (and create if needed) a project (results not shown):</p>
-<div id="af5f4729" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">activate</span>(<span class="st">"MyNewProject"</span>)</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">status</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e06915d4" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">activate</span>(<span class="st">"MyNewProject"</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">status</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="adding-packages-to-a-project" class="level4">
 <h4 class="anchored" data-anchor-id="adding-packages-to-a-project">Adding packages to a project</h4>
 <p>Before you can invoke <code>using</code> or <code>import</code> to access a package for the first time in the context of a project, you’ll need to “add” the package to the project (but see caveats in the next section).</p>
-<div id="5b87514d" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(<span class="st">"BenchmarkTools"</span>)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Or to add a specific version:</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Pkg.add(name = "BenchmarkTools", version = "1.5.0")</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">BenchmarkTools</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="6747ce03" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(<span class="st">"BenchmarkTools"</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Or to add a specific version:</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Pkg.add(name = "BenchmarkTools", version = "1.5.0")</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">BenchmarkTools</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Julia will prompt you to add a package if it’s not part of a project. And if the version of the package is not installed anywhere on your system, it will download and install it (to <code>~/.julia/packages</code>). Information about what packages/versions are available and where they are on the internet is contained in a <em>registry</em>.</p>
 </section>
@@ -555,17 +583,17 @@ Info Packages marked with ⌃ have new versions available and may be upgradable.
 <h3 class="anchored" data-anchor-id="isolated-projects">Isolated projects</h3>
 <p>I don’t fully understand the reasoning, but if you activate a project, you still have access to packages from your default project and (if it exists) the system default project. So this seems to make the project not fully isolated. According to the Julia docs, this is because those default projects are <em>shared environments</em>.</p>
 <p>In the following, note that I never added <code>JSON</code> to the active project, but it’s accessible from my default project.</p>
-<div id="7379ab2a" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="fu">load_path</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="8">
+<div id="90f63dd9" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="fu">load_path</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
 <pre><code>3-element Vector{String}:
  "/accounts/vis/paciorek/.julia/environments/v1.10/Project.toml"
  "/system/linux/julia-1.10.4/share/julia/stdlib/v1.10"
  "/usr/local/linux/julia-1.10.4/share/julia/environments/v1.10/Project.toml"</code></pre>
 </div>
 </div>
-<div id="514d05c4" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JSON</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="6af8ad83" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JSON</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>So good practice when trying to isolate a project is probably to use <code>Pkg.add</code> to add any packages you use to your project, rather than relying on those packages being available from elsewhere on the load path. Alternatively you may want to avoid adding packages to the default project entirely.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Exercise">
@@ -589,20 +617,20 @@ Exercise
 <section id="creating-your-package" class="level3">
 <h3 class="anchored" data-anchor-id="creating-your-package">Creating your package</h3>
 <p>The Julia documentation provides a <a href="https://julialang.org/contribute/developing_package/">nice overview of creating a package</a>. One standard way is to use the <code>PackageTemplates</code> package.</p>
-<div id="5409671f" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">PkgTemplates</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> <span class="fu">Template</span>(;</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>           user<span class="op">=</span><span class="st">"paciorek"</span>,</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>           authors<span class="op">=</span>[<span class="st">"Christopher Paciorek"</span>],</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>           plugins<span class="op">=</span>[</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>               <span class="fu">License</span>(name<span class="op">=</span><span class="st">"MIT"</span>),</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>               <span class="fu">Git</span>(),</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>               <span class="fu">GitHubActions</span>(),</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>           ],</span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="fu">t</span>(<span class="st">"CPpkg"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="1b8b6096" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">PkgTemplates</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> <span class="fu">Template</span>(;</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>           user<span class="op">=</span><span class="st">"paciorek"</span>,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>           authors<span class="op">=</span>[<span class="st">"Christopher Paciorek"</span>],</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>           plugins<span class="op">=</span>[</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>               <span class="fu">License</span>(name<span class="op">=</span><span class="st">"MIT"</span>),</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>               <span class="fu">Git</span>(),</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>               <span class="fu">GitHubActions</span>(),</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>           ],</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="fu">t</span>(<span class="st">"CPpkg"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Running <code>t(CPpkg)</code> produces this output, indicating what is happening on the filesystem:</p>
 <pre><code>julia&gt; t("CPpkg")
@@ -633,12 +661,12 @@ Precompiling project...
 <section id="git-repository" class="level4">
 <h4 class="anchored" data-anchor-id="git-repository">Git repository</h4>
 <p>Running the template created a Git repository for the package. Nice.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/.julia/dev/CPpkg</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-l</span> .git</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/.julia/dev/CPpkg</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-l</span> .git</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Note that because a Git repository was created, we need to commit any changes to <code>src</code> to have them reflected in the package when we use it in Julia (in a moment).</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add src/CPpkg.jl</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span><span class="st">'Add initial test function.'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add src/CPpkg.jl</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span><span class="st">'Add initial test function.'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="testing" class="level4">
 <h4 class="anchored" data-anchor-id="testing">Testing</h4>
@@ -648,14 +676,14 @@ Precompiling project...
 <section id="accessing-a-local-package" class="level4">
 <h4 class="anchored" data-anchor-id="accessing-a-local-package">Accessing a local package</h4>
 <p>We can try out the (local) package like this:</p>
-<div id="72710755" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(path<span class="op">=</span><span class="st">"/accounts/vis/paciorek/.julia/dev/CPpkg"</span>)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CPpkg</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">test</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d43b7eb4" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(path<span class="op">=</span><span class="st">"/accounts/vis/paciorek/.julia/dev/CPpkg"</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CPpkg</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">test</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>It looks like we add a package directly from GitHub like this:</p>
-<div id="075950b9" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(url<span class="op">=</span><span class="st">"https://github.com/JuliaLang/Example.jl"</span>, rev<span class="op">=</span><span class="st">"master"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fa5dde69" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(url<span class="op">=</span><span class="st">"https://github.com/JuliaLang/Example.jl"</span>, rev<span class="op">=</span><span class="st">"master"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -670,25 +698,25 @@ Precompiling project...
 <section id="exported-objects" class="level4">
 <h4 class="anchored" data-anchor-id="exported-objects">Exported objects</h4>
 <p>If we look in <code>BenchmarkTools.jl</code> (in <code>~/.julia/packages/BenchmarkTools/&lt;version_hash&gt;/src</code>), we see that <code>loadparams!</code> from <code>parameters.jl</code> is exported, but <code>estimate_overhead</code> is not. The exports define the user interface or “API” of the package.</p>
-<div id="b86ad277" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">BenchmarkTools</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>loadparams!</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="10">
+<div id="dbda321e" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">BenchmarkTools</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>loadparams!</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
 <pre><code>loadparams! (generic function with 3 methods)</code></pre>
 </div>
 </div>
-<div id="e5ebaf6c" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>estimate_overhead</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="0415100c" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>estimate_overhead</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>LoadError: UndefVarError: `estimate_overhead` not defined
 UndefVarError: `estimate_overhead` not defined</code></pre>
 </div>
 </div>
 <p>We can access <code>estimate_overhead</code> in the BenchmarkTools module:</p>
-<div id="f469f276" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">BenchmarkTools</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>BenchmarkTools.estimate_overhead</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="12">
+<div id="9ead70d1" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">BenchmarkTools</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>BenchmarkTools.estimate_overhead</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
 <pre><code>estimate_overhead (generic function with 1 method)</code></pre>
 </div>
 </div>
@@ -697,18 +725,18 @@ UndefVarError: `estimate_overhead` not defined</code></pre>
 <h4 class="anchored" data-anchor-id="additional-modules">Additional modules</h4>
 <p>One can organize code within a package into multiple modules nested within the main module for the package.</p>
 <p>For example, in the LinearAlgebra package (part of Julia’s standard library), <code>src/blas.jl</code> contains the <code>BLAS</code> module. To make it available, <code>LinearAlgebra.jl</code> uses <code>include("blas.jl")</code> and <code>export BLAS</code>. Here’s how we can access the BLAS (sub)module:</p>
-<div id="a044bfea" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">LinearAlgebra</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="bu">LinearAlgebra</span>.BLAS.<span class="fu">get_num_threads</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="13">
+<div id="a2a2070a" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">LinearAlgebra</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="bu">LinearAlgebra</span>.BLAS.<span class="fu">get_num_threads</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
 <pre><code>4</code></pre>
 </div>
 </div>
 <p>or</p>
-<div id="abe8f0e4" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">LinearAlgebra</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>BLAS.<span class="fu">get_num_threads</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="14">
+<div id="6db7f9f2" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">LinearAlgebra</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>BLAS.<span class="fu">get_num_threads</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
 <pre><code>4</code></pre>
 </div>
 </div>
@@ -734,17 +762,17 @@ Exercise
 <h3 class="anchored" data-anchor-id="tracebacks">Tracebacks</h3>
 <p>We can see the function frames if we force an error to occur.</p>
 <p>Here we have a function that uses recursion, but the same thing happens when the nested function calls are not recursive.</p>
-<div id="a9531cc4" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">factorial</span>(x)</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> x <span class="op">==</span> <span class="fl">0</span></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>(<span class="op">-</span><span class="fl">1</span>)</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fl">1</span></span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span></span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">x*factorial</span>(x<span class="op">-</span><span class="fl">1</span>)</span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">end</span></span>
-<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a><span class="fu">factorial</span>(<span class="fl">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cab442f2" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">factorial</span>(x)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> x <span class="op">==</span> <span class="fl">0</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>(<span class="op">-</span><span class="fl">1</span>)</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fl">1</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">x*factorial</span>(x<span class="op">-</span><span class="fl">1</span>)</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">end</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a><span class="fu">factorial</span>(<span class="fl">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>LoadError: DomainError with -1.0:
 sqrt was called with a negative real argument but will only return a complex result if called with a complex argument. Try sqrt(Complex(x)).
@@ -759,33 +787,33 @@ Stacktrace:
  [3] sqrt(x::Int64)
    @ Base.Math ./math.jl:1578
  [4] factorial(x::Int64)
-   @ Main ./In[15]:3
+   @ Main ./In[18]:3
  [5] factorial(x::Int64) (repeats 3 times)
-   @ Main ./In[15]:6
+   @ Main ./In[18]:6
  [6] top-level scope
-   @ In[15]:10</code></pre>
+   @ In[18]:10</code></pre>
 </div>
 </div>
 </section>
 <section id="finding-the-source-code" class="level3">
 <h3 class="anchored" data-anchor-id="finding-the-source-code">Finding the source code</h3>
 <p>If I wanted to dig into the source code to better understand an error or try to understand how it works, here’s an example of finding the functions indicated in the traceback:</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="ex">paciorek@gandalf:~</span><span class="op">&gt;</span> type julia</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="ex">julia</span> is /usr/local/linux/julia-1.10.4/bin/julia</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="ex">paciorek@gandalf:~</span><span class="op">&gt;</span> cd /usr/local/linux/julia-1.10.4</span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="ex">paciorek@gandalf:/usr/local/linux/julia-1.10.4</span><span class="op">&gt;</span> find . <span class="at">-name</span> math.jl</span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="ex">./share/julia/base/math.jl</span></span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="ex">./share/julia/test/math.jl</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="ex">paciorek@gandalf:~</span><span class="op">&gt;</span> type julia</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="ex">julia</span> is /usr/local/linux/julia-1.10.4/bin/julia</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="ex">paciorek@gandalf:~</span><span class="op">&gt;</span> cd /usr/local/linux/julia-1.10.4</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="ex">paciorek@gandalf:/usr/local/linux/julia-1.10.4</span><span class="op">&gt;</span> find . <span class="at">-name</span> math.jl</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="ex">./share/julia/base/math.jl</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="ex">./share/julia/test/math.jl</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="try-catch" class="level3">
 <h3 class="anchored" data-anchor-id="try-catch">Try-catch</h3>
 <p>One standard way to make your code more robust is to anticipate where errors may occur and give informative messaging and/or proceed despite the error.</p>
-<div id="118256e2" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>try</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> <span class="fu">open</span>(<span class="st">"bad_file.txt"</span>)</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>catch exc</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"Something went wrong: </span><span class="sc">$</span>exc<span class="st">"</span>)</span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="13dfea9b" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>try</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> <span class="fu">open</span>(<span class="st">"bad_file.txt"</span>)</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>catch exc</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"Something went wrong: </span><span class="sc">$</span>exc<span class="st">"</span>)</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Something went wrong: SystemError("opening file \"bad_file.txt\"", 2, nothing)</code></pre>
 </div>
@@ -795,41 +823,41 @@ Stacktrace:
 <h3 class="anchored" data-anchor-id="warnings-and-logging">Warnings and logging</h3>
 <p>You can print out useful information with <code>@info</code>, <code>@warn</code>, and <code>@error</code>, going from information messages to more serious issues. The latter doesn’t actually throw a formal exception (error) and stop execution, it just indicates a less extreme error from which the code can still proceed.</p>
 <p>Users can then control the level of logging information that they see. In this example we set the logging level for warnings and more serious messages, so the Info message is not shown. (This code is not run here because the rendering process is causing problems.)</p>
-<div id="8b088a47" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">test</span>() </span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"Hello from test."</span>)</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@info</span> <span class="st">"Some info"</span></span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@warn</span> <span class="st">"A warning"</span></span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@error</span> <span class="st">"An error"</span></span>
-<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Logging</span></span>
-<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Show warning messages and above (this excludes info messages)</span></span>
-<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a><span class="fu">global_logger</span>(<span class="fu">ConsoleLogger</span>(<span class="cn">stderr</span>, <span class="bu">Logging</span>.Warn))</span>
-<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a><span class="fu">test</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="41265e8f" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">test</span>() </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"Hello from test."</span>)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@info</span> <span class="st">"Some info"</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@warn</span> <span class="st">"A warning"</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@error</span> <span class="st">"An error"</span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Logging</span></span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Show warning messages and above (this excludes info messages)</span></span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a><span class="fu">global_logger</span>(<span class="fu">ConsoleLogger</span>(<span class="cn">stderr</span>, <span class="bu">Logging</span>.Warn))</span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a><span class="fu">test</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>These are examples of <a href="#macros"><em>macros</em></a>, which start with <code>@</code>.</p>
 </section>
 <section id="debugging-statements" class="level3">
 <h3 class="anchored" data-anchor-id="debugging-statements">Debugging statements</h3>
-<div id="92196d48" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> (<span class="fl">3</span>,<span class="fl">5</span>)</span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> x</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@debug</span> <span class="st">"The sum of some values </span><span class="sc">$</span>(<span class="fu">sum</span>(<span class="fu">rand</span>(<span class="fl">100</span>)))<span class="st">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="282161cd" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> (<span class="fl">3</span>,<span class="fl">5</span>)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@show</span> x</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@debug</span> <span class="st">"The sum of some values </span><span class="sc">$</span>(<span class="fu">sum</span>(<span class="fu">rand</span>(<span class="fl">100</span>)))<span class="st">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>x = (3, 5)</code></pre>
 </div>
 </div>
 <p>The debug statement is only run if debugging is enabled (e.g., via <code>JULIA_DEBUG=all</code> when invoking Julia or in the Julia interactive session).</p>
-<div id="7ee81e99" class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="cn">ENV</span>[<span class="st">"JULIA_DEBUG"</span>] <span class="op">=</span> <span class="st">"all"</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@debug</span> <span class="st">"The sum of some values </span><span class="sc">$</span>(<span class="fu">sum</span>(<span class="fu">rand</span>(<span class="fl">100</span>)))<span class="st">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="118adea7" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="cn">ENV</span>[<span class="st">"JULIA_DEBUG"</span>] <span class="op">=</span> <span class="st">"all"</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@debug</span> <span class="st">"The sum of some values </span><span class="sc">$</span>(<span class="fu">sum</span>(<span class="fu">rand</span>(<span class="fl">100</span>)))<span class="st">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>┌ Debug: The sum of some values 47.96083233911496
-└ @ Main In[18]:2</code></pre>
+<pre><code>┌ Debug: The sum of some values 50.98888069948493
+└ @ Main In[21]:2</code></pre>
 </div>
 </div>
 <p>We’ll see the Julia debugger (and possibly Julia debugging in VS Code) later.</p>
@@ -838,12 +866,12 @@ Stacktrace:
 <section id="assertions" class="level2">
 <h2 class="anchored" data-anchor-id="assertions">Assertions</h2>
 <p>One can use assertions to check values for robustness or as sanity checks while developing code.</p>
-<div id="7de19adf" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">mysum</span>(x, y)</span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="pp">@assert</span>(<span class="fu">isa</span>(x, <span class="dt">Number</span>) <span class="op">&amp;&amp;</span> <span class="fu">isa</span>(y, <span class="dt">Number</span>), <span class="st">"non-numeric inputs"</span>)</span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> x <span class="op">+</span> y</span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="19">
+<div id="34958fc8" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">mysum</span>(x, y)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="pp">@assert</span>(<span class="fu">isa</span>(x, <span class="dt">Number</span>) <span class="op">&amp;&amp;</span> <span class="fu">isa</span>(y, <span class="dt">Number</span>), <span class="st">"non-numeric inputs"</span>)</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> x <span class="op">+</span> y</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="22">
 <pre><code>mysum (generic function with 1 method)</code></pre>
 </div>
 </div>
@@ -852,8 +880,8 @@ Stacktrace:
 <h3 class="anchored" data-anchor-id="exceptions">Exceptions</h3>
 <p>Julia has a <a href="https://docs.julialang.org/en/v1/manual/control-flow/#Exception-Handling">variety of kinds of runtime errors (aka <em>exceptions</em>)</a>.</p>
 <p>Here’s a <code>DomainError</code>.</p>
-<div id="2f4a8c1e" class="cell" data-execution_count="28">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="op">-</span><span class="fl">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="9f17a9ff" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="op">-</span><span class="fl">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>LoadError: DomainError with -1.0:
 sqrt was called with a negative real argument but will only return a complex result if called with a complex argument. Try sqrt(Complex(x)).
@@ -868,20 +896,20 @@ Stacktrace:
  [3] sqrt(x::Int64)
    @ Base.Math ./math.jl:1578
  [4] top-level scope
-   @ In[20]:1</code></pre>
+   @ In[23]:1</code></pre>
 </div>
 </div>
 <p>And here’s how we can trap an error and throw an exception (again a <code>DomainError</code>) ourselves.</p>
-<div id="031b605b" class="cell" data-execution_count="29">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">mysqrt</span>(x)</span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>   <span class="cf">if</span> x <span class="op">&lt;</span> <span class="fl">0</span></span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">throw</span>(<span class="fu">DomainError</span>(x, <span class="st">"sqrt: input must be non-negative."</span>))</span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>   <span class="cf">else</span></span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> <span class="fu">sqrt</span>(x)</span>
-<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>   <span class="cf">end</span></span>
-<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a><span class="fu">mysqrt</span>(<span class="op">-</span><span class="fl">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="bb73ee3f" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">mysqrt</span>(x)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>   <span class="cf">if</span> x <span class="op">&lt;</span> <span class="fl">0</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">throw</span>(<span class="fu">DomainError</span>(x, <span class="st">"sqrt: input must be non-negative."</span>))</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>   <span class="cf">else</span></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> <span class="fu">sqrt</span>(x)</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>   <span class="cf">end</span></span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a><span class="fu">mysqrt</span>(<span class="op">-</span><span class="fl">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>LoadError: DomainError with -3:
 sqrt: input must be non-negative.
@@ -890,9 +918,9 @@ sqrt: input must be non-negative.
 
 Stacktrace:
  [1] mysqrt(x::Int64)
-   @ Main ./In[21]:4
+   @ Main ./In[24]:4
  [2] top-level scope
-   @ In[21]:10</code></pre>
+   @ In[24]:10</code></pre>
 </div>
 </div>
 </section>
@@ -946,27 +974,27 @@ Tips for docstrings
 <h2 class="anchored" data-anchor-id="testing-1">Testing</h2>
 <p>We’ll cover testing separately.</p>
 <p>You can run the tests for an existing package like this:</p>
-<div id="b80119a5" class="cell" data-execution_count="30">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">test</span>(<span class="st">"CSV"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="4ccb36a3" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">test</span>(<span class="st">"CSV"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="macros" class="level2">
 <h2 class="anchored" data-anchor-id="macros">Macros (<code>@</code>)</h2>
 <p>Macros <a href="https://jkrumbiegel.com/pages/2021-06-07-macros-for-beginners/">modify existing code or generate new code</a>. They’re a convenient shortcut to do a variety of things.</p>
 <p>Here’s a basic example of timing some code:</p>
-<div id="0a9c46e2" class="cell" data-execution_count="31">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fl">3</span> <span class="op">+</span> <span class="fl">7</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="43f0870c" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fl">3</span> <span class="op">+</span> <span class="fl">7</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  0.000001 seconds</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="22">
+<div class="cell-output cell-output-display" data-execution_count="25">
 <pre><code>10</code></pre>
 </div>
 </div>
 <p>The <code>@.</code> broadcasting macro ‘distributes’ the <code>.</code> broadcasting to all operations. These two lines of code are equivalent.</p>
-<div id="3f88b1b8" class="cell" data-execution_count="32">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>@. x<span class="op">^</span><span class="fl">2</span> <span class="op">+</span> y<span class="op">^</span><span class="fl">2</span> <span class="op">≤</span> <span class="fl">1</span></span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>x<span class="op">.^</span><span class="fl">2</span> <span class="op">.+</span> y<span class="op">.^</span><span class="fl">2</span> <span class="op">.≤</span> <span class="fl">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="95e54423" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>@. x<span class="op">^</span><span class="fl">2</span> <span class="op">+</span> y<span class="op">^</span><span class="fl">2</span> <span class="op">≤</span> <span class="fl">1</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>x<span class="op">.^</span><span class="fl">2</span> <span class="op">.+</span> y<span class="op">.^</span><span class="fl">2</span> <span class="op">.≤</span> <span class="fl">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Macros execute when the Julia code is parsed, <strong>before</strong> the code is actually run.</p>
 
