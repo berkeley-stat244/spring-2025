@@ -225,15 +225,12 @@ Consider the difference between the following vectorized calls:
 x = randn(5)
 σ = 10;
 y1 = x .+ σ .* randn.()
-zeros(5) .+ σ .* randn.()
-```
-```{julia}
 y2 = x .+ σ .* randn()
-(y1 - x) / σ
-(y2 - x) / σ
+print((y1 - x) / σ)
+print((y2 - x) / σ)
 ```
 
-That's perhaps a bit surprising given one might think that because the multiplication is done first, the `σ .* randn.()` might produce a scalar.
+That's perhaps a bit surprising given one might think that because the multiplication is done first, the `σ .* randn.()` might produce a scalar, as it does if you just run `σ .* randn.()` on its own.
 
 ## Loop fusion
 
@@ -285,10 +282,9 @@ x = rand(n);
 @btime y = mymathloop(x);
 ```
 
+Note that it appears only 800 MB (~760 MiB; ~0.95 MiB = 1 MB) are allocated (for the output) in the (presumably) fused operation, rather than multiples of 800 MB for various temporary arrays that one might expect to be created.
 
-I'm not sure why there was more than one allocation if the operations were fused, but note that it appears only 800 MB (~760 MiB; ~0.95 MiB = 1 MB) are allocated (for the output) in the (presumably) fused operation, rather than multiples of 800 MB for various temporary arrays that one might expect to be created.
-
-And in the loop, there is no allocation. We might expect some allocation of scalars, but those are probably handled differently than allocating memory off the heap.
+And in the loop, there is no allocation. We might expect some allocation of scalars, but those are probably handled differently than allocating memory for arrays off the [heap](https://stackoverflow.com/questions/79923/what-and-where-are-the-stack-and-heap). I've seen some information for how Julia handles allocation of space for immutable objects (including scalars and strings), but I hvaen't had a chance to absorb that.
 
 ### Cases without loop fusion
 
@@ -316,7 +312,7 @@ Julia stores the values in a matrix contiguously column by column (and analogous
 We should therefore access matrix elements within a column rather than within a row. Why is that?
 
 ::: {.callout-warning title="Memory access and the cache"}
-When a value is retrieved from main memory into the cache, a block of values will be retrieved, and those will generally include the values in the same column but (for large enough arrays) not the values in the same row. If subsequent operations work on values from that column, the values won't need to be moved into the cache. (This is called a "cache hit").
+When a value is retrieved from main memory into the CPU cache, a block of values will be retrieved, and those will generally include the values in the same column but (for large enough arrays) not all the values in the same row. If subsequent operations work on values from that column, the values won't need to be moved into the cache. (This is called a "cache hit").
 :::
 
 Let's first see if it makes a difference when using Julia's built-in `sum` function, which can do the reduction operation on various dimensions of the array.
@@ -348,6 +344,11 @@ end
 There's little difference.
 
 Are we wrong about how the cache works? Probably not; rather it's probably that Julia's `sum()` is set up to take advantage of how the cache works by being careful about the order of operations used to sum the rows or columns.
+
+::: {.callout-tip title="Exercise"}
+How could you program the for loops involved in row-wise summation to be efficient when a matrix is stored column-major given how caching work? If you retrieve the data by column, how do you get the row sums?
+:::
+
 
 In contrast, if we manually loop over rows or columns, we do see a big (almost order-of-magnitude) difference.
 
@@ -382,18 +383,18 @@ And we see that having an array of Reals is bad for performance. As part of this
 using LinearAlgebra
 n = 100;
 A = rand(n, n);
-@btime tmp = A'*A;
+@btime tmp = A'A;  # Equivalant to A' * A or transpose(A) * A.
 ```
 ```{julia}
 rA = convert(Array{Real}, A);
-@btime tmp = rA'*rA;
+@btime tmp = rA'rA;
 ```
 
 ## Lookup speed
 
 If we have code that needs to retrieve a lot of values from a data structure, it's worth knowing the situations in which we can expect that lookup to be fast.
 
-Lookup in arrays is fast $O(1)$ (not varying with the size of the array) because of the "random access" aspect of RAM (random access memory).
+Lookup in arrays is fast ($O(1)$; i.e., not varying with the size of the array) because of the "random access" aspect of RAM (random access memory).
 
 
 ```{julia}
@@ -441,8 +442,12 @@ dsub = makedict(100000);
 xsub = x[1:100000];
 names = Symbol.('x' .* keys(dsub));  # For this construction of tuple, the keys need to be symbols.
 xtnamed = (;zip(names, xsub)...); 
-@btime xtnamed.x50000
+@btime xtnamed.x50000;
 ```
+
+::: {.callout-warning title="Developing a perspective on speed"}
+Note that while all the individual operations above are fast in absolute terms for a single lookup, for simple operations, we generally want them to be really fast (e.g., order of nanoseconds) because we'll generally be doing a lot of such operations for any sizeable overall computation.
+:::
 
 
 
