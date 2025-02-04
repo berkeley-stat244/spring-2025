@@ -111,14 +111,15 @@ Profile.print()
 Instead let's try a visualization. There are other Julia packages for visualizing profiler output. Some might be better than this. (I tried `ProfileView` and liked `StatProfilerHTML` better.)
 
 ```{julia}
-# using ProfileView
-# @profview ols_slow(y, X)
+#| eval: false
+using ProfileView
+@profview ols_slow(y, X)
 
 using StatProfilerHTML
 @profilehtml ols_slow(y, X)
 ```
 
-That produces [this output](statprof/index.html), which can in some ways be hard to interpret, but the color-coded division between `inv`, `*` and `*` gives us an idea of where time is being spent. That output might not show up fully in the links - you might need to run the code above yourself.
+`@profilehtml produces [this output](statprof/index.html), which can in some ways be hard to interpret, but the color-coded division between `inv`, `*` and `*` gives us an idea of where time is being spent. That output might not show up fully in the links - you might need to run the code above yourself.
 
 ## Pre-allocation
 
@@ -360,6 +361,11 @@ In contrast, if we manually loop over rows or columns, we do see a big (almost o
 ```
 
 So while one lesson is to code with the cache in mind, another is to use built-in functions that are probably written for efficiency.
+
+::: {.callout-tip title="Exercise"}
+In your own work, can you think of an algorithm and associated data structures where one has to retrieve a lot of data and one would want to think about cache hits and misses? In general the idea is that if you retrieve a value, try to make use of the nearby values at that same time, rather than retrieving the nearby values later on in the computation.
+:::
+
 
 ### Store values contiguously in memory
 
