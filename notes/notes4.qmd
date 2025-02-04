@@ -480,7 +480,7 @@ We'll see the Julia debugger (and possibly Julia debugging in VS Code) later.
 
 ## Assertions
 
-One can use assertions to check values for robustness or as sanity checks while developing code.
+One can use assertions to check values for robustness or as sanity checks while developing code. 
 
 ```{julia}
 function mysum(x, y)
@@ -490,6 +490,8 @@ end
 ```
 
 Of course that's not a good example as we can more robustly and elegantly deal with type checking by declaring types for the function arguments!
+
+For errors that may arise because of user inputs, one generally wants to use exceptions.
 
 ### Exceptions
  
@@ -572,10 +574,12 @@ Pkg.test("CSV")
 
 Macros [modify existing code or generate new code](https://jkrumbiegel.com/pages/2021-06-07-macros-for-beginners/). They're a convenient shortcut to do a variety of things. 
 
+We've already seen assertions related to messaging.
+
 Here's a basic example of timing some code:
 
 ```{julia}
-@time 3 + 7
+@time 3 + 7;
 ```
 
 The `@.` broadcasting macro 'distributes' the `.` broadcasting to all operations. These two lines of code are equivalent.

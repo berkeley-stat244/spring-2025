@@ -1,5 +1,5 @@
 ---
-title: "Notes 4: Efficiency"
+title: "Notes 5: Efficiency"
 author: "Chris Paciorek"
 date: "2025-02-04"
 format:
@@ -98,20 +98,27 @@ X = randn((n,p));
 
 ## Run once to avoid profiling JIT compilation.
 coefs = ols_slow(y, X);
+```
 
-# This prints out voluminous, hard-to-interpret information.
-# @profile coefs = ols_slow(y, X)
-# Profile.print()  
+Directly interpreting the Profile output can be difficulty. In this case, if we ran the following code, we'd see very long, hard-to-interpret information.
 
-# Instead, let's try a visualization. 
-using ProfileView
-@profview ols_slow(y, X)
+```{julia}
+#| eval: false
+@profile coefs = ols_slow(y, X)
+Profile.print()  
+```
+
+Instead let's try a visualization. There are other Julia packages for visualizing profiler output. Some might be better than this. (I tried `ProfileView` and liked `StatProfilerHTML` better.)
+
+```{julia}
+# using ProfileView
+# @profview ols_slow(y, X)
 
 using StatProfilerHTML
 @profilehtml ols_slow(y, X)
 ```
 
-That produces [this output](statprof/index.html), which can in some ways be hard to interpret, but the color-coded division between `inv`, `*` and `*` gives us an idea of where time is being spent. 
+That produces [this output](statprof/index.html), which can in some ways be hard to interpret, but the color-coded division between `inv`, `*` and `*` gives us an idea of where time is being spent. That output might not show up fully in the links - you might need to run the code above yourself.
 
 ## Pre-allocation
 
@@ -129,7 +136,7 @@ Python lists [handle this much better](https://stat243.berkeley.edu/fall-2024/un
 Let's consider this in Julia.
 
 ```{julia}
-function fun1(n) 
+function fun_prealloc(n) 
   x = zeros(n);
   for i in 1:n
     x[i] = i;
@@ -137,7 +144,7 @@ function fun1(n)
   return x
 end
 
-function fun2(n) 
+function fun_grow(n) 
   x = Float64[];
   for i in 1:n
     push!(x, i);
@@ -148,20 +155,20 @@ end
 using BenchmarkTools
 
 n = 100000000
-@btime x1 = fun1(n);
+@btime x1 = fun_prealloc(n);
 ```
 ```{julia}
-@btime x2 = fun2(n);
+@btime x2 = fun_grow(n);
 ```
 
-That indicates that it's better to pre-allocate memory in Julia, but the time does not seem to grow as order of $n^2$ as it does in R.
+That indicates that it's better to pre-allocate memory in Julia, but the time does not seem to grow as order of $n^2$ as it does in R or with numpy arrays.
 So that suggests Julia is growing the array in a smart fashion.
 
 We can verify that by looking at the memory allocation information returned by `@btime`.
 
-For `fun1`, we see an allocation of ~800 MB, consistent with allocating an array of 100 million 8 byte floats. (It turns out the "second" allocation occurs because we are running `@btime` in the global scope).
+For `fun_prealloc`, we see an allocation of ~800 MB, consistent with allocating an array of 100 million 8 byte floats. (It turns out the "second" allocation occurs because we are running `@btime` in the global scope).
 
-For `fun2`, we see 23 allocations of ~1 GB, consistent with Julia growing the array in a smart fashion but with some additional memory allocation.
+For `fun_grow`, we see 23 allocations of ~1 GB, consistent with Julia growing the array in a smart fashion but with some additional memory allocation.
 
 If the array were reallocated each time it grew by one, we'd allocate and copy $1+2+\cdots+n = n (n+1)/2$ numbers in total over the course of the computation (but not all at once), which would take a lot of time.
 
