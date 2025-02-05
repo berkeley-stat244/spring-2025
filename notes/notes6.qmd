@@ -1,5 +1,5 @@
 ---
-title: "Notes 6: JIT compilation (intro)"
+title: "Notes 6: JIT compilation"
 author: "Chris Paciorek"
 date: "2025-02-06"
 format:
