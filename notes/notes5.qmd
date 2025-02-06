@@ -389,7 +389,7 @@ And we see that having an array of Reals is bad for performance. As part of this
 using LinearAlgebra
 n = 100;
 A = rand(n, n);
-@btime tmp = A'A;  # Equivalant to A' * A or transpose(A) * A.
+@btime tmp = A'A;  # Equivalent to A' * A or transpose(A) * A.
 ```
 ```{julia}
 rA = convert(Array{Real}, A);

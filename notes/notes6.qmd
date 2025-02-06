@@ -127,6 +127,7 @@ Try the following:
  3. Time it after running it a second time
  4. Time a vectorized version without the loop (also within a function)
 
+Fill in your timing answers in [this Google form](https://forms.gle/deR11fRdR3i32PnT6) and we'll discuss during the next class.
 :::
 
 

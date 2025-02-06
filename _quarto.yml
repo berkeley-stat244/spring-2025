@@ -29,6 +29,8 @@ website:
           - href: notes/notes4.qmd
           - href: notes/notes5.qmd
           - href: notes/notes6.qmd
+      - href: presentations.md
+        text: Presentations
       - section: "Problem Sets"
         contents:
           - href: ps/ps1.qmd
