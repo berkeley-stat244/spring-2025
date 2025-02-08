@@ -204,7 +204,7 @@ const z = 3;
 @btime squaresum_with_const_global(4);
 ```
 
-Using the constant brings the speed back to the version without a global variable.
+sing the constant brings the speed back to the version without a global variable.
 We can see in the LLVM version of the code that $z^2$ has been computed and is hard-coded into the code. So it makes sense that it's just as fast as the non-global version (in fact we'd expect it to be faster as there is only one squaring operation).
 
 Here we add a type declaration to the global.
