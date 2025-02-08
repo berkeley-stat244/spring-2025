@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Chris Paciorek">
+<meta name="dcterms.date" content="2025-02-11">
+
+<title>Notes 7: Parallelization</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-e3c2a318547996e22cb8eadf618fd4f6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notes/notes1.html">Course Notes</a></li><li class="breadcrumb-item"><a href="../notes/notes7.html">Notes 7: Parallelization</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      <img src="../assets/stat_bear.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Stat 244</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/berkeley-stat244/spring-2025" title="" class="quarto-navigation-tool px-1" aria-label="GitHub"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../syllabus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Syllabus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../schedule.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Schedule</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../office_hours.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Office Hours</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Course Notes</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Notes 1: Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Notes 2: Memory and scope</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Notes 3: Types and dispatch</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Notes 4: Managing Julia</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Notes 5: Efficiency</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Notes 6: JIT compilation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes7.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Notes 7: Parallelization</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../presentations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Presentations</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Problem Sets</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ps/ps1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Problem Set 1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ps/ps2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Problem Set 2</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">How tos</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../howtos/accessJulia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Accessing Julia</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../howtos/accessSCF.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Accessing the SCF</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../howtos/useQuarto.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Using Quarto</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../howtos/installPython.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Installing Python</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../howtos/installGit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Installing Git</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../howtos/presentations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Presentation guidelines</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../license.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">License</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#parallelization-overview" id="toc-parallelization-overview" class="nav-link" data-scroll-target="#parallelization-overview">Parallelization overview</a>
+  <ul class="collapse">
+  <li><a href="#glossary-of-terms" id="toc-glossary-of-terms" class="nav-link" data-scroll-target="#glossary-of-terms">Glossary of terms</a></li>
+  <li><a href="#parallelization-strategies" id="toc-parallelization-strategies" class="nav-link" data-scroll-target="#parallelization-strategies">Parallelization strategies</a></li>
+  <li><a href="#types-of-parallelization" id="toc-types-of-parallelization" class="nav-link" data-scroll-target="#types-of-parallelization">Types of parallelization</a></li>
+  </ul></li>
+  <li><a href="#threading-in-julia" id="toc-threading-in-julia" class="nav-link" data-scroll-target="#threading-in-julia">Threading in Julia</a>
+  <ul class="collapse">
+  <li><a href="#threaded-linear-algebra" id="toc-threaded-linear-algebra" class="nav-link" data-scroll-target="#threaded-linear-algebra">Threaded linear algebra</a></li>
+  <li><a href="#threaded-for-loops-and-map-like-operations" id="toc-threaded-for-loops-and-map-like-operations" class="nav-link" data-scroll-target="#threaded-for-loops-and-map-like-operations">Threaded for loops and map-like operations</a></li>
+  <li><a href="#spawning-tasks-on-threads" id="toc-spawning-tasks-on-threads" class="nav-link" data-scroll-target="#spawning-tasks-on-threads">Spawning tasks on threads</a></li>
+  </ul></li>
+  <li><a href="#multi-process-parallelization-in-julia" id="toc-multi-process-parallelization-in-julia" class="nav-link" data-scroll-target="#multi-process-parallelization-in-julia">Multi-process parallelization in Julia</a>
+  <ul class="collapse">
+  <li><a href="#parallel-map-operations" id="toc-parallel-map-operations" class="nav-link" data-scroll-target="#parallel-map-operations">Parallel map operations</a></li>
+  <li><a href="#parallel-for-loops" id="toc-parallel-for-loops" class="nav-link" data-scroll-target="#parallel-for-loops">Parallel <code>for</code> loops</a></li>
+  <li><a href="#passing-data-to-the-workers" id="toc-passing-data-to-the-workers" class="nav-link" data-scroll-target="#passing-data-to-the-workers">Passing data to the workers</a></li>
+  <li><a href="#spawning-tasks" id="toc-spawning-tasks" class="nav-link" data-scroll-target="#spawning-tasks">Spawning tasks</a></li>
+  <li><a href="#using-multiple-machines" id="toc-using-multiple-machines" class="nav-link" data-scroll-target="#using-multiple-machines">Using multiple machines</a></li>
+  </ul></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="notes7.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notes/notes1.html">Course Notes</a></li><li class="breadcrumb-item"><a href="../notes/notes7.html">Notes 7: Parallelization</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Notes 7: Parallelization</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Chris Paciorek </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 11, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>This document is the seventh of a set of notes, this document focusing on the parallelization. The notes are not meant to be particularly complete in terms of useful functions (Google and LLMs can now provide that quite well), but rather to introduce the language and consider key programming concepts in the context of Julia.</p>
+<p>Given that, the document heavily relies on demos, with interpretation in some cases left to the reader.</p>
+<p>In some cases, I have set the code chunks to not execute when rendering this document, since the parallelization complicates execution and display of results.</p>
+</section>
+<section id="parallelization-overview" class="level2">
+<h2 class="anchored" data-anchor-id="parallelization-overview">Parallelization overview</h2>
+<p>Let’s first discuss some general concepts related to parallelization, based on the <a href="https://computing.stat.berkeley.edu/tutorial-parallelization/">overview in this SCF tutorial</a>.</p>
+<section id="glossary-of-terms" class="level3">
+<h3 class="anchored" data-anchor-id="glossary-of-terms">Glossary of terms</h3>
+<ul>
+<li><em>cores</em>: We’ll use this term to mean the different processing units available on a single machine or node.</li>
+<li><em>nodes</em>: We’ll use this term to mean the different computers, each with their own distinct memory, that make up a cluster or supercomputer.</li>
+<li><em>processes</em>: instances of a program executing on a machine; multiple processes may be executing at once. A given executable (e.g., Julia or Python) may start up multiple processes at once. Ideally we have no more user processes than cores on a node.</li>
+<li><em>workers</em>: the individual processes that are carrying out the (parallelized) computation. We’ll use worker and process interchangeably.</li>
+<li><em>tasks</em>: This term gets used in various ways (including in place of ‘processes’ in the context of Slurm and MPI), but we’ll use it to refer to the individual computational items you want to complete - e.g., one task per cross-validation fold or one task per simulation replicate/iteration.</li>
+<li><em>threads</em>: multiple paths of execution within a single process; the OS sees the threads as a single process, but one can think of them as ‘lightweight’ processes. Ideally when considering the processes and their threads, we would have the number of total threads across all processes not exceed the number of cores on a node. Note: this is a separate term/concept from hardware hyperthreading, in which a single core can have two hyperthreads and operate almost as if it had two cores.</li>
+<li><em>forking</em>: child processes are spawned that are identical to the parent, but with different process IDs and their own memory. In some cases if objects are not changed, the objects in the child process may refer back to the original objects in the original process, avoiding making copies.</li>
+<li><em>sockets</em>: some of R’s parallel functionality involves creating new R processes (e.g., starting processes via <em>Rscript</em>) and communicating with them via a communication technology called sockets.</li>
+<li><em>scheduler</em>: a program that manages users’ jobs on a cluster. Slurm is the most popular.</li>
+<li><em>load-balanced</em>: when all the cores that are part of a computation are busy for the entire period of time the computation is running.</li>
+<li><em>latency</em>: the time delay or lag in starting an operation. Note this is a fixed cost and does not scale with the size of the operation.</li>
+</ul>
+</section>
+<section id="parallelization-strategies" class="level3">
+<h3 class="anchored" data-anchor-id="parallelization-strategies">Parallelization strategies</h3>
+<p>Some of the considerations that apply when thinking about how effective a given parallelization approach will be include:</p>
+<ul>
+<li>the amount of memory that will be used by the various processes,</li>
+<li>the amount of communication that needs to happen – how much data will need to be passed between processes,</li>
+<li>the latency of any communication - how much delay/lag is there in sending data between processes or starting up a worker process, and</li>
+<li>to what extent do processes have to wait for other processes to finish before they can do their next step.</li>
+</ul>
+<p>The following are some basic principles/suggestions for how to parallelize your computation.</p>
+<ul>
+<li>Should I use one machine/node or many machines/nodes?
+<ul>
+<li>If you can do your computation on the cores of a single node using shared memory, that will be faster than using the same number of cores (or even somewhat more cores) across multiple nodes. Similarly, jobs with a lot of data/high memory requirements that one might think of as requiring multiple nodes may in some cases be much faster if you can find a single machine with a lot of memory.</li>
+<li>That said, if you would run out of memory on a single node, then you’ll need to use distributed memory.</li>
+</ul></li>
+<li>What level or dimension should I parallelize over?
+<ul>
+<li>If you have nested loops, you generally only want to parallelize at one level of the code. That said, in this unit we’ll see some tools for parallelizing at multiple levels. Keep in mind whether your linear algebra is being threaded. Often you will want to parallelize over a loop and not use threaded linear algebra within the iterations of the loop.</li>
+<li>Often it makes sense to parallelize the outer loop when you have nested loops.</li>
+<li>You generally want to parallelize in such a way that your code is load-balanced and does not involve too much communication.</li>
+</ul></li>
+<li>How do I balance communication overhead with keeping my cores busy?
+<ul>
+<li>If you have very few tasks, particularly if the tasks take different amounts of time, often some processors will be idle and your code poorly load-balanced.</li>
+<li>If you have very many tasks and each one takes little time, the overhead of starting and stopping the tasks will reduce efficiency.</li>
+</ul></li>
+<li>Should multiple tasks be pre-assigned (statically assigned) to a process (i.e., a worker) (sometimes called prescheduling) or should tasks be assigned dynamically as previous tasks finish?
+<ul>
+<li>To illustrate the difference, suppose you have 6 tasks and 3 workers. If the tasks are pre-assigned, worker 1 might be assigned tasks 1 and 4 at the start, worker 2 assigned tasks 2 and 5, and worker 3 assigned tasks 3 and 6. If the tasks are dynamically assigned, worker 1 would be assigned task 1, worker 2 task 2, and worker 3 task 3. Then whichever worker finishes their task first (it woudn’t necessarily be worker 1) would be assigned task 4 and so on.</li>
+<li>Basically if you have many tasks that each take similar time, you want to preschedule the tasks to reduce communication. If you have few tasks or tasks with highly variable completion times, you don’t want to preschedule, to improve load-balancing.</li>
+</ul></li>
+</ul>
+</section>
+<section id="types-of-parallelization" class="level3">
+<h3 class="anchored" data-anchor-id="types-of-parallelization">Types of parallelization</h3>
+<ul>
+<li>Threading
+<ul>
+<li>Multi-threaded computation involves a single process that executes multiple threads (paths of execution on (ideally) as many cores as there are threads.</li>
+<li>All the threads have access to the same memory (which is efficient but can potentially cause conflicts (aka “race conditions”).</li>
+<li>One will see &gt;100% CPU usage because all usage is associated with a single process.</li>
+</ul></li>
+<li>Multi-process
+<ul>
+<li>Multiple processes collaborate to execute a computation.</li>
+<li>Processes may be controlled by a single main process and/or may execute distinct code based on their ID.</li>
+<li>One will see multiple processes running.</li>
+</ul></li>
+<li>GPUs
+<ul>
+<li>Many processing units (thousands) that are slow individually compared to the CPU but provide massive parallelism.</li>
+<li>They have somewhat more limited memory (though modern GPUs like the A100 can have 80 GB of GPU memory).</li>
+<li>They can only use data in their own memory, not in the CPU’s memory, so one must transfer data back and forth between the CPU (the <em>host</em>) and the GPU (the <em>device</em>). This copying can, in some computations, constitute a very large fraction of the overall computation. So it is best to create the data and/or leave the data (for subsequent calculations) on the GPU when possible and to limit transfers.</li>
+</ul></li>
+</ul>
+<p>More on GPUs in the next set of notes.</p>
+<p>One of the nice things about Julia is that much of the parallelization functionality is available directly in the Base package/module or in a limited number of additional packages. In Python and R, there is a confusing explosion of different parallelization packages (though for R, I highly recommend the <code>future</code> package and related packages for all your non-GPU parallelization work). E.g., in Python there is <code>ipyparallel</code>, <code>ray</code>, <code>dask</code>, <code>multiprocessing</code> in addition to other numerical computing packages that can run code in parallel (and on the GPU), such as JAX and PyTorch.</p>
+</section>
+</section>
+<section id="threading-in-julia" class="level2">
+<h2 class="anchored" data-anchor-id="threading-in-julia">Threading in Julia</h2>
+<p>This material is drawn from <a href="https://computing.stat.berkeley.edu/tutorial-parallelization/parallel-julia#2-threading">this SCF tutorial</a>.</p>
+<section id="threaded-linear-algebra" class="level3">
+<h3 class="anchored" data-anchor-id="threaded-linear-algebra">Threaded linear algebra</h3>
+<p>As with Python and R, Julia uses BLAS, a standard library of basic linear algebra operations (written in Fortran or C), for linear algebra operations. A fast BLAS can greatly speed up linear algebra relative to the default BLAS on a machine. Julia uses a fast, open source, free BLAS library called <em>OpenBLAS</em>. In addition to being fast when used on a single core, the openBLAS library is threaded - if your computer has multiple cores and there are free resources, your linear algebra will use multiple cores.</p>
+<p>Here’s an example.</p>
+<div id="3614c885" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">LinearAlgebra</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Distributions</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">BenchmarkTools</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="fl">6000</span>;</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fu">rand</span>(<span class="fu">Uniform</span>(<span class="fl">0</span>,<span class="fl">1</span>), n,n);</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(BLAS.<span class="fu">get_num_threads</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>4</code></pre>
+</div>
+</div>
+<div id="09bb8190" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">chol_xtx</span>(x)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> x<span class="op">'</span>x;   <span class="co">## `z` is positive definite.</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    C <span class="op">=</span> <span class="fu">cholesky</span>(z);</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> C;</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>BLAS.<span class="fu">set_num_threads</span>(<span class="fl">4</span>);</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> chol <span class="op">=</span> <span class="fu">chol_xtx</span>(x);  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  5.766 s (5 allocations: 549.32 MiB)</code></pre>
+</div>
+</div>
+<div id="4596d087" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>BLAS.<span class="fu">set_num_threads</span>(<span class="fl">1</span>);</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> chol <span class="op">=</span> <span class="fu">chol_xtx</span>(x);  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  6.832 s (5 allocations: 549.32 MiB)</code></pre>
+</div>
+</div>
+<p>We see that using four threads is faster than one, but in this case the speedup was (surprisingly) minimal. (In Python or R, I would expect a much bigger speedup and since all are using BLAS/LAPACK, I don’t understand why there is so little difference in Julia.)</p>
+<p>By default, Julia will set the number of threads for linear algebra equal to the number of processors on your machine.</p>
+<p>As seen above, you can check the number of threads being used with:</p>
+<div id="c978056e" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>BLAS.<span class="fu">get_num_threads</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>1</code></pre>
+</div>
+</div>
+<p>You can also control the number of threads used for linear algebra via the <code>OMP_NUM_THREADS</code> (or <code>OPENBLAS_NUM_THREADS</code>) environment variable in the shell:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Option 1</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">OMP_NUM_THREADS</span><span class="op">=</span>4</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="ex">julia</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">## Option 2</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="va">OMP_NUM_THREADS</span><span class="op">=</span>4 <span class="ex">julia</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="threaded-for-loops-and-map-like-operations" class="level3">
+<h3 class="anchored" data-anchor-id="threaded-for-loops-and-map-like-operations">Threaded for loops and map-like operations</h3>
+<p>In Julia, you can directly set up <a href="https://docs.julialang.org/en/v1/manual/multi-threading">software threads to use for parallel processing</a>.</p>
+<p>Here we’ll see some examples of running a for loop in parallel, both acting on a single object and used as a parallel map operation.</p>
+<p>Here we can operate on a vector in parallel:</p>
+<div id="a6bee871" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Base.Threads</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="fl">50000000</span>;</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fu">rand</span>(n);</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="pp">@threads</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu">length</span>(x)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    x[i] <span class="op">=</span> <span class="fu">tan</span>(x[i]) <span class="op">+</span> <span class="fl">3</span><span class="fu">*sin</span>(x[i]);</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If anyone is familiar with OpenMP, the use of the macro above to tag the loop for parallelization will look familiar.</p>
+<p>We could also threads to carry out a parallel map operation, implemented as a for loop.</p>
+<div id="d7202937" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="fl">1000</span>;</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">test</span>(n)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="fu">rand</span>(<span class="fu">Uniform</span>(<span class="fl">0</span>,<span class="fl">1</span>), n,n);</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> x<span class="op">'</span>x;</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    C <span class="op">=</span> <span class="fu">cholesky</span>(z);</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span>(C.U[<span class="fl">1</span>,<span class="fl">1</span>])  <span class="co">## Arbitrary output to assure that the computation was done.</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="fu">zeros</span>(<span class="fl">12</span>)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="pp">@threads</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">12</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    a[i] <span class="op">=</span> <span class="fu">test</span>(n);</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="spawning-tasks-on-threads" class="level3">
+<h3 class="anchored" data-anchor-id="spawning-tasks-on-threads">Spawning tasks on threads</h3>
+<p>You can also create (aka <em>spawn</em>) individual tasks on threads, with the tasks running in parallel.</p>
+<p>Let’s see an example (taken from <a href="http://ferestrepoca.github.io/paradigmas-de-programacion/paralela/tutoriales/julia/notebooks/parallelProgrammingApplications.html">here</a> of sorting a vector in parallel, by sorting subsets of the vector in separate threads.</p>
+<div id="3e064ab3" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">Base.Threads.@spawn</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># sort the elements of `v` in place, from indices `lo` to `hi` inclusive</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">psort!</span>(v, lo<span class="op">::</span><span class="dt">Int</span>=<span class="fl">1</span>, hi<span class="op">::</span><span class="dt">Int</span>=<span class="fu">length</span>(v))</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="fu">current_task</span>(), <span class="ch">' '</span>, lo, <span class="ch">' '</span>, hi)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> lo <span class="op">&gt;=</span> hi                       <span class="co"># 1 or 0 elements; nothing to do.</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> v</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> hi <span class="op">-</span> lo <span class="op">&lt;</span> <span class="fl">100000</span>               <span class="co"># Below some cutoff, run in serial.</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sort!</span>(<span class="fu">view</span>(v, lo<span class="op">:</span>hi), alg <span class="op">=</span> <span class="cn">MergeSort</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> v</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    mid <span class="op">=</span> (lo<span class="op">+</span>hi)<span class="op">&gt;&gt;&gt;</span><span class="fl">1</span>                 <span class="co"># Find the midpoint.</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">### Set up parallelization here </span><span class="al">###</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">## Sort two halves in parallel, one in current call and one in a new task</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">## in a separate thread:</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    half <span class="op">=</span> <span class="pp">@spawn</span> <span class="fu">psort!</span>(v, lo, mid)  <span class="co"># Task to sort the lower half.</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">psort!</span>(v, mid<span class="op">+</span><span class="fl">1</span>, hi)              <span class="co"># Sort the upper half in the current call.</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">wait</span>(half)                        <span class="co"># Wait for the lower half to finish.</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    temp <span class="op">=</span> v[lo<span class="op">:</span>mid]                  <span class="co"># Create workspace for merging.</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>    i, k, j <span class="op">=</span> <span class="fl">1</span>, lo, mid<span class="op">+</span><span class="fl">1</span>            <span class="co"># Merge the two sorted sub-arrays.</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@inbounds</span> <span class="cf">while</span> k <span class="op">&lt;</span> j <span class="op">&lt;=</span> hi       <span class="co">#   `@inbounds` skips array bound checking for efficiency.</span></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> v[j] <span class="op">&lt;</span> temp[i]</span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>            v[k] <span class="op">=</span> v[j]</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>            j <span class="op">+=</span> <span class="fl">1</span></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>            v[k] <span class="op">=</span> temp[i]</span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>            i <span class="op">+=</span> <span class="fl">1</span></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>        k <span class="op">+=</span> <span class="fl">1</span></span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@inbounds</span> <span class="cf">while</span> k <span class="op">&lt;</span> j</span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>        v[k] <span class="op">=</span> temp[i]</span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>        k <span class="op">+=</span> <span class="fl">1</span></span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>        i <span class="op">+=</span> <span class="fl">1</span></span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> v</span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>psort! (generic function with 3 methods)</code></pre>
+</div>
+</div>
+<p>How does this work? Let’s consider an example where we sort a vector of length 250000.</p>
+<p>The vector gets split into elements 1:125000 (run in task #1) and 125001:250000 (run in the main call). Then the elements 1:125000 are split into 1:62500 (run in task #2) and 62501:125000 (run in task #1), while the elements 125001:250000 are split into 125001:187500 (run in task #3) and 187501:250000 (run in the main call). No more splitting occurs because vectors of length less than 100000 are run in serial.</p>
+<p>Assuming we have at least four threads (including the main process), each of the tasks will run in a separate thread, and all four sorts on the vector subsets will run in parallel.</p>
+<div id="24a86383" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">250000</span>);</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">## Run once to invoke JIT.</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">psort!</span>(x);</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sort!</span>(x);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Task (runnable) @0x00007fdec933cfb0 1 250000
+Task (runnable) @0x00007fdec933cfb0 125001 250000
+Task (runnable) @0x00007fdec933cfb0 187501 250000
+Task (runnable) @0x00007fdeca9afd00 1 125000
+Task (runnable) @0x00007fdeca9afd00 62501 125000
+Task (runnable) @0x00007fdeca800010 125001 187500
+Task (runnable) @0x00007fdeca8001a0 1 62500</code></pre>
+</div>
+</div>
+<p>We see that the output from <code>current_task()</code> shows that the task labels correspond with what I stated above.</p>
+<p>I’ll use <code>@time</code> since using the repeated runs in <code>@btime</code> would end up sorting an already sorted vector.</p>
+<div id="9eb6dad8" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">250000</span>);</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> x[<span class="op">:</span>];</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">psort!</span>(x);</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">sort!</span>(y; alg <span class="op">=</span> <span class="cn">MergeSort</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Task (runnable) @0x00007fdec933cfb0 1 250000
+Task (runnable) @0x00007fdec933cfb0 125001 250000
+Task (runnable) @0x00007fdec933cfb0 187501 250000
+Task (runnable) @0x00007fdeca802ef0 1 125000
+Task (runnable) @0x00007fdeca802ef0 62501 125000
+Task (runnable) @0x00007fdeca803080 125001 187500
+Task (runnable) @0x00007fdeca803210 1 62500
+  0.018681 seconds (641 allocations: 2.886 MiB)
+  0.184783 seconds (174.99 k allocations: 12.453 MiB, 90.65% compilation time)</code></pre>
+</div>
+</div>
+<p>Once we account for the compilation time, it looks like the parallel sort is not faster than the non-parallel sort.</p>
+<p>The number of tasks running in parallel will be at most the number of threads set in the Julia session.</p>
+<section id="controlling-the-number-of-threads" class="level4">
+<h4 class="anchored" data-anchor-id="controlling-the-number-of-threads">Controlling the number of threads</h4>
+<p>You can see the number of threads available:</p>
+<div id="2a38418c" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Threads</span>.<span class="fu">nthreads</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>1</code></pre>
+</div>
+</div>
+<p>You can control the number of threads used for threading in Julia (apart from linear algebra) either by:</p>
+<ul>
+<li>setting the <code>JULIA_NUM_THREADS</code> environment variable in the shell before starting Julia, or</li>
+<li>starting Julia with the <code>-t</code> (or <code>--threads</code>) flag, e.g.: <code>julia -t 4</code>.</li>
+</ul>
+<p>Note that we can’t use <code>OMP_NUM_THREADS</code> as the Julia threading is not based on OpenMP.</p>
+</section>
+</section>
+</section>
+<section id="multi-process-parallelization-in-julia" class="level2">
+<h2 class="anchored" data-anchor-id="multi-process-parallelization-in-julia">Multi-process parallelization in Julia</h2>
+<p>This material is drawn from <a href="https://computing.stat.berkeley.edu/tutorial-parallelization/parallel-julia#3-multi-process-parallelization">this SCF tutorial</a>.</p>
+<p>We’d want to think about how JIT compilation fits into the multi-process parallelization. I have not considered that in these materials.</p>
+<section id="parallel-map-operations" class="level3">
+<h3 class="anchored" data-anchor-id="parallel-map-operations">Parallel map operations</h3>
+<p>We can use <code>pmap</code> to run a parallel map operation across multiple Julia processes (on one or more machines). <code>pmap</code> is good for cases where each task takes a non-negligible amount of time, as there is overhead (latency) in starting the tasks.</p>
+<p>Here we’ll carry out multiple computationally expensive calculations in the map.</p>
+<p>We need to import packages and create the function on each of the worker processes using <code>@everywhere</code>.</p>
+<div id="f9b49b5e" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Distributed</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="fu">nprocs</span>() <span class="op">==</span> <span class="fl">1</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">addprocs</span>(<span class="fl">4</span>)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="fu">nprocs</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>WARNING: using Distributed.@spawn in module Main conflicts with an existing identifier.</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre><code>5</code></pre>
+</div>
+</div>
+<div id="603e9de8" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@everywhere</span> <span class="cf">begin</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="im">using</span> <span class="bu">Distributions</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="im">using</span> <span class="bu">LinearAlgebra</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">function</span> <span class="fu">test</span>(n)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="fu">rand</span>(<span class="fu">Uniform</span>(<span class="fl">0</span>,<span class="fl">1</span>), n,n)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> x<span class="op">'</span>x</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>        C <span class="op">=</span> <span class="fu">cholesky</span>(z)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> C.U[<span class="fl">2</span>,<span class="fl">3</span>]  <span class="co">## Arbitrary output to assure that the computation was done.</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> <span class="fu">pmap</span>(test, <span class="fu">repeat</span>([<span class="fl">5000</span>],<span class="fl">12</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>12-element Vector{Float64}:
+ 11.92819262926525
+ 11.486380157599637
+ 11.744361479874499
+ 10.924251757967712
+ 11.270951456269394
+ 12.249656886543042
+ 11.741978712892982
+ 11.560937709829929
+ 11.977586847029013
+ 11.26490233886605
+ 11.022623287735463
+ 11.306618441343915</code></pre>
+</div>
+</div>
+<p>One can use <a href="./#parallelization-strategies">static allocation (prescheduling)</a> with the <code>batch_size</code> argument, thereby assigning that many tasks to each worker to reduce latency.</p>
+</section>
+<section id="parallel-for-loops" class="level3">
+<h3 class="anchored" data-anchor-id="parallel-for-loops">Parallel <code>for</code> loops</h3>
+<p>One can execute <code>for</code> loops in parallel across multiple worker processes as follows. This is particularly handy for cases where one uses a reduction operator (e.g., the <code>+</code> here) so that little data needs to be copied back to the main process. (And in this case we don’t copy any data to the workers either.)</p>
+<p>Here we’ll sum over a large number of random numbers with chunks done on each of the workers, comparing the time to a basic <code>for</code> loop.</p>
+<div id="c7b48c31" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">BenchmarkTools</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">forfun</span>(n)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    sum <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>n</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>        sum <span class="op">+=</span> <span class="fu">rand</span>(<span class="fl">1</span>)[<span class="fl">1</span>]</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span>(sum)</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">pforfun</span>(n)</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>   out <span class="op">=</span> <span class="pp">@sync</span> <span class="pp">@distributed</span> (<span class="op">+</span>) <span class="cf">for</span> i <span class="op">=</span> <span class="fl">1</span><span class="op">:</span>n</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>       <span class="fu">rand</span>(<span class="fl">1</span>)[<span class="fl">1</span>]</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>   <span class="cf">end</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span>(out)</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>n<span class="op">=</span><span class="fl">50000000</span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">forfun</span>(n);</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> <span class="fu">forfun</span>(n);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  2.437506 seconds (50.01 M allocations: 2.981 GiB, 13.41% gc time, 0.40% compilation time)
+  1.887 s (50000001 allocations: 2.98 GiB)</code></pre>
+</div>
+</div>
+<div id="61bf631e" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">pforfun</span>(n);</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> <span class="fu">pforfun</span>(n); </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  1.682341 seconds (498.47 k allocations: 33.222 MiB, 24.19% compilation time)
+  481.166 ms (319 allocations: 13.39 KiB)</code></pre>
+</div>
+</div>
+<p>The use of <code>@sync</code> causes the operation to block until the result is available so we can get the correct timing.</p>
+<p>Without a reduction operation, depending on what one is doing, one coud end up passing a lot of data back to the main process, and this could take a lot of time. For such calculations, one would generally be better off using threaded for loops in order to take advantage of shared memory.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="Random number generation in parallel">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Random number generation in parallel
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We’d have to look into how the random number seed is set on each worker to better understand any issues that might arise from parallel random number generation, but I believe that each worker has a different seed (but note that this does not explicitly ensure that the random number streams on the workers are distinct, as is the case if one uses the L’Ecuyer algorithm).</p>
+</div>
+</div>
+</section>
+<section id="passing-data-to-the-workers" class="level3">
+<h3 class="anchored" data-anchor-id="passing-data-to-the-workers">Passing data to the workers</h3>
+<p>With multiple workers, particularly on more than one machine, one generally wants to be careful about having to copy large data objects to each worker, as that could make up a substantial portion of the time involved in the computation.</p>
+<p>One can explicitly copy a variable to the workers in an <code>@everywhere</code> block by using Julia’s interpolation syntax:</p>
+<div id="46ab3f74" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fu">randn</span>(<span class="fl">5</span>);</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(x[<span class="fl">1</span>])</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@everywhere</span> <span class="cf">begin</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="op">$</span>x  <span class="co"># copy to workers using interpolation syntax</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="fu">pointer_from_objref</span>(x), <span class="ch">' '</span>, x[<span class="fl">1</span>])  </span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span>(<span class="fl">2</span>)  <span class="co"># There is probably a better way to wait until all worker printing is done.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0.6011221160341603
+Ptr{Nothing} @0x00007fde3d51ae30 0.6011221160341603
+      From worker 5:    Ptr{Nothing} @0x00007f765ffa4010 0.6011221160341603
+      From worker 2:    Ptr{Nothing} @0x00007fe896ba4010 0.6011221160341603
+      From worker 3:    Ptr{Nothing} @0x00007f3af35a4010 0.6011221160341603
+      From worker 4:    Ptr{Nothing} @0x00007fc5ebea8010 0.6011221160341603</code></pre>
+</div>
+</div>
+<p>We see based on <code>pointer_from_objref</code> that each copy of <code>x</code> is stored at a distinct location in memory, even when processes are on the same machine.</p>
+<p>Also note that if one creates a variable within an <code>@everywhere</code> block, that variable is available to all tasks run on the worker, so it is global’ with respect to those tasks. Note the repeated values in the result here.</p>
+<div id="85438a6f" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@everywhere</span> <span class="cf">begin</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">5</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">function</span> <span class="fu">test</span>(i)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="fu">sum</span>(x)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> <span class="fu">pmap</span>(test, <span class="fl">1</span><span class="op">:</span><span class="fl">12</span>, batch_size <span class="op">=</span> <span class="fl">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>12-element Vector{Float64}:
+ 2.2034918068594176
+ 1.8363018044376878
+ 1.6301623917119548
+ 2.102599325199847
+ 2.2034918068594176
+ 1.8363018044376878
+ 1.6301623917119548
+ 2.102599325199847
+ 2.2034918068594176
+ 1.8363018044376878
+ 1.6301623917119548
+ 2.102599325199847</code></pre>
+</div>
+</div>
+<p>If one wants to have multiple processes all work on the same object, without copying it, one can consider using Julia’s <a href="https://docs.julialang.org/en/v1/stdlib/SharedArrays/#SharedArrays.SharedArray">SharedArray</a> (one machine) or <a href="https://juliaparallel.org/DistributedArrays.jl/stable/">DArray from the DistributedArrays package</a> (multiple machines) types, which break up arrays into pieces, with different pieces stored locally on different processes.</p>
+</section>
+<section id="spawning-tasks" class="level3">
+<h3 class="anchored" data-anchor-id="spawning-tasks">Spawning tasks</h3>
+<p>One can use the <code>Distributed.@spawnat</code> macro to run tasks on processes, in a fashion similar to using <code>Threads.@spawn</code>. More details can be found <a href="https://docs.julialang.org/en/v1/stdlib/Distributed/#Distributed.@spawnat">here</a>.</p>
+</section>
+<section id="using-multiple-machines" class="level3">
+<h3 class="anchored" data-anchor-id="using-multiple-machines">Using multiple machines</h3>
+<p>In addition to using processes on one machine, one can use processes across multiple machines. One can either start the processes when you start the main Julia session or you can start them from within the Julia session. In both cases you’ll need to have the ability to ssh to the other machines without entering your password. In some cases you as the user might need to set up <a href="https://statistics.berkeley.edu/computing/ssh-keys">SSH keys</a>.</p>
+<p>To start the processes when starting Julia, create a “machinefile” that lists the names of the machines and the number of worker processes to start on each machine.</p>
+<p>Here’s an example machinefile:</p>
+<pre><code>radagast.berkeley.edu
+radagast.berkeley.edu
+gandalf.berkeley.edu
+gandalf.berkeley.edu</code></pre>
+<p>Note that if you’re using Slurm on a Linux cluster, you could generate that file in the shell from within your Slurm allocation like this:</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> hostname <span class="op">&gt;</span> machines</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then start Julia like this:</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="ex">julia</span> <span class="at">--machine-file</span> machines</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>If anyone has used MPI for programming parallel code, the idea of a “machine file” or “host file” will look familiar.</p>
+<p>From within Julia, you can add processes like this (first we’ll remove the existing worker processes started using <code>addprocs()</code> previously):</p>
+<div id="e04bdebe" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rmprocs</span>(<span class="fu">workers</span>())</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">addprocs</span>([(<span class="st">"radagast"</span>, <span class="fl">2</span>), (<span class="st">"gandalf"</span>, <span class="fl">2</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>4-element Vector{Int64}:
+ 6
+ 7
+ 8
+ 9</code></pre>
+</div>
+</div>
+<p>To check on the number of processes:</p>
+<div id="c727b343" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nprocs</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>5</code></pre>
+</div>
+</div>
+<p>When we demo this in class, we’ll try our parallel map example (the linear algebra calculation) and check that we have workers running on the various machines using <code>top</code> or <code>ps</code> after sshing to the machines.</p>
+<div id="f5a8a735" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> <span class="fu">pmap</span>(test, <span class="fu">repeat</span>([<span class="fl">5000</span>],<span class="fl">12</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/berkeley-stat244\.github\.io\/spring-2025");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -245,6 +245,12 @@ window.Quarto = {
  <span class="menu-text">Notes 6: JIT compilation</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notes/notes7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Notes 7: Parallelization</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
@@ -440,7 +446,7 @@ window.Quarto = {
 <section id="multiple-dispatch" class="level3">
 <h3 class="anchored" data-anchor-id="multiple-dispatch">Multiple dispatch</h3>
 <p>Julia compiles version of functions for each type of inputs. Let’s see that with an example.</p>
-<div id="082af6bd" class="cell" data-execution_count="1">
+<div id="fbf1a929" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">mysum</span>(x)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  out<span class="op">=</span>(<span class="fu">typeof</span>(x[<span class="fl">1</span>]))(<span class="fl">0</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  n <span class="op">=</span> <span class="fu">length</span>(x)</span>
@@ -456,34 +462,34 @@ window.Quarto = {
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">mysum</span>(xfloat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  0.010444 seconds (2.86 k allocations: 194.250 KiB, 99.72% compilation time)</code></pre>
+<pre><code>  0.009719 seconds (2.86 k allocations: 194.250 KiB, 99.75% compilation time)</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <pre><code>12.0</code></pre>
 </div>
 </div>
-<div id="cdec7390" class="cell" data-execution_count="2">
+<div id="e712ba0e" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">mysum</span>(xfloat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  0.000009 seconds (1 allocation: 16 bytes)</code></pre>
+<pre><code>  0.000007 seconds (1 allocation: 16 bytes)</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>12.0</code></pre>
 </div>
 </div>
-<div id="aaa773ed" class="cell" data-execution_count="3">
+<div id="28f42000" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">mysum</span>(xfloat32)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  0.010267 seconds (2.85 k allocations: 193.719 KiB, 99.74% compilation time)</code></pre>
+<pre><code>  0.009583 seconds (2.85 k allocations: 193.719 KiB, 99.74% compilation time)</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>11.999999f0</code></pre>
 </div>
 </div>
-<div id="c47618ae" class="cell" data-execution_count="4">
+<div id="1d063a29" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">mysum</span>(xint)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  0.013630 seconds (2.85 k allocations: 193.688 KiB, 99.82% compilation time)</code></pre>
+<pre><code>  0.013744 seconds (2.85 k allocations: 193.688 KiB, 99.83% compilation time)</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <pre><code>12</code></pre>
@@ -495,7 +501,7 @@ window.Quarto = {
 <p>Let’s explore the timing of Julia looping to better understand the JIT compilation.</p>
 <p>We’ll use the well-used example of the Monte Carlo approach to estimating <span class="math inline">\(\pi\)</span>.</p>
 <p>Here’s a Julia implementation:</p>
-<div id="ec4d94bd" class="cell" data-execution_count="5">
+<div id="a420599a" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>in_circle <span class="op">=</span> <span class="fl">0</span>;</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>num_throws <span class="op">=</span> <span class="fl">5000</span>;</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -514,7 +520,7 @@ window.Quarto = {
 <span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate PI</span></span>
 <span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>pi_estimate <span class="op">=</span> <span class="fl">4</span> <span class="op">*</span> in_circle <span class="op">/</span> num_throws</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
-<pre><code>3.1536</code></pre>
+<pre><code>3.1368</code></pre>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled" title="Exercise">
@@ -542,7 +548,7 @@ Exercise
 <section id="jit-and-global-versus-local-variables" class="level2">
 <h2 class="anchored" data-anchor-id="jit-and-global-versus-local-variables">JIT and global versus local variables</h2>
 <p>Using global variables is much less efficient than using local variables because the type of the global variable could change and that makes it hard to generate simple optimized code.</p>
-<div id="8077f415" class="cell" data-execution_count="6">
+<div id="87c40b44" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">squaresum</span>(x, y)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> x<span class="op">^</span><span class="fl">2</span> <span class="op">+</span> y<span class="op">^</span><span class="fl">2</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
@@ -558,7 +564,7 @@ Exercise
 <h3 class="anchored" data-anchor-id="the-intermediate-representations">The intermediate representations</h3>
 <p>Let’s look at the LLVM (intermediate representation) code produced by the JIT compilation process.</p>
 <p>The LLVM code for the basic version is simple and in fact we can read and understand it.</p>
-<div id="6f49e8c9" class="cell" data-execution_count="7">
+<div id="c2906fa3" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@code_llvm</span> <span class="fu">squaresum</span>(<span class="fl">4</span>, <span class="fl">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>;  @ In[7]:1 within `squaresum`
@@ -578,7 +584,7 @@ top:
 </div>
 </div>
 <p>In contrast the LLVM code for the version with the global is quite complicated (and only partially shown below).</p>
-<div id="12267b13" class="cell" data-execution_count="8">
+<div id="b5c8e141" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@code_llvm</span> <span class="fu">squaresum_with_global</span>(<span class="fl">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>;  @ REPL[22]:1 within `squaresum_with_global`
@@ -595,14 +601,14 @@ top:
   %3 = bitcast i8* %tls_ppgcstack to {}****
 [... snip ...]</code></pre>
 <p>Let’s time the two:</p>
-<div id="63087321" class="cell" data-execution_count="9">
+<div id="bc73495b" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">BenchmarkTools</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> <span class="fl">3</span>;</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> <span class="fu">squaresum_with_global</span>(<span class="fl">4</span>);</span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> <span class="fu">squaresum</span>(<span class="fl">4</span>, <span class="fl">3</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  33.984 ns (0 allocations: 0 bytes)
-  1.300 ns (0 allocations: 0 bytes)</code></pre>
+<pre><code>  32.709 ns (0 allocations: 0 bytes)
+  1.299 ns (0 allocations: 0 bytes)</code></pre>
 </div>
 </div>
 <p>That’s a very simple function, so it’s very fast on an <em>absolute</em> basis even with the global, but clearly very slow <em>relative</em> to the non-global version. That makes sense given the additional code in the LLVM code for the global version.</p>
@@ -610,7 +616,7 @@ top:
 <section id="helping-out-the-compiler" class="level3">
 <h3 class="anchored" data-anchor-id="helping-out-the-compiler">Helping out the compiler</h3>
 <p>Now let’s see that using a <code>const</code> or typing the global variable avoids the problem.</p>
-<div id="41006a0e" class="cell" data-execution_count="10">
+<div id="10a9f695" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">squaresum_with_const_global</span>(x)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> x<span class="op">^</span><span class="fl">2</span> <span class="op">+</span> z<span class="op">^</span><span class="fl">2</span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
@@ -633,15 +639,15 @@ top:
 }</code></pre>
 </div>
 </div>
-<div id="efe82bb8" class="cell" data-execution_count="11">
+<div id="607eac3b" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> <span class="fu">squaresum_with_const_global</span>(<span class="fl">4</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  1.300 ns (0 allocations: 0 bytes)</code></pre>
+<pre><code>  1.299 ns (0 allocations: 0 bytes)</code></pre>
 </div>
 </div>
-<p>Using the constant brings the speed back to the version without a global variable. We can see in the LLVM version of the code that <span class="math inline">\(z^2\)</span> has been computed and is hard-coded into the code. So it makes sense that it’s just as fast as the non-global version (in fact we’d expect it to be faster as there is only one squaring operation).</p>
+<p>sing the constant brings the speed back to the version without a global variable. We can see in the LLVM version of the code that <span class="math inline">\(z^2\)</span> has been computed and is hard-coded into the code. So it makes sense that it’s just as fast as the non-global version (in fact we’d expect it to be faster as there is only one squaring operation).</p>
 <p>Here we add a type declaration to the global.</p>
-<div id="bfa37e38" class="cell" data-execution_count="12">
+<div id="322c4827" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>w<span class="op">::</span><span class="dt">Int64 </span><span class="op">=</span> <span class="fl">3</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">squaresum_with_typed_global</span>(x)</span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> x<span class="op">^</span><span class="fl">2</span> <span class="op">+</span> w<span class="op">^</span><span class="fl">2</span></span>
@@ -657,7 +663,7 @@ top:
 ; │┌ @ int.jl:88 within `*`
     %1 = mul i64 %0, %0
 ; └└
-  %w2 = load atomic i64*, i64** inttoptr (i64 140710115249168 to i64**) unordered, align 16
+  %w2 = load atomic i64*, i64** inttoptr (i64 139623806937472 to i64**) unordered, align 128
 ; ┌ @ intfuncs.jl:332 within `literal_pow`
 ; │┌ @ int.jl:88 within `*`
     %unbox = load i64, i64* %w2, align 8
@@ -670,10 +676,10 @@ top:
 }</code></pre>
 </div>
 </div>
-<div id="64e4a094" class="cell" data-execution_count="13">
+<div id="30c64f6e" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> <span class="fu">squaresum_with_typed_global</span>(<span class="fl">4</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  2.588 ns (0 allocations: 0 bytes)</code></pre>
+<pre><code>  2.586 ns (0 allocations: 0 bytes)</code></pre>
 </div>
 </div>
 <p>The typed global avoids the performance issue as well. (Mostly –it is a bit slower, presumably because of the retrieval of the global variable.)</p>
@@ -684,7 +690,7 @@ top:
 <section id="jit-intermediate-representations" class="level2">
 <h2 class="anchored" data-anchor-id="jit-intermediate-representations">JIT: intermediate representations</h2>
 <p>Let’s look at the various representations along the Julia compilation process.</p>
-<div id="818d0fe9" class="cell" data-execution_count="14">
+<div id="554508b1" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># using InteractiveUtils</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@code_lowered</span> <span class="fu">squaresum</span>(<span class="fl">3.0</span>, <span class="fl">4.0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="14">
@@ -704,7 +710,7 @@ top:
 </div>
 </div>
 </div>
-<div id="e9544ffc" class="cell" data-execution_count="15">
+<div id="208ed091" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@code_typed</span> <span class="fu">squaresum</span>(<span class="fl">3.0</span>, <span class="fl">4.0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="15">
 <div class="ansi-escaped-output">
@@ -717,7 +723,7 @@ top:
 </div>
 </div>
 </div>
-<div id="4ddd2bb8" class="cell" data-execution_count="16">
+<div id="ac69eaf1" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@code_llvm</span> <span class="fu">squaresum</span>(<span class="fl">3.0</span>, <span class="fl">4.0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>;  @ In[7]:1 within `squaresum`
@@ -739,7 +745,7 @@ top:
 <section id="assembly-and-machine-code" class="level3">
 <h3 class="anchored" data-anchor-id="assembly-and-machine-code">Assembly and machine code</h3>
 <p>Here’s the assembly (‘native’) code, which has a very close relationship with the actual binary machine code.</p>
-<div id="49dbc217" class="cell" data-execution_count="17">
+<div id="8745a710" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@code_native</span> <span class="fu">squaresum</span>(<span class="fl">3.0</span>, <span class="fl">4.0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    .text
@@ -771,7 +777,7 @@ julia_squaresum_1543:                   # @julia_squaresum_1543
 </div>
 </div>
 <p>And here’s the “binary” version, though it seems like it’s still showing a version of the assembly code but with some binary annotation.</p>
-<div id="3eb8ac95" class="cell" data-execution_count="18">
+<div id="3450f6e0" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">code_native</span>(squaresum, binary<span class="op">=</span><span class="cn">true</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>; WARNING: This code may not match what actually runs.
@@ -806,14 +812,14 @@ julia_squaresum_1560:                   # @julia_squaresum_1560
     mov qword ptr [rsp + 40], rax       # encoding: [0x48,0x89,0x44,0x24,0x28]
     lea rax, [rsp + 32]                 # encoding: [0x48,0x8d,0x44,0x24,0x20]
     mov qword ptr [r13], rax            # encoding: [0x49,0x89,0x45,0x00]
-    movabs  rax, 140709917414144            # encoding: [0x48,0xb8,0x00,0xd3,0xa4,0x94,0xf9,0x7f,0x00,0x00]
+    movabs  rax, 139623585985280            # encoding: [0x48,0xb8,0x00,0xb3,0x3e,0xa6,0xfc,0x7e,0x00,0x00]
     mov qword ptr [rsp], rax            # encoding: [0x48,0x89,0x04,0x24]
     mov qword ptr [rsp + 8], rdi        # encoding: [0x48,0x89,0x7c,0x24,0x08]
-    movabs  rax, 140709916828096            # encoding: [0x48,0xb8,0xc0,0xe1,0x9b,0x94,0xf9,0x7f,0x00,0x00]
+    movabs  rax, 139623585399232            # encoding: [0x48,0xb8,0xc0,0xc1,0x35,0xa6,0xfc,0x7e,0x00,0x00]
     mov qword ptr [rsp + 16], rax       # encoding: [0x48,0x89,0x44,0x24,0x10]
     movabs  r14, offset ijl_apply_generic   # encoding: [0x49,0xbe,A,A,A,A,A,A,A,A]
                                         #   fixup A - offset: 2, value: ijl_apply_generic, kind: FK_Data_8
-    movabs  r15, 140709952738992            # encoding: [0x49,0xbf,0xb0,0xd6,0xbf,0x96,0xf9,0x7f,0x00,0x00]
+    movabs  r15, 139623621310128            # encoding: [0x49,0xbf,0xb0,0xb6,0x59,0xa8,0xfc,0x7e,0x00,0x00]
     mov r12, rsp                        # encoding: [0x49,0x89,0xe4]
     mov rdi, r15                        # encoding: [0x4c,0x89,0xff]
     mov rsi, r12                        # encoding: [0x4c,0x89,0xe6]
@@ -822,12 +828,12 @@ julia_squaresum_1560:                   # @julia_squaresum_1560
     call    r14                             # encoding: [0x41,0xff,0xd6]
     mov rbx, rax                        # encoding: [0x48,0x89,0xc3]
     mov qword ptr [rsp + 56], rax       # encoding: [0x48,0x89,0x44,0x24,0x38]
-    movabs  rax, 140709917414144            # encoding: [0x48,0xb8,0x00,0xd3,0xa4,0x94,0xf9,0x7f,0x00,0x00]
+    movabs  rax, 139623585985280            # encoding: [0x48,0xb8,0x00,0xb3,0x3e,0xa6,0xfc,0x7e,0x00,0x00]
     mov qword ptr [rsp], rax            # encoding: [0x48,0x89,0x04,0x24]
     mov rax, qword ptr [rsp + 24]       # 8-byte Reload
                                         # encoding: [0x48,0x8b,0x44,0x24,0x18]
     mov qword ptr [rsp + 8], rax        # encoding: [0x48,0x89,0x44,0x24,0x08]
-    movabs  rax, 140709916828096            # encoding: [0x48,0xb8,0xc0,0xe1,0x9b,0x94,0xf9,0x7f,0x00,0x00]
+    movabs  rax, 139623585399232            # encoding: [0x48,0xb8,0xc0,0xc1,0x35,0xa6,0xfc,0x7e,0x00,0x00]
     mov qword ptr [rsp + 16], rax       # encoding: [0x48,0x89,0x44,0x24,0x10]
     mov rdi, r15                        # encoding: [0x4c,0x89,0xff]
     mov rsi, r12                        # encoding: [0x4c,0x89,0xe6]
@@ -836,7 +842,7 @@ julia_squaresum_1560:                   # @julia_squaresum_1560
     mov qword ptr [rsp + 48], rax       # encoding: [0x48,0x89,0x44,0x24,0x30]
     mov qword ptr [rsp], rbx            # encoding: [0x48,0x89,0x1c,0x24]
     mov qword ptr [rsp + 8], rax        # encoding: [0x48,0x89,0x44,0x24,0x08]
-    movabs  rdi, 140709918578576            # encoding: [0x48,0xbf,0x90,0x97,0xb6,0x94,0xf9,0x7f,0x00,0x00]
+    movabs  rdi, 139623587149712            # encoding: [0x48,0xbf,0x90,0x77,0x50,0xa6,0xfc,0x7e,0x00,0x00]
     mov rsi, r12                        # encoding: [0x4c,0x89,0xe6]
     mov edx, 2                          # encoding: [0xba,0x02,0x00,0x00,0x00]
     call    r14                             # encoding: [0x41,0xff,0xd6]
