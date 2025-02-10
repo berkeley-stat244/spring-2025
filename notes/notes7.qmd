@@ -43,7 +43,7 @@ processes may be executing at once. A given executable (e.g., Julia or Python) m
 processes at once. Ideally we have no more user processes than cores on
 a node.
   - *workers*: the individual processes that are carrying out the (parallelized) computation. We'll use worker and process interchangeably. 
-  - *tasks*: This term gets used in various ways (including in place of 'processes' in the context of Slurm and MPI), but we'll use it to refer to the individual computational items you want to complete - e.g., one task per cross-validation fold or one task per simulation replicate/iteration.
+  - *tasks*: This term gets used in various ways (including having the same meaning as 'processes' in the context of Slurm and MPI), but we'll use it to refer to the individual computational items you want to complete - e.g., one task per cross-validation fold or one task per simulation replicate/iteration.
   - *threads*: multiple paths of execution within a single process;
 the OS sees the threads as a single process, but one can think of
 them as 'lightweight' processes. Ideally when considering the processes
@@ -55,14 +55,14 @@ the parent, but with different process IDs and their own memory. In some cases i
 new R processes (e.g., starting processes via *Rscript*) and
 communicating with them via a communication technology called sockets.
   - *scheduler*: a program that manages users' jobs on a cluster. Slurm is the most popular.
-  - *load-balanced*: when all the cores that are part of a computation are busy for the entire period of time the computation is running.
-  - *latency*: the time delay or lag in starting an operation. Note this is a fixed cost and does not scale with the size of the operation.
+  - *load-balanced*: when all the workers that are part of a computation are busy for the entire period of time the computation is running.
+  - *latency*: the time delay or lag in starting an operation (e.g., copying a chunk of data or starting a process or sending a message to a worker). Note this is a fixed cost and does not scale with the size of the operation.
 
 ### Parallelization strategies
 
 Some of the considerations that apply when thinking about how effective a given parallelization approach will be include:
 
-  - the amount of memory that will be used by the various processes,
+  - the amount of memory that will be used by the various processes (the main concern is the maximum memory used at a given time during a computation),
   - the amount of communication that needs to happen – how much data will need to be passed between processes,
   - the latency of any communication - how much delay/lag is there in sending data between processes or starting up a worker process, and
   - to what extent do processes have to wait for other processes to finish before they can do their next step.
@@ -74,15 +74,15 @@ The following are some basic principles/suggestions for how to parallelize your 
     - That said, if you would run out of memory on a single node, then you'll need to use distributed memory.
 
   - What level or dimension should I parallelize over?
-    - If you have nested loops, you generally only want to parallelize at one level of the code. That said, in this unit we'll see some tools for parallelizing at multiple levels. Keep in mind whether your linear algebra is being threaded. Often you will want to parallelize over a loop and not use threaded linear algebra within the iterations of the loop. 
+    - If you have nested loops, you generally only want to parallelize at one level of the code. Often you will want to parallelize over a loop and not use threaded linear algebra within the iterations of the loop. 
     - Often it makes sense to parallelize the outer loop when you have nested loops. 
     - You generally want to parallelize in such a way that your code is load-balanced and does not involve too much communication. 
 
   - How do I balance communication overhead with keeping my cores busy?
     - If you have very few tasks, particularly if the tasks take different amounts of time, often some processors will be idle and your code poorly load-balanced. 
-    - If you have very many tasks and each one takes little time, the overhead of starting and stopping the tasks will reduce efficiency.
+    - If you have very many tasks and each one takes little time, the overhead of starting and stopping the tasks (caused by latency) will reduce efficiency.
 
-  - Should multiple tasks be pre-assigned (statically assigned) to a process (i.e., a worker) (sometimes called prescheduling) or should tasks be assigned dynamically as previous tasks finish? 
+  - Should multiple tasks be pre-assigned (statically assigned) to a process (i.e., a worker) (sometimes called *prescheduling*) or should tasks be assigned dynamically as previous tasks finish? 
     - To illustrate the difference, suppose you have 6 tasks and 3 workers. If the tasks are pre-assigned, worker 1 might be assigned tasks 1 and 4 at the start, worker 2 assigned tasks 2 and 5, and worker 3 assigned tasks 3 and 6. If the tasks are dynamically assigned, worker 1 would be assigned task 1, worker 2 task 2, and worker 3 task 3. Then whichever worker finishes their task first (it woudn't necessarily be worker 1) would be assigned task 4 and so on. 
     - Basically if you have many tasks that each take similar time, you want to preschedule the tasks to reduce communication. If you have few tasks or tasks with highly variable completion times, you don't want to preschedule, to improve load-balancing. 
 
@@ -187,6 +187,8 @@ x = rand(n);
 end
 ```
 
+Presumably/hopefully in a case like that, the iterations are being grouped into chunks assigned to the threads; otherwise the latency from communicating about each individual task (iteration) would probably slow things down a lot.
+
 If anyone is familiar with OpenMP, the use of the macro above to tag the loop for parallelization will look familiar.
 
 We could also threads to carry out a parallel map operation, implemented as a for loop.
@@ -212,6 +214,7 @@ end
 ### Spawning tasks on threads
 
 You can also create (aka *spawn*) individual tasks on threads, with the tasks running in parallel.
+Tasks will be allocated to the available threads as threads become available (i.e., you can have many more tasks than threads, with the threadpool working its way through the tasks).
 
 Let's see an example (taken from [here](http://ferestrepoca.github.io/paradigmas-de-programacion/paralela/tutoriales/julia/notebooks/parallelProgrammingApplications.html) of sorting a vector in parallel, by sorting subsets of the vector in separate threads.
 
@@ -219,33 +222,35 @@ Let's see an example (taken from [here](http://ferestrepoca.github.io/paradigmas
 
 import Base.Threads.@spawn
 
-# sort the elements of `v` in place, from indices `lo` to `hi` inclusive
+"""
+Sort the elements of `v` in place, from indices `lo` to `hi` inclusive.
+"""
 function psort!(v, lo::Int=1, hi::Int=length(v))
     println(current_task(), ' ', lo, ' ', hi)
     if lo >= hi                       # 1 or 0 elements; nothing to do.
         return v
     end
     if hi - lo < 100000               # Below some cutoff, run in serial.
-        sort!(view(v, lo:hi), alg = MergeSort)
+        sort!(view(v, lo:hi), alg = MergeSort);
         return v
     end
 
     mid = (lo+hi)>>>1                 # Find the midpoint.
 
-    ### Set up parallelization here ###
+    ### Set up parallelization. ###
 
     ## Sort two halves in parallel, one in current call and one in a new task
-    ## in a separate thread:
+    ## in a separate thread.
     
-    half = @spawn psort!(v, lo, mid)  # Task to sort the lower half.
+    half = @spawn psort!(v, lo, mid)  # Sort the lower half in new thread.
     psort!(v, mid+1, hi)              # Sort the upper half in the current call.
     
     wait(half)                        # Wait for the lower half to finish.
 
-    temp = v[lo:mid]                  # Create workspace for merging.
+    temp = v[lo:mid];                 # Create workspace for merging.
 
     i, k, j = 1, lo, mid+1            # Merge the two sorted sub-arrays.
-    @inbounds while k < j <= hi       #   `@inbounds` skips array bound checking for efficiency.
+    @inbounds while k < j <= hi       #  `@inbounds` skips array bound checking for efficiency.
         if v[j] < temp[i]
             v[k] = v[j]
             j += 1
@@ -269,7 +274,7 @@ How does this work? Let's consider an example where we sort a vector of length 2
 
 The vector gets split into elements 1:125000 (run in task #1) and 125001:250000 (run in the main call). Then the elements 1:125000 are split into 1:62500 (run in task #2) and 62501:125000 (run in task #1), while the elements 125001:250000 are split into 125001:187500 (run in task #3) and 187501:250000 (run in the main call). No more splitting occurs because vectors of length less than 100000 are run in serial.
 
-Assuming we have at least four threads (including the main process), each of the tasks will run in a separate thread, and all four sorts on the vector subsets will run in parallel.
+Assuming we have at least four threads (including the main process), each of the tasks will run in a separate thread, and all four sorts on the vector subsets will run in parallel. With fewer threads than tasks, some tasks will have to wait.
 
 ```{julia}
 x = rand(250000);
@@ -289,7 +294,7 @@ y = x[:];
 @time sort!(y; alg = MergeSort);
 ```
 
-Once we account for the compilation time, it looks like the parallel sort is not faster than the non-parallel sort.
+Assuming that we started Julia such that there are multiple threads available (and also needing to account for the compilation time), we see that the parallel sort is faster than the non-parallel sort.
 
 
 The number of tasks running in parallel will be at most the number of threads set in the Julia session.
@@ -309,6 +314,7 @@ You can control the number of threads used for threading in Julia (apart from li
 
 Note that we can't use `OMP_NUM_THREADS` as the Julia threading is not based on OpenMP.
 
+Surprisingly, I'm not seeing a way to change the number of threads after Julia starts.
 
 ## Multi-process parallelization in Julia
 
@@ -323,7 +329,6 @@ We can use `pmap` to run a parallel map operation across multiple Julia processe
 
 Here we'll carry out multiple computationally expensive calculations in the map.
 
-We need to import packages and create the function on each of the worker processes using `@everywhere`.
 
 ```{julia}
 using Distributed
@@ -334,6 +339,8 @@ end
 
 nprocs()
 ```
+
+We need to import packages and create the function on each of the worker processes using `@everywhere`.
 
 ```{julia}
 @everywhere begin
@@ -387,7 +394,7 @@ n=50000000
 
 The use of `@sync` causes the operation to block until the result is available so we can get the correct timing.
 
-Without a reduction operation, depending on what one is doing, one coud end up passing a lot of data back to the main process, and this could take a lot of time. For such calculations, one would generally be better off using threaded for loops in order to take advantage of shared memory.
+Without a reduction operation, depending on what one is doing, one could end up passing a lot of data back to the main process, and this could take a lot of time. For such calculations, one would generally be better off using threaded for loops in order to take advantage of shared memory.
 
 ::: {.callout-warning title="Random number generation in parallel"}
 We'd have to look into how the random number seed is set on each worker to better understand any issues that might arise from parallel random number generation, but I believe that each worker has a different seed (but note that this does not explicitly ensure that the random number streams on the workers are distinct, as is the case if one uses the L'Ecuyer algorithm).
@@ -431,7 +438,7 @@ If one wants to have multiple processes all work on the same object, without cop
 
 ### Spawning tasks
 
-One can use the `Distributed.@spawnat` macro to run tasks on processes, in a fashion similar to using `Threads.@spawn`. More details can be found [here](https://docs.julialang.org/en/v1/stdlib/Distributed/#Distributed.@spawnat).
+One can use the `Distributed.@spawnat` macro to run tasks on separate workers/processes, in a fashion similar to using `Threads.@spawn` to run tasks on separate threads. More details can be found [here](https://docs.julialang.org/en/v1/stdlib/Distributed/#Distributed.@spawnat).
 
 ### Using multiple machines
 
