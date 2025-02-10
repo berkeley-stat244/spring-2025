@@ -294,7 +294,7 @@ y = x[:];
 @time sort!(y; alg = MergeSort);
 ```
 
-Assuming that we started Julia such that there are multiple threads available (and also needing to account for the compilation time), we see that the parallel sort is faster than the non-parallel sort.
+Assuming that we started Julia such that there are multiple threads available (and also needing to account for the compilation time), we see that the parallel sort is faster than the non-parallel sort, though I was getting somewhat varied timing results on repeated runs.
 
 
 The number of tasks running in parallel will be at most the number of threads set in the Julia session.
