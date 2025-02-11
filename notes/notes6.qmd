@@ -105,11 +105,11 @@ num_throws = 5000;
 
 # Run Monte Carlo simulation
 for _ in 1:num_throws
-  # Generate random x and y coordinates between -1 and 1
-  local xpos = rand() * 2 - 1.0  # Equivalent to random.uniform(-1.0, 1.0)
-  local ypos = rand() * 2 - 1.0
+  # Generate random x and y coordinates between -1 and 1.
+  xpos = rand() * 2 - 1.0  # Equivalent to random.uniform(-1.0, 1.0)
+  ypos = rand() * 2 - 1.0
 
-  # Check if point is inside unit circle
+  # Check if point is inside unit circle.
   if sqrt(xpos^2 + ypos^2) <= 1.0  # Equivalent to math.hypot()
     in_circle += 1
   end
@@ -130,6 +130,7 @@ Try the following:
 Fill in your timing answers in [this Google form](https://forms.gle/deR11fRdR3i32PnT6) and we'll discuss during the next class.
 :::
 
+Here's [some Julia code](./speed.jl) to explore this further.
 
 ## JIT and global versus local variables
 
