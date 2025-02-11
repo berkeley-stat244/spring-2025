@@ -1,3 +1,4 @@
+---
 title: "Notes 8: GPUs"
 author: "Chris Paciorek"
 date: "2025-02-13"
@@ -27,7 +28,7 @@ This document is the eighth of a set of notes, this document focusing on the par
 
 Given that, the document heavily relies on demos, with interpretation in some cases left to the reader.
 
-{.callout-warning title="GPU code run separately from rendering"}
+::: {.callout-warning title="GPU code run separately from rendering"}
 In most cases, I have set the code chunks to not execute when rendering this document, since that would require rendering to HTML/PDF on a machine with a GPU. In some cases I've copied in output from running the chunk manually outside of the rendering process, sometimes as part of code comments.
 :::
 
@@ -75,7 +76,7 @@ If you're on a machine with a (NVIDIA) GPU, you should be able to run `nvidia-sm
 
 The environment variable `CUDA_VISIBLE_DEVICES` will show the ID(s) of the GPU(s) available to you. You generally won't need to use this, but it can be useful to check this variable.
 
-```{bash}
+```bash
 #| eval: false
 echo $CUDA_VISIBLE_DEVICES
 ```
@@ -92,7 +93,7 @@ CUDA.has_cuda_gpu()
 true
 ```
 
-{.callout-important title="Invoke `using CUDA` on a machine with a GPU"}
+::: {.callout-important title="Invoke `using CUDA` on a machine with a GPU"}
 
 I invoked `using CUDA` on a machine without a GPU and it caused some pre-compilation that then prevented me from using the GPU on a machine with a GPU, giving messages like "Error: CUDA.jl could not find an appropriate CUDA runtime to use". Untangling that took some effort (in particular manually removing CUDA-related Julia packages via `rm ~/.julia/compiled/v1.10/CUDA*`).
 
@@ -171,7 +172,7 @@ So the speedup was about 250-fold!
 
 In class we'll use `nvidia-smi` and `top` to monitor the GPU and CPU.
 
-{.callout-important title="Timing GPU code"}
+::: {.callout-important title="Timing GPU code"}
 Some comments on timing GPU code:
 
  - I believe it's [reasonable to use `@btime` to time GPU code](https://cuda.juliagpu.org/stable/development/profiling/#Time-measurements)
@@ -218,6 +219,8 @@ In most contexts, computation on a GPU will use 32-bit real numbers for efficien
 Let's first simply see if matrix multiplication on the CPU is faster with 32-bit numbers.
 
 ```{julia}
+using BenchmarkTools
+
 function matmult(x, y)
     z = x * y
     return z
@@ -351,18 +354,21 @@ In general you'd want each independent calculation done in a separate thread, bu
 Some facts about the organization of threads on a GPU.
 
 Threads:
+
  - threads grouped into a warp (on A100 and possibly most others, 32 threads per warp)
  - threads in a warp operate in lock step (so an if statement can cause a threads to pause to wait for other threads).
  - GPU can switch between warps very quickly
  - threads should be cache-aware
 
 Blocks:
+
   - 1, 2, or 3-dimensional block of threads
      - 2 and 3 dimensions are just for code clarity, not real
  - threads in a block have access to some fast shared memory on chip (for A100 this is 49 KB)
  - A100 GPU has up to 1024 threads per block
 
 Grids
+
  - 1, 2, or 3-dimensional grid of blocks (again for code clarity only)
  - A100 GPU has up to 2147483647 blocks per grid (I think)
 
@@ -382,9 +388,9 @@ Grids
 
 Here's some example output from a machine with multiple GPUs, but only one of which is available to us:
 
-```{bash}
-#| eval: false
+```bash
 nvidia-smi
+```
 ```
 Fri Jan  3 14:11:23 2025       
 +-----------------------------------------------------------------------------------------+
@@ -533,7 +539,7 @@ Device 0: "NVIDIA A100 80GB PCIe"
 
 We can create the `deviceQuery` executable like this (this would need to be modified for other systems/machines):
 
-```{bash}
+```bash
 module load cuda   # This gives access to the `nvcc` compiler.
 git clone https://github.com/NVIDIA/cuda-samples
 nvcc Samples/1_Utilities/deviceQuery/deviceQuery.cpp -I/usr/local/cuda-12.2/include \
@@ -570,7 +576,7 @@ saruman                   Fri Jan  3 14:33:36 2025  535.104.05
 
 There are various flags. I'm not familiar with the details but this invocation shows more information about the processes running on each GPU:
 
-```{bash}
+```bash
 ~/.local/bin/gpustat -fup
 ```
 
