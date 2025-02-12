@@ -336,14 +336,19 @@ x_gpu = CuArray(x);
 # 9.041 s (0 allocations: 0 bytes)
 
 # GPU calculation:
-# Run it once to flush out any compilation/transformation time.
-CUDA.@sync vec_calc(x_gpu);
+# Try to flush out any compilation/transformation time.
+test = CuArray([1.1, 2.2])
+CUDA.@sync vec_calc(test);  # This seems to take surprisingly long.
 
+CUDA.@time CUDA.@sync vec_calc(x_gpu);
+# 0.099259 seconds (39.83 k CPU allocations: 2.770 MiB)
 CUDA.@time CUDA.@sync vec_calc(x_gpu);
 # 0.003745 seconds (88 CPU allocations: 3.672 KiB)
 ```
 
-That's a 2400-fold speedup. Impressive!
+I'm not sure why the initial call on `test` takes so long. I'm also not sure what explains the big difference between running the calculation on the full vector the first and second times (including why the first call involves so many separate allocations). The first time represents a 91-fold speedup and the second time a surprising 2400-fold speedup.
+
+
 
 ::: {.callout-tip title="Exercise"}
 See how small `n` can be before the time of doing the GPU calculation exceeds that of the CPU calculation.
@@ -739,16 +744,15 @@ nblocks = Int(ceil(n/nthreads));
 Array(x_gpu)[n]
 
 # Run it once to flush out any compilation/transformation time.
-CUDA.@sync @cuda threads=nthreads blocks=nblocks my_kernel(x_gpu);
-Array(x_gpu)[n]
+y_gpu = CUDA.randn(5);
+CUDA.@sync @cuda threads=nthreads blocks=nblocks my_kernel(y_gpu);
 
 CUDA.@time CUDA.@sync @cuda threads=nthreads blocks=nblocks my_kernel(x_gpu);
 # 0.002003 seconds (45 CPU allocations: 2.719 KiB)
-
-
+Array(x_gpu)[n]
 ```
 
-The 2.0 ms is reasonably comparable to the 3.7 ms when we just had Julia run the vectorized computation on the GPU. That used 64-bit floats. When I reran the code above using 64-bit floats, the time was 5.2 ms.
+The 2.0 ms is reasonably comparable to the 3.7 ms when we just had Julia run the [vectorized computation on the GPU](./#vectorized-example) (from the last time we ran it). That used 64-bit floats. When I reran the code above using 64-bit floats, the time was 5.2 ms.
 
 ## Final comments (for now)
 
