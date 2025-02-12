@@ -182,12 +182,12 @@ using Base.Threads
 n = 50000000;
 x = rand(n);
 
-@threads for i in 1:length(x)
+@threads :dynamic for i in 1:length(x)
     x[i] = tan(x[i]) + 3*sin(x[i]);
 end
 ```
 
-Presumably/hopefully in a case like that, the iterations are being grouped into chunks assigned to the threads; otherwise the latency from communicating about each individual task (iteration) would probably slow things down a lot.
+The iterations are [grouped into chunks](https://docs.julialang.org/en/v1/base/multi-threading/#lib-multithreading); otherwise the latency from communicating about each individual task (iteration) would probably slow things down a lot. One has some control over this with the option `schedule` argument, like this: `@threads :static ....`.
 
 If anyone is familiar with OpenMP, the use of the macro above to tag the loop for parallelization will look familiar.
 

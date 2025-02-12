@@ -272,48 +272,78 @@ I'm quite surprised the 32-bit multiplication is no faster. I'm not sure what is
 
 It does make sense that the transfer back takes about half as long.
 
+### Uses of CuArray objects
+
+Only some of the operations you might try to do are implemented for the CuArray type.
+
+```{julia}
+#| eval: false
+y_gpu = CuArray([1.1,3.3,4.4]);
+y_gpu + y_gpu
+```
+```
+3-element CuArray{Float64, 1, CUDA.DeviceMemory}:
+ 2.2
+ 6.6
+ 8.8
+```
+
+```{julia}
+#| eval: false
+sin(y_gpu)
+```
+```
+ERROR: MethodError: no method matching sin(::CuArray{Float64, 1, CUDA.DeviceMemory})
+```
+
+And we can't work with scalar elements of the array because that tries to do a non-vectorized calculation on a GPU-based array.
+
+```{julia}
+#| eval: false
+y_gpu[1]
+```
+```
+julia> y_gpu[1]
+ERROR: Scalar indexing is disallowed.
+Invocation of getindex resulted in scalar indexing of a GPU array.
+This is typically caused by calling an iterating implementation of a method.
+Such implementations *do not* execute on the GPU, but very slowly on the CPU,
+and therefore should be avoided.
+```
+
+
 ### Vectorized example
 
 Here we'll offload a vectorized calculation to the GPU. Note that in this case we cannot set up the calculation as a for loop as one can't loop through scalar operations on GPU in that fashion (more about how to loop on a GPU in the discussion of GPU kernels).
+
+We'll use `.=` for in-place calculation to avoid additional memory allocation.
 
 ```{julia}
 #| eval: false
 
 function vec_calc(x)
-  x = tan.(x) .+ 3 .* sin.(x)
+  x .= tan.(x) .+ 3 .* sin.(x)
   return 0
 end
 
 n = 250000000;
 
-x = rand(n);        # 2 GB of data.
-@btime vec_calc(x);     # Again a bit unfair to the host/CPU in that we don't exploit multiple CPU cores.
-# 7.731 s (2 allocations: 1.86 GiB)
+x = rand(n);            # 2 GB of data.
 x_gpu = CuArray(x);
+
+# CPU calculation:
+@btime vec_calc(x);     # Again a bit unfair to the host/CPU in that we don't exploit multiple CPU cores.
+# 9.041 s (0 allocations: 0 bytes)
+
+# GPU calculation:
+# Run it once to flush out any compilation/transformation time.
+CUDA.@sync vec_calc(x_gpu);
+
 CUDA.@time CUDA.@sync vec_calc(x_gpu);
-#  3.744 ms (105 allocations: 2.25 KiB)
+# 0.003745 seconds (88 CPU allocations: 3.672 KiB)
 ```
 
-Wow, that's a 2000-fold increase. It seems that a chunk of that may be because the CPU calculation allocates a new array to store the result, whereas the GPU calculation doesn't (but it would if we transferred the result back to the host).
-
-Instead, let's compare to the time for a for loop implementation on the CPU.
-
-```{julia}
-#| eval: false
-
-function loop_calc(x)
-  n = length(x);
-  for i in 1:n
-    x[i] = tan(x[i]) + 3*sin(x[i])
-  end
-  return 0
-end
-
-@btime loop_calc(x);
-# 9.463 s (0 allocations: 0 bytes)
-```
-
-Hmmm, it seems that the allocation was not the cause of the slowness! 
+That's a 2400-fold speedup. Impressive!
 
 ::: {.callout-tip title="Exercise"}
 See how small `n` can be before the time of doing the GPU calculation exceeds that of the CPU calculation.
@@ -342,7 +372,7 @@ In general you'd want each independent calculation done in a separate thread, bu
  - *streaming multiprocessor* (SM): a set of GPU cores with registers and shared memory; each GPU has multiple SMs
  - *threads*: parallel execution units
  - *blocks*: threads are grouped into blocks
- - *grid*: blocks are grouped into grids
+ - *grid*: blocks are grouped into a grid
  - *warp*: a group of (usually) 32 threads that operate together 
  - *kernel*: a C function that runs on the GPU
  - *device*: the GPU and its memory
@@ -356,7 +386,7 @@ Some facts about the organization of threads on a GPU.
 Threads:
 
  - threads grouped into a warp (on A100 and possibly most others, 32 threads per warp)
- - threads in a warp operate in lock step (so an if statement can cause a threads to pause to wait for other threads).
+ - threads in a warp operate in lock step (so an `if` statement causes threads to pause to wait for other threads that follow other branches).
  - GPU can switch between warps very quickly
  - threads should be cache-aware
 
@@ -367,10 +397,10 @@ Blocks:
  - threads in a block have access to some fast shared memory on chip (for A100 this is 49 KB)
  - A100 GPU has up to 1024 threads per block
 
-Grids
+Grid
 
  - 1, 2, or 3-dimensional grid of blocks (again for code clarity only)
- - A100 GPU has up to 2147483647 blocks per grid (I think)
+ - A100 GPU has up to 2147483647 blocks in the grid (I think)
 
 ### GPU execution
 
@@ -644,7 +674,7 @@ x_gpu = CUDA.randn(n);
 
 ### Multiple blocks
 
-We need to use at least as many threads as computations, and in addition to only being able to use 1024 threads in the x-dimension, we can have at most 1024 threads in a block on the GPU we're using. So we'll need multiple blocks.
+We need to use at least as many threads as computations, and in addition to only being able to use 1024 threads in the x dimension, we can have at most 1024 threads in a block on the A100 GPU we're using. So we'll need multiple blocks.
 
 ```{julia}
 #| eval: false
@@ -661,11 +691,11 @@ end
 n = 2000;
 nthreads = 1024;
 x_gpu = CUDA.randn(n);
-Array(x_gpu)[n]
+initial = Array(x_gpu)[n]
 nblocks = Int(ceil(n/nthreads));
 
 @cuda threads=nthreads blocks=nblocks my_kernel(x_gpu);
-Array(x_gpu)[n]
+(initial, Array(x_gpu)[n])
 ```
 
 Let's do a smaller test run in which we can check on the thread and block indexing.
@@ -710,11 +740,24 @@ Array(x_gpu)[n]
 
 # Run it once to flush out any compilation/transformation time.
 CUDA.@sync @cuda threads=nthreads blocks=nblocks my_kernel(x_gpu);
+Array(x_gpu)[n]
 
 CUDA.@time CUDA.@sync @cuda threads=nthreads blocks=nblocks my_kernel(x_gpu);
 # 0.002003 seconds (45 CPU allocations: 2.719 KiB)
 
-Array(x_gpu)[n]
+
 ```
 
-The 2.0 ms is comparable to the 3.7 ms when we just had Julia run the vectorized computation on the GPU. That used 64-bit floats (check that), which may explain the slower speed compared to what is seen here.
+The 2.0 ms is reasonably comparable to the 3.7 ms when we just had Julia run the vectorized computation on the GPU. That used 64-bit floats. When I reran the code above using 64-bit floats, the time was 5.2 ms.
+
+## Final comments (for now)
+
+### When to use the GPU
+
+To effectively use the GPU, one generally wants to have a computation in which the same calculation is being done on many data elements. Things like the vectorized examples and matrix multiplication seen above, pixel-wise processing of images/video, simulations with many independent samples, etc.
+
+Situations with a lot of conditionality (if-else branching), small data sizes, and lots of data transfer to/from the GPU are generally not good use cases for the GPU.
+
+### Further investigations
+
+Depending on how much time we have in future classes and the focus of student presentations and projects, we may come back to this topic to explore GPU-based operations from Julia, in particular GPU-based computations on CuArrays and writing more interesting kernels.
