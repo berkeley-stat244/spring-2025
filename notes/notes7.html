@@ -472,7 +472,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="threaded-linear-algebra">Threaded linear algebra</h3>
 <p>As with Python and R, Julia uses BLAS, a standard library of basic linear algebra operations (written in Fortran or C), for linear algebra operations. A fast BLAS can greatly speed up linear algebra relative to the default BLAS on a machine. Julia uses a fast, open source, free BLAS library called <em>OpenBLAS</em>. In addition to being fast when used on a single core, the openBLAS library is threaded - if your computer has multiple cores and there are free resources, your linear algebra will use multiple cores.</p>
 <p>Here’s an example.</p>
-<div id="34138508" class="cell" data-execution_count="1">
+<div id="e61e7478" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">LinearAlgebra</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Distributions</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">BenchmarkTools</span></span>
@@ -485,7 +485,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>4</code></pre>
 </div>
 </div>
-<div id="52522544" class="cell" data-execution_count="2">
+<div id="761c8143" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">chol_xtx</span>(x)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> x<span class="op">'</span>x;   <span class="co">## `z` is positive definite.</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    C <span class="op">=</span> <span class="fu">cholesky</span>(z);</span>
@@ -495,20 +495,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>BLAS.<span class="fu">set_num_threads</span>(<span class="fl">4</span>);</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> chol <span class="op">=</span> <span class="fu">chol_xtx</span>(x);  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  6.233 s (5 allocations: 549.32 MiB)</code></pre>
+<pre><code>  5.886 s (5 allocations: 549.32 MiB)</code></pre>
 </div>
 </div>
-<div id="9fb58a0c" class="cell" data-execution_count="3">
+<div id="d8e6aae0" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>BLAS.<span class="fu">set_num_threads</span>(<span class="fl">1</span>);</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> chol <span class="op">=</span> <span class="fu">chol_xtx</span>(x);  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  6.920 s (5 allocations: 549.32 MiB)</code></pre>
+<pre><code>  7.240 s (5 allocations: 549.32 MiB)</code></pre>
 </div>
 </div>
 <p>We see that using four threads is faster than one, but in this case the speedup was (surprisingly) minimal. (In Python or R, I would expect a much bigger speedup and since all are using BLAS/LAPACK, I don’t understand why there is so little difference in Julia.)</p>
 <p>By default, Julia will set the number of threads for linear algebra equal to the number of processors on your machine.</p>
 <p>As seen above, you can check the number of threads being used with:</p>
-<div id="e0416c24" class="cell" data-execution_count="4">
+<div id="16bc61aa" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>BLAS.<span class="fu">get_num_threads</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <pre><code>1</code></pre>
@@ -527,20 +527,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>In Julia, you can directly set up <a href="https://docs.julialang.org/en/v1/manual/multi-threading">software threads to use for parallel processing</a>.</p>
 <p>Here we’ll see some examples of running a for loop in parallel, both acting on a single object and used as a parallel map operation.</p>
 <p>Here we can operate on a vector in parallel:</p>
-<div id="3105aa39" class="cell" data-execution_count="5">
+<div id="4019bf66" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Base.Threads</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="fl">50000000</span>;</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fu">rand</span>(n);</span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="pp">@threads</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu">length</span>(x)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="pp">@threads</span> <span class="op">:</span>dynamic <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu">length</span>(x)</span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    x[i] <span class="op">=</span> <span class="fu">tan</span>(x[i]) <span class="op">+</span> <span class="fl">3</span><span class="fu">*sin</span>(x[i]);</span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Presumably/hopefully in a case like that, the iterations are being grouped into chunks assigned to the threads; otherwise the latency from communicating about each individual task (iteration) would probably slow things down a lot.</p>
+<p>The iterations are <a href="https://docs.julialang.org/en/v1/base/multi-threading/#lib-multithreading">grouped into chunks</a>; otherwise the latency from communicating about each individual task (iteration) would probably slow things down a lot. One has some control over this with the option <code>schedule</code> argument, like this: <code>@threads :static ....</code>.</p>
 <p>If anyone is familiar with OpenMP, the use of the macro above to tag the loop for parallelization will look familiar.</p>
 <p>We could also threads to carry out a parallel map operation, implemented as a for loop.</p>
-<div id="9c0675a3" class="cell" data-execution_count="6">
+<div id="a842b9dd" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="fl">1000</span>;</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">test</span>(n)</span>
@@ -560,7 +560,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="spawning-tasks-on-threads">Spawning tasks on threads</h3>
 <p>You can also create (aka <em>spawn</em>) individual tasks on threads, with the tasks running in parallel. Tasks will be allocated to the available threads as threads become available (i.e., you can have many more tasks than threads, with the threadpool working its way through the tasks).</p>
 <p>Let’s see an example (taken from <a href="http://ferestrepoca.github.io/paradigmas-de-programacion/paralela/tutoriales/julia/notebooks/parallelProgrammingApplications.html">here</a> of sorting a vector in parallel, by sorting subsets of the vector in separate threads.</p>
-<div id="aea6b0f9" class="cell" data-execution_count="7">
+<div id="f167830e" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">Base.Threads.@spawn</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
@@ -616,38 +616,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>How does this work? Let’s consider an example where we sort a vector of length 250000.</p>
 <p>The vector gets split into elements 1:125000 (run in task #1) and 125001:250000 (run in the main call). Then the elements 1:125000 are split into 1:62500 (run in task #2) and 62501:125000 (run in task #1), while the elements 125001:250000 are split into 125001:187500 (run in task #3) and 187501:250000 (run in the main call). No more splitting occurs because vectors of length less than 100000 are run in serial.</p>
 <p>Assuming we have at least four threads (including the main process), each of the tasks will run in a separate thread, and all four sorts on the vector subsets will run in parallel. With fewer threads than tasks, some tasks will have to wait.</p>
-<div id="1d0bcd4b" class="cell" data-execution_count="8">
+<div id="8d1150a1" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">250000</span>);</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">## Run once to invoke JIT.</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">psort!</span>(x);</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sort!</span>(x);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Task (runnable) @0x00007fe03a1acfb0 1 250000
-Task (runnable) @0x00007fe03a1acfb0 125001 250000
-Task (runnable) @0x00007fe03a1acfb0 187501 250000
-Task (runnable) @0x00007fe03a6401a0 1 125000
-Task (runnable) @0x00007fe03a640330 125001 187500
-Task (runnable) @0x00007fe03a6401a0 62501 125000
-Task (runnable) @0x00007fe03bd1c1a0 1 62500</code></pre>
+<pre><code>Task (runnable) @0x00007f34111d5c30 1 250000
+Task (runnable) @0x00007f34111d5c30 125001 250000
+Task (runnable) @0x00007f34111d5c30 187501 250000
+Task (runnable) @0x00007f340f3dc330 1 125000
+Task (runnable) @0x00007f340f3dc330 62501 125000
+Task (runnable) @0x00007f340f3dc4c0 125001 187500
+Task (runnable) @0x00007f340f3dc650 1 62500</code></pre>
 </div>
 </div>
 <p>We see that the output from <code>current_task()</code> shows that the task labels correspond with what I stated above.</p>
 <p>I’ll use <code>@time</code> since using the repeated runs in <code>@btime</code> would end up sorting an already sorted vector.</p>
-<div id="01f2e726" class="cell" data-execution_count="9">
+<div id="cde130f5" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">250000</span>);</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> x[<span class="op">:</span>];</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">psort!</span>(x);</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">sort!</span>(y; alg <span class="op">=</span> <span class="cn">MergeSort</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Task (runnable) @0x00007fe03a1acfb0 1 250000
-Task (runnable) @0x00007fe03a1acfb0 125001 250000
-Task (runnable) @0x00007fe03a642d60 1 125000
-Task (runnable) @0x00007fe03a642ef0 125001 187500
-Task (runnable) @0x00007fe03bd241a0 1 62500
-Task (runnable) @0x00007fe03a642d60 62501 125000
-Task (runnable) @0x00007fe03a1acfb0 187501 250000
-  0.008234 seconds (549 allocations: 2.877 MiB)
-  0.231185 seconds (174.99 k allocations: 16.453 MiB, 91.73% compilation time)</code></pre>
+<pre><code>Task (runnable) @0x00007f34111d5c30 1 250000
+Task (runnable) @0x00007f34111d5c30 125001 250000
+Task (runnable) @0x00007f34111d5c30 187501 250000
+Task (runnable) @0x00007f340f3deef0 1 125000
+Task (runnable) @0x00007f340f3deef0 62501 125000
+Task (runnable) @0x00007f340f3df080 125001 187500
+Task (runnable) @0x00007f340f3df210 1 62500
+  0.019204 seconds (539 allocations: 2.876 MiB)
+  0.191631 seconds (174.99 k allocations: 16.453 MiB, 91.09% compilation time)</code></pre>
 </div>
 </div>
 <p>Assuming that we started Julia such that there are multiple threads available (and also needing to account for the compilation time), we see that the parallel sort is faster than the non-parallel sort, though I was getting somewhat varied timing results on repeated runs.</p>
@@ -655,10 +655,10 @@ Task (runnable) @0x00007fe03a1acfb0 187501 250000
 <section id="controlling-the-number-of-threads" class="level4">
 <h4 class="anchored" data-anchor-id="controlling-the-number-of-threads">Controlling the number of threads</h4>
 <p>You can see the number of threads available:</p>
-<div id="b4ae3308" class="cell" data-execution_count="10">
+<div id="224c09cb" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Threads</span>.<span class="fu">nthreads</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
-<pre><code>4</code></pre>
+<pre><code>1</code></pre>
 </div>
 </div>
 <p>You can control the number of threads used for threading in Julia (apart from linear algebra) either by:</p>
@@ -679,7 +679,7 @@ Task (runnable) @0x00007fe03a1acfb0 187501 250000
 <h3 class="anchored" data-anchor-id="parallel-map-operations">Parallel map operations</h3>
 <p>We can use <code>pmap</code> to run a parallel map operation across multiple Julia processes (on one or more machines). <code>pmap</code> is good for cases where each task takes a non-negligible amount of time, as there is overhead (latency) in starting the tasks.</p>
 <p>Here we’ll carry out multiple computationally expensive calculations in the map.</p>
-<div id="85d13d51" class="cell" data-execution_count="11">
+<div id="050fda29" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Distributed</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="fu">nprocs</span>() <span class="op">==</span> <span class="fl">1</span></span>
@@ -695,7 +695,7 @@ Task (runnable) @0x00007fe03a1acfb0 187501 250000
 </div>
 </div>
 <p>We need to import packages and create the function on each of the worker processes using <code>@everywhere</code>.</p>
-<div id="2b621fef" class="cell" data-execution_count="12">
+<div id="9287ea1a" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@everywhere</span> <span class="cf">begin</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="im">using</span> <span class="bu">Distributions</span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="im">using</span> <span class="bu">LinearAlgebra</span></span>
@@ -710,18 +710,18 @@ Task (runnable) @0x00007fe03a1acfb0 187501 250000
 <span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> <span class="fu">pmap</span>(test, <span class="fu">repeat</span>([<span class="fl">5000</span>],<span class="fl">12</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="12">
 <pre><code>12-element Vector{Float64}:
- 11.218966565163182
- 11.471639794313495
- 11.959352102543399
- 11.782885437106158
- 11.523901474568529
- 11.756221316314898
- 11.75081720722693
- 12.163646767084126
- 11.029296020492206
- 11.06930019111942
- 11.778680297605666
- 11.849080067427394</code></pre>
+ 11.778572010641529
+ 11.553737108925652
+ 11.690563201742266
+ 11.375628289612921
+ 10.937991765261375
+ 11.273678381206961
+ 11.413197680824258
+ 12.197955254151326
+ 11.661455513015316
+ 11.25219672049385
+ 12.28806612748913
+ 11.6320335460589</code></pre>
 </div>
 </div>
 <p>One can use <a href="./#parallelization-strategies">static allocation (prescheduling)</a> with the <code>batch_size</code> argument, thereby assigning that many tasks to each worker to reduce latency.</p>
@@ -730,7 +730,7 @@ Task (runnable) @0x00007fe03a1acfb0 187501 250000
 <h3 class="anchored" data-anchor-id="parallel-for-loops">Parallel <code>for</code> loops</h3>
 <p>One can execute <code>for</code> loops in parallel across multiple worker processes as follows. This is particularly handy for cases where one uses a reduction operator (e.g., the <code>+</code> here) so that little data needs to be copied back to the main process. (And in this case we don’t copy any data to the workers either.)</p>
 <p>Here we’ll sum over a large number of random numbers with chunks done on each of the workers, comparing the time to a basic <code>for</code> loop.</p>
-<div id="c0db9f32" class="cell" data-execution_count="13">
+<div id="3ff9fd1f" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">BenchmarkTools</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">forfun</span>(n)</span>
@@ -752,16 +752,16 @@ Task (runnable) @0x00007fe03a1acfb0 187501 250000
 <span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">forfun</span>(n);</span>
 <span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> <span class="fu">forfun</span>(n);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  2.906140 seconds (50.01 M allocations: 2.981 GiB, 14.27% gc time, 0.35% compilation time)
-  1.981 s (50000001 allocations: 2.98 GiB)</code></pre>
+<pre><code>  2.510428 seconds (50.01 M allocations: 2.981 GiB, 14.03% gc time, 0.40% compilation time)
+  1.994 s (50000001 allocations: 2.98 GiB)</code></pre>
 </div>
 </div>
-<div id="7f880845" class="cell" data-execution_count="14">
+<div id="4300627c" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">pforfun</span>(n);</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> <span class="fu">pforfun</span>(n); </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  2.082129 seconds (498.48 k allocations: 33.223 MiB, 21.04% compilation time)
-  741.577 ms (325 allocations: 13.48 KiB)</code></pre>
+<pre><code>  1.750898 seconds (498.48 k allocations: 33.222 MiB, 24.11% compilation time)
+  485.477 ms (317 allocations: 13.36 KiB)</code></pre>
 </div>
 </div>
 <p>The use of <code>@sync</code> causes the operation to block until the result is available so we can get the correct timing.</p>
@@ -784,7 +784,7 @@ Random number generation in parallel
 <h3 class="anchored" data-anchor-id="passing-data-to-the-workers">Passing data to the workers</h3>
 <p>With multiple workers, particularly on more than one machine, one generally wants to be careful about having to copy large data objects to each worker, as that could make up a substantial portion of the time involved in the computation.</p>
 <p>One can explicitly copy a variable to the workers in an <code>@everywhere</code> block by using Julia’s interpolation syntax:</p>
-<div id="052257d7" class="cell" data-execution_count="15">
+<div id="6a4224dc" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fu">randn</span>(<span class="fl">5</span>);</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(x[<span class="fl">1</span>])</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -795,17 +795,17 @@ Random number generation in parallel
 <span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span>(<span class="fl">2</span>)  <span class="co"># There is probably a better way to wait until all worker printing is done.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>0.6125368067205698
-Ptr{Nothing} @0x00007fdf6af0a110 0.6125368067205698
-      From worker 4:    Ptr{Nothing} @0x00007f30107b0010 0.6125368067205698
-      From worker 2:    Ptr{Nothing} @0x00007f34460ac010 0.6125368067205698
-      From worker 5:    Ptr{Nothing} @0x00007ffba8814010 0.6125368067205698
-      From worker 3:    Ptr{Nothing} @0x00007f38474ac010 0.6125368067205698</code></pre>
+<pre><code>-0.5969410785963898
+Ptr{Nothing} @0x00007f33dd2c29b0 -0.5969410785963898
+      From worker 2:    Ptr{Nothing} @0x00007ff3b8704010 -0.5969410785963898
+      From worker 4:    Ptr{Nothing} @0x00007ff616104010 -0.5969410785963898
+      From worker 5:    Ptr{Nothing} @0x00007f3c0b1a0010 -0.5969410785963898
+      From worker 3:    Ptr{Nothing} @0x00007fdbf34a4010 -0.5969410785963898</code></pre>
 </div>
 </div>
 <p>We see based on <code>pointer_from_objref</code> that each copy of <code>x</code> is stored at a distinct location in memory, even when processes are on the same machine.</p>
 <p>Also note that if one creates a variable within an <code>@everywhere</code> block, that variable is available to all tasks run on the worker, so it is global’ with respect to those tasks. Note the repeated values in the result here.</p>
-<div id="1b9602b5" class="cell" data-execution_count="16">
+<div id="efd261b6" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@everywhere</span> <span class="cf">begin</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">5</span>)</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">function</span> <span class="fu">test</span>(i)</span>
@@ -816,18 +816,18 @@ Ptr{Nothing} @0x00007fdf6af0a110 0.6125368067205698
 <span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> <span class="fu">pmap</span>(test, <span class="fl">1</span><span class="op">:</span><span class="fl">12</span>, batch_size <span class="op">=</span> <span class="fl">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="16">
 <pre><code>12-element Vector{Float64}:
- 2.3229482820902483
- 2.845042363175371
- 2.3141747975932594
- 1.5374325539315943
- 2.3229482820902483
- 2.845042363175371
- 2.3141747975932594
- 1.5374325539315943
- 2.3229482820902483
- 2.845042363175371
- 2.3141747975932594
- 1.5374325539315943</code></pre>
+ 2.2306281202163807
+ 3.175024532363796
+ 2.2496614429822515
+ 2.6708289409820245
+ 2.2306281202163807
+ 3.175024532363796
+ 2.2496614429822515
+ 2.6708289409820245
+ 2.2306281202163807
+ 3.175024532363796
+ 2.2496614429822515
+ 2.6708289409820245</code></pre>
 </div>
 </div>
 <p>If one wants to have multiple processes all work on the same object, without copying it, one can consider using Julia’s <a href="https://docs.julialang.org/en/v1/stdlib/SharedArrays/#SharedArrays.SharedArray">SharedArray</a> (one machine) or <a href="https://juliaparallel.org/DistributedArrays.jl/stable/">DArray from the DistributedArrays package</a> (multiple machines) types, which break up arrays into pieces, with different pieces stored locally on different processes.</p>
@@ -851,7 +851,7 @@ gandalf.berkeley.edu</code></pre>
 <div class="sourceCode" id="cb35"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="ex">julia</span> <span class="at">--machine-file</span> machines</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>If anyone has used MPI for programming parallel code, the idea of a “machine file” or “host file” will look familiar.</p>
 <p>From within Julia, you can add processes like this (first we’ll remove the existing worker processes started using <code>addprocs()</code> previously):</p>
-<div id="ec1abf83" class="cell" data-execution_count="17">
+<div id="f8897432" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rmprocs</span>(<span class="fu">workers</span>())</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">addprocs</span>([(<span class="st">"radagast"</span>, <span class="fl">2</span>), (<span class="st">"gandalf"</span>, <span class="fl">2</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -864,14 +864,14 @@ gandalf.berkeley.edu</code></pre>
 </div>
 </div>
 <p>To check on the number of processes:</p>
-<div id="ee898774" class="cell" data-execution_count="18">
+<div id="11f91464" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nprocs</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="18">
 <pre><code>5</code></pre>
 </div>
 </div>
 <p>When we demo this in class, we’ll try our parallel map example (the linear algebra calculation) and check that we have workers running on the various machines using <code>top</code> or <code>ps</code> after sshing to the machines.</p>
-<div id="f4d3e440" class="cell" data-execution_count="19">
+<div id="34661fc9" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> <span class="fu">pmap</span>(test, <span class="fu">repeat</span>([<span class="fl">5000</span>],<span class="fl">12</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
