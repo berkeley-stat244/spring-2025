@@ -216,7 +216,7 @@ end
 You can also create (aka *spawn*) individual tasks on threads, with the tasks running in parallel.
 Tasks will be allocated to the available threads as threads become available (i.e., you can have many more tasks than threads, with the threadpool working its way through the tasks).
 
-Let's see an example (taken from [here](http://ferestrepoca.github.io/paradigmas-de-programacion/paralela/tutoriales/julia/notebooks/parallelProgrammingApplications.html) of sorting a vector in parallel, by sorting subsets of the vector in separate threads.
+Let's see an example (taken from [here](http://ferestrepoca.github.io/paradigmas-de-programacion/paralela/tutoriales/julia/notebooks/parallelProgrammingApplications.html) of sorting a vector in parallel, by sorting subsets of the vector in separate tasks.
 
 ```{julia}
 
@@ -237,12 +237,11 @@ function psort!(v, lo::Int=1, hi::Int=length(v))
 
     mid = (lo+hi)>>>1                 # Find the midpoint.
 
-    ### Set up parallelization. ###
+    ### Set up parallelization.
 
     ## Sort two halves in parallel, one in current call and one in a new task
-    ## in a separate thread.
     
-    half = @spawn psort!(v, lo, mid)  # Sort the lower half in new thread.
+    half = @spawn psort!(v, lo, mid)  # Sort the lower half in new task.
     psort!(v, mid+1, hi)              # Sort the upper half in the current call.
     
     wait(half)                        # Wait for the lower half to finish.
