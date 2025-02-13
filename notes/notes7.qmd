@@ -182,7 +182,7 @@ using Base.Threads
 n = 50000000;
 x = rand(n);
 
-@threads :dynamic for i in 1:length(x)
+@threads for i in 1:length(x)
     x[i] = tan(x[i]) + 3*sin(x[i]);
 end
 ```

@@ -106,6 +106,16 @@ There are various other Julia CUDA package functions that we can explore for che
 
 Before we get into the complexities of how GPUs work and what one has to do to write one's own code to use the GPU, let's see how easily one can offload standard calculations (in particular linear algebra) to the GPU.
 
+The main package we'll use is the [CUDA package](https://cuda.juliagpu.org/stable/). It provides:
+
+ - the `CuArray` type for working with arrays on the GPU,
+ - wrappers for NVIDIA's CUDA library (distinct from the Julia CUDA package) functions that allow one to use Julia functions/operators with CuArrays, and
+ - tooling for writing CUDA kernels in Julia.
+
+In this section we'll see the first two, before looking at writing kernels in the last section of these notes.
+
+Note that this kind of offloading of linear algebra and vectorized computations to the GPU [can be done similarly with PyTorch, JAX and CuPy in Python](https://computing.stat.berkeley.edu/tutorial-parallelization/parallel-python#6-using-the-gpu-via-pytorch). 
+
 ### Matrix multiplication example
 
 Matrix multiplication is simple, but it's at the heart of a lot of algorithms, including deep learning, so it's a simple, but non-trivial example of a situation where we could offload a part of a computation to the GPU for big speedups.
@@ -180,6 +190,13 @@ Some comments on timing GPU code:
  - Since GPU code is executed asynchronously, we should use `CUDA.@sync` or `synchronize` to make sure the execution is finished.
 :::
 
+### Multiple dispatch with GPU operations
+
+Given that we use `*` with two `CuArray` matrices, Julia's multiple dispatch system is clearly involved in determining what code to call to execute the matrix multiplication on the GPU.
+
+Digging around a bit in the source code for the `LinearAlgebra` and `CUDA` packages, it looks like the result of the dispatch is to call `LinearAlgebra.generic_matmatmul!`, with the method that works for CuArrays in the `lib/cublas/linalg.jl` file in the CUDA package. That presumably invokes the cuBLAS versions of the BLAS functions found in `lib/cublas/libcublas.jl` and `lib/cublas/wrappers.jl` where we see calls out to native cuBLAS functions. 
+
+At a high level that makes sense, though the details of all the wrapping and type inheritance/dispatch that is going on might be hard to trace through carefully.
 
 ### Copying data to/from the GPU
 
@@ -272,20 +289,22 @@ I'm quite surprised the 32-bit multiplication is no faster. I'm not sure what is
 
 It does make sense that the transfer back takes about half as long.
 
-### Uses of CuArray objects
+### Interacting with NVIDIA's CUDA libraries
 
-Only some of the operations you might try to do are implemented for the CuArray type.
+Working with objects on the GPU requires interfacing with functions provided by the CUDA Toolkit and its related packages such as `cuBLAS`, `cuRAND`, `cuFFT`, etc. These are provided for Julia with the CUDA package (see `CUDA/<version_string>/lib`) so all that you need installed on the machine with the GPU is the NVIDIA driver software and the Julia CUDA package. You don't actually need NVIDIA's CUDA Toolkit.
+
+Only some operations are possible on the GPU, since Julia is calling out to CUDA functions to run code on the GPU.
 
 ```{julia}
 #| eval: false
-y_gpu = CuArray([1.1,3.3,4.4]);
+y_gpu = CUDA.randn(3);    # This uses cuRAND.
 y_gpu + y_gpu
 ```
 ```
-3-element CuArray{Float64, 1, CUDA.DeviceMemory}:
- 2.2
- 6.6
- 8.8
+3-element CuArray{Float32, 1, CUDA.DeviceMemory}:
+ -2.3132815
+  0.11570158
+ -1.0381625
 ```
 
 ```{julia}
@@ -293,7 +312,7 @@ y_gpu + y_gpu
 sin(y_gpu)
 ```
 ```
-ERROR: MethodError: no method matching sin(::CuArray{Float64, 1, CUDA.DeviceMemory})
+ERROR: MethodError: no method matching sin(::CuArray{Float32, 1, CUDA.DeviceMemory})
 ```
 
 And we can't work with scalar elements of the array because that tries to do a non-vectorized calculation on a GPU-based array.
@@ -348,7 +367,7 @@ CUDA.@time CUDA.@sync vec_calc(x_gpu);
 
 I'm not sure why the initial call on `test` takes so long. I'm also not sure what explains the big difference between running the calculation on the full vector the first and second times (including why the first call involves so many separate allocations). The first time represents a 91-fold speedup and the second time a surprising 2400-fold speedup.
 
-
+I'm also not sure of what is going on behind the scenes in terms of the Julia interpeter and/or compiler processing the `vec_calc` code to allow it to be run via CUDA calls on the GPU. `@code_native vec_calc(x_gpu)` indicates use of the `GPUArrays` package, in particular use of `gpu_call` to run a kernel on the GPU. So I think the main questions are (1) how Julia creates a Julia-coded kernel function (such as [this example Julia kernel](#gpu-kernels) and (2) how that function is transformed to CUDA code.
 
 ::: {.callout-tip title="Exercise"}
 See how small `n` can be before the time of doing the GPU calculation exceeds that of the CPU calculation.
@@ -638,15 +657,19 @@ saruman                   Fri Jan  3 14:35:20 2025  535.104.05
 
 ## GPU kernels
 
-Next we'll see that we can actually write a kernel - a function that can be run on the GPU - in Julia and then call that kernel. Kernels are functions that encode the core computational operations that are executed in parallel.
+A *kernel* is a function that can be run on the GPU.
+
+Next we'll see that we can actually [write a kernel](https://cuda.juliagpu.org/stable/development/kernel/) in Julia and then call that kernel. Kernels are functions that encode the core computational operations that are executed in parallel.
 
 In other languages, the basic mode of operation with a GPU when you are writing your own GPU code is to write a kernel using CUDA (basically C) code and then call the kernel in parallel via C, R, or Python code. In Julia, we can write the kernel using Julia syntax (though many operations will not run on the GPU...).
 
-I have not investigated to see what Julia does behind the scenes with the kernel code for it to be able to run on the GPU. I don't know if there is a step in which it is translated to CUDA code, but I would guess there is.
+I have not investigated much to see what Julia does behind the scenes with the kernel code for it to be able to run on the GPU, but [this blog post](https://robertcunningham.xyz/how-does-cuda-jl-work/) seems helpful. I *think* the steps involve going from LLVM code to PTX code (an assembly language for GPUs) that is then converted to GPU machine code. These steps involve tooling available outside of Julia.
 
 ### Basic example
 
 Here's a basic example in which we'll exponentiate a vector in place. We run 1000 scalar calculations using 1000 threads.
+
+We use `@cuda` to compile and run the kernel.
 
 ```{julia}
 #| eval: false
@@ -764,4 +787,4 @@ Situations with a lot of conditionality (if-else branching), small data sizes, a
 
 ### Further investigations
 
-Depending on how much time we have in future classes and the focus of student presentations and projects, we may come back to this topic to explore GPU-based operations from Julia, in particular GPU-based computations on CuArrays and writing more interesting kernels.
+Depending on how much time we have in future classes and the focus of student presentations and projects, we may come back to this topic to explore GPU-based operations from Julia, in particular writing more interesting kernels.
