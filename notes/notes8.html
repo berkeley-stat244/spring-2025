@@ -331,9 +331,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#basic-gpu-offloading" id="toc-basic-gpu-offloading" class="nav-link" data-scroll-target="#basic-gpu-offloading">Basic GPU offloading</a>
   <ul class="collapse">
   <li><a href="#matrix-multiplication-example" id="toc-matrix-multiplication-example" class="nav-link" data-scroll-target="#matrix-multiplication-example">Matrix multiplication example</a></li>
+  <li><a href="#multiple-dispatch-with-gpu-operations" id="toc-multiple-dispatch-with-gpu-operations" class="nav-link" data-scroll-target="#multiple-dispatch-with-gpu-operations">Multiple dispatch with GPU operations</a></li>
   <li><a href="#copying-data-tofrom-the-gpu" id="toc-copying-data-tofrom-the-gpu" class="nav-link" data-scroll-target="#copying-data-tofrom-the-gpu">Copying data to/from the GPU</a></li>
   <li><a href="#vs-32-bit-numbers" id="toc-vs-32-bit-numbers" class="nav-link" data-scroll-target="#vs-32-bit-numbers">64- vs 32-bit numbers</a></li>
-  <li><a href="#uses-of-cuarray-objects" id="toc-uses-of-cuarray-objects" class="nav-link" data-scroll-target="#uses-of-cuarray-objects">Uses of CuArray objects</a></li>
+  <li><a href="#interacting-with-nvidias-cuda-libraries" id="toc-interacting-with-nvidias-cuda-libraries" class="nav-link" data-scroll-target="#interacting-with-nvidias-cuda-libraries">Interacting with NVIDIA’s CUDA libraries</a></li>
   <li><a href="#vectorized-example" id="toc-vectorized-example" class="nav-link" data-scroll-target="#vectorized-example">Vectorized example</a></li>
   </ul></li>
   <li><a href="#gpu-architecture" id="toc-gpu-architecture" class="nav-link" data-scroll-target="#gpu-architecture">GPU architecture</a>
@@ -446,7 +447,7 @@ GPU code run separately from rendering
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$CUDA_VISIBLE_DEVICES</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>We can check in Julia. Here’s what we would see if a GPU is available (also requiring that CUDA.jl is set up to use a GPU even if one is available).</p>
-<div id="7ad90cff" class="cell" data-execution_count="1">
+<div id="42ea490b" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CUDA</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>CUDA.<span class="fu">has_cuda_gpu</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -471,11 +472,19 @@ Invoke <code>using CUDA</code> on a machine with a GPU
 <section id="basic-gpu-offloading" class="level2">
 <h2 class="anchored" data-anchor-id="basic-gpu-offloading">Basic GPU offloading</h2>
 <p>Before we get into the complexities of how GPUs work and what one has to do to write one’s own code to use the GPU, let’s see how easily one can offload standard calculations (in particular linear algebra) to the GPU.</p>
+<p>The main package we’ll use is the <a href="https://cuda.juliagpu.org/stable/">CUDA package</a>. It provides:</p>
+<ul>
+<li>the <code>CuArray</code> type for working with arrays on the GPU,</li>
+<li>wrappers for NVIDIA’s CUDA library (distinct from the Julia CUDA package) functions that allow one to use Julia functions/operators with CuArrays, and</li>
+<li>tooling for writing CUDA kernels in Julia.</li>
+</ul>
+<p>In this section we’ll see the first two, before looking at writing kernels in the last section of these notes.</p>
+<p>Note that this kind of offloading of linear algebra and vectorized computations to the GPU <a href="https://computing.stat.berkeley.edu/tutorial-parallelization/parallel-python#6-using-the-gpu-via-pytorch">can be done similarly with PyTorch, JAX and CuPy in Python</a>.</p>
 <section id="matrix-multiplication-example" class="level3">
 <h3 class="anchored" data-anchor-id="matrix-multiplication-example">Matrix multiplication example</h3>
 <p>Matrix multiplication is simple, but it’s at the heart of a lot of algorithms, including deep learning, so it’s a simple, but non-trivial example of a situation where we could offload a part of a computation to the GPU for big speedups.</p>
 <p>First we’ll set up the matrices, generating them on the host/CPU (and they’ll therefore be in CPU memory) and transferring to GPU (device) memory.</p>
-<div id="71feab6f" class="cell" data-execution_count="2">
+<div id="66a0b33d" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">BenchmarkTools</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CUDA</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">LinearAlgebra</span></span>
@@ -501,7 +510,7 @@ Invoke <code>using CUDA</code> on a machine with a GPU
 <span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="co"># 1600000000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now let’s compare the speed of the multiplication on CPU (host) vs.&nbsp;GPU (device). As usual we’ll put our computation into functions to allow for JIT compilation and avoid use of global variables whose type can change.</p>
-<div id="6b384042" class="cell" data-execution_count="3">
+<div id="8f5c8f12" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">LinearAlgebra</span>.BLAS.<span class="fu">set_num_threads</span>(<span class="fl">1</span>);  <span class="co"># To keep things simple but perhaps unfair to the CPU.</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">matmult</span>(x, y)</span>
@@ -547,6 +556,12 @@ Timing GPU code
 </div>
 </div>
 </section>
+<section id="multiple-dispatch-with-gpu-operations" class="level3">
+<h3 class="anchored" data-anchor-id="multiple-dispatch-with-gpu-operations">Multiple dispatch with GPU operations</h3>
+<p>Given that we use <code>*</code> with two <code>CuArray</code> matrices, Julia’s multiple dispatch system is clearly involved in determining what code to call to execute the matrix multiplication on the GPU.</p>
+<p>Digging around a bit in the source code for the <code>LinearAlgebra</code> and <code>CUDA</code> packages, it looks like the result of the dispatch is to call <code>LinearAlgebra.generic_matmatmul!</code>, with the method that works for CuArrays in the <code>lib/cublas/linalg.jl</code> file in the CUDA package. That presumably invokes the cuBLAS versions of the BLAS functions found in <code>lib/cublas/libcublas.jl</code> and <code>lib/cublas/wrappers.jl</code> where we see calls out to native cuBLAS functions.</p>
+<p>At a high level that makes sense, though the details of all the wrapping and type inheritance/dispatch that is going on might be hard to trace through carefully.</p>
+</section>
 <section id="copying-data-tofrom-the-gpu" class="level3">
 <h3 class="anchored" data-anchor-id="copying-data-tofrom-the-gpu">Copying data to/from the GPU</h3>
 <p>If we copy a lot of data back and forth to the GPU, that can end up being a large fraction of the time of a GPU-based calculation. We’d like to:</p>
@@ -556,7 +571,7 @@ Timing GPU code
 <li>avoid copying output back to the device if possible.</li>
 </ul>
 <p>Let’s see how the time of copying compares to the time of doing the matrix multiplication.</p>
-<div id="30a6372e" class="cell" data-execution_count="4">
+<div id="03df1bbc" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fu">randn</span>(n, n);</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># To the GPU:</span></span>
@@ -576,7 +591,7 @@ Timing GPU code
 <h3 class="anchored" data-anchor-id="vs-32-bit-numbers">64- vs 32-bit numbers</h3>
 <p>In most contexts, computation on a GPU will use 32-bit real numbers for efficiency. This reduces memory use and speeds up computation because half as many bytes are being allocated, copied, and computed with. Of course we want to keep in mind the reduced precision in case that could be a problem for certain computations.</p>
 <p>Let’s first simply see if matrix multiplication on the CPU is faster with 32-bit numbers.</p>
-<div id="9fd782e3" class="cell" data-execution_count="5">
+<div id="c9c9dfee" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">BenchmarkTools</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">matmult</span>(x, y)</span>
@@ -598,13 +613,13 @@ Timing GPU code
 <span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> <span class="fu">matmult</span>(x32, y32);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  1.994 s (2 allocations: 190.73 MiB)
-  796.238 ms (2 allocations: 95.37 MiB)</code></pre>
+<pre><code>  1.505 s (2 allocations: 190.73 MiB)
+  729.005 ms (2 allocations: 95.37 MiB)</code></pre>
 </div>
 </div>
 <p>Indeed it is quite a bit faster.</p>
 <p>Now let’s consider that on the GPU. We’ll also show random number generation directly on the GPU to avoid the cost of transferring data to the GPU.</p>
-<div id="312d373c" class="cell" data-execution_count="6">
+<div id="b29bd553" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>x64_gpu <span class="op">=</span> CUDA.<span class="fu">randn</span>(<span class="dt">Float64</span>, n, n);</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>y64_gpu <span class="op">=</span> CUDA.<span class="fu">randn</span>(<span class="dt">Float64</span>, n, n);</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(x64_gpu)</span>
@@ -628,23 +643,24 @@ Timing GPU code
 <p>I’m quite surprised the 32-bit multiplication is no faster. I’m not sure what is going on. (If you time the <code>randn</code> you should see that the 32-bit randn generation is about half the time of the 64-bit generation.)</p>
 <p>It does make sense that the transfer back takes about half as long.</p>
 </section>
-<section id="uses-of-cuarray-objects" class="level3">
-<h3 class="anchored" data-anchor-id="uses-of-cuarray-objects">Uses of CuArray objects</h3>
-<p>Only some of the operations you might try to do are implemented for the CuArray type.</p>
-<div id="f9b792c7" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>y_gpu <span class="op">=</span> <span class="fu">CuArray</span>([<span class="fl">1.1</span>,<span class="fl">3.3</span>,<span class="fl">4.4</span>]);</span>
+<section id="interacting-with-nvidias-cuda-libraries" class="level3">
+<h3 class="anchored" data-anchor-id="interacting-with-nvidias-cuda-libraries">Interacting with NVIDIA’s CUDA libraries</h3>
+<p>Working with objects on the GPU requires interfacing with functions provided by the CUDA Toolkit and its related packages such as <code>cuBLAS</code>, <code>cuRAND</code>, <code>cuFFT</code>, etc. These are provided for Julia with the CUDA package (see <code>CUDA/&lt;version_string&gt;/lib</code>) so all that you need installed on the machine with the GPU is the NVIDIA driver software and the Julia CUDA package. You don’t actually need NVIDIA’s CUDA Toolkit.</p>
+<p>Only some operations are possible on the GPU, since Julia is calling out to CUDA functions to run code on the GPU.</p>
+<div id="bd7784eb" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>y_gpu <span class="op">=</span> CUDA.<span class="fu">randn</span>(<span class="fl">3</span>);    <span class="co"># This uses cuRAND.</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>y_gpu <span class="op">+</span> y_gpu</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<pre><code>3-element CuArray{Float64, 1, CUDA.DeviceMemory}:
- 2.2
- 6.6
- 8.8</code></pre>
-<div id="c941aaa3" class="cell" data-execution_count="8">
+<pre><code>3-element CuArray{Float32, 1, CUDA.DeviceMemory}:
+ -2.3132815
+  0.11570158
+ -1.0381625</code></pre>
+<div id="1cc13e2f" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sin</span>(y_gpu)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<pre><code>ERROR: MethodError: no method matching sin(::CuArray{Float64, 1, CUDA.DeviceMemory})</code></pre>
+<pre><code>ERROR: MethodError: no method matching sin(::CuArray{Float32, 1, CUDA.DeviceMemory})</code></pre>
 <p>And we can’t work with scalar elements of the array because that tries to do a non-vectorized calculation on a GPU-based array.</p>
-<div id="6020f1a6" class="cell" data-execution_count="9">
+<div id="2ffc7f0a" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>y_gpu[<span class="fl">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>julia&gt; y_gpu[1]
@@ -658,7 +674,7 @@ and therefore should be avoided.</code></pre>
 <h3 class="anchored" data-anchor-id="vectorized-example">Vectorized example</h3>
 <p>Here we’ll offload a vectorized calculation to the GPU. Note that in this case we cannot set up the calculation as a for loop as one can’t loop through scalar operations on GPU in that fashion (more about how to loop on a GPU in the discussion of GPU kernels).</p>
 <p>We’ll use <code>.=</code> for in-place calculation to avoid additional memory allocation.</p>
-<div id="940f5367" class="cell" data-execution_count="10">
+<div id="dfe8b259" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">vec_calc</span>(x)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  x <span class="op">.=</span> <span class="fu">tan</span>.(x) <span class="op">.+</span> <span class="fl">3</span> <span class="op">.*</span> <span class="fu">sin</span>.(x)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="fl">0</span></span>
@@ -684,6 +700,7 @@ and therefore should be avoided.</code></pre>
 <span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.003745 seconds (88 CPU allocations: 3.672 KiB)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>I’m not sure why the initial call on <code>test</code> takes so long. I’m also not sure what explains the big difference between running the calculation on the full vector the first and second times (including why the first call involves so many separate allocations). The first time represents a 91-fold speedup and the second time a surprising 2400-fold speedup.</p>
+<p>I’m also not sure of what is going on behind the scenes in terms of the Julia interpeter and/or compiler processing the <code>vec_calc</code> code to allow it to be run via CUDA calls on the GPU. <code>@code_native vec_calc(x_gpu)</code> indicates use of the <code>GPUArrays</code> package, in particular use of <code>gpu_call</code> to run a kernel on the GPU. So I think the main questions are (1) how Julia creates a Julia-coded kernel function (such as <a href="#gpu-kernels">this example Julia kernel</a> and (2) how that function is transformed to CUDA code.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Exercise">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -948,13 +965,15 @@ Device 0: "NVIDIA A100 80GB PCIe"
 </section>
 <section id="gpu-kernels" class="level2">
 <h2 class="anchored" data-anchor-id="gpu-kernels">GPU kernels</h2>
-<p>Next we’ll see that we can actually write a kernel - a function that can be run on the GPU - in Julia and then call that kernel. Kernels are functions that encode the core computational operations that are executed in parallel.</p>
+<p>A <em>kernel</em> is a function that can be run on the GPU.</p>
+<p>Next we’ll see that we can actually <a href="https://cuda.juliagpu.org/stable/development/kernel/">write a kernel</a> in Julia and then call that kernel. Kernels are functions that encode the core computational operations that are executed in parallel.</p>
 <p>In other languages, the basic mode of operation with a GPU when you are writing your own GPU code is to write a kernel using CUDA (basically C) code and then call the kernel in parallel via C, R, or Python code. In Julia, we can write the kernel using Julia syntax (though many operations will not run on the GPU…).</p>
-<p>I have not investigated to see what Julia does behind the scenes with the kernel code for it to be able to run on the GPU. I don’t know if there is a step in which it is translated to CUDA code, but I would guess there is.</p>
+<p>I have not investigated much to see what Julia does behind the scenes with the kernel code for it to be able to run on the GPU, but <a href="https://robertcunningham.xyz/how-does-cuda-jl-work/">this blog post</a> seems helpful. I <em>think</em> the steps involve going from LLVM code to PTX code (an assembly language for GPUs) that is then converted to GPU machine code. These steps involve tooling available outside of Julia.</p>
 <section id="basic-example" class="level3">
 <h3 class="anchored" data-anchor-id="basic-example">Basic example</h3>
 <p>Here’s a basic example in which we’ll exponentiate a vector in place. We run 1000 scalar calculations using 1000 threads.</p>
-<div id="b31799bf" class="cell" data-execution_count="11">
+<p>We use <code>@cuda</code> to compile and run the kernel.</p>
+<div id="2b3a785d" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">my_kernel</span>(x)</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  idx <span class="op">=</span> <span class="fu">threadIdx</span>().x;   <span class="co"># What thread am I?</span></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> idx <span class="op">&lt;</span> <span class="fu">length</span>(x)</span>
@@ -972,7 +991,7 @@ Device 0: "NVIDIA A100 80GB PCIe"
 <span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a><span class="co"># -28.875708f0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>There are limits on the number of threads we can use.</p>
-<div id="b9e6d729" class="cell" data-execution_count="12">
+<div id="4b24bd7b" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="fl">2000</span>;</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>x_gpu <span class="op">=</span> CUDA.<span class="fu">randn</span>(n);</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@cuda</span> threads<span class="op">=</span>n <span class="fu">my_kernel</span>(x_gpu);</span>
@@ -982,7 +1001,7 @@ Device 0: "NVIDIA A100 80GB PCIe"
 <section id="multiple-blocks" class="level3">
 <h3 class="anchored" data-anchor-id="multiple-blocks">Multiple blocks</h3>
 <p>We need to use at least as many threads as computations, and in addition to only being able to use 1024 threads in the x dimension, we can have at most 1024 threads in a block on the A100 GPU we’re using. So we’ll need multiple blocks.</p>
-<div id="650957f8" class="cell" data-execution_count="13">
+<div id="1a296eda" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">my_kernel</span>(x)</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  i <span class="op">=</span> <span class="fu">threadIdx</span>().x;  <span class="co"># What thread am I within the block?</span></span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  j <span class="op">=</span> <span class="fu">blockIdx</span>().x;   <span class="co"># What block am I in?</span></span>
@@ -1003,7 +1022,7 @@ Device 0: "NVIDIA A100 80GB PCIe"
 <span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>(initial, <span class="fu">Array</span>(x_gpu)[n])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s do a smaller test run in which we can check on the thread and block indexing.</p>
-<div id="4685ff8d" class="cell" data-execution_count="14">
+<div id="0e035e63" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">my_kernel_print</span>(x)</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  i <span class="op">=</span> <span class="fu">threadIdx</span>().x;  <span class="co"># What thread am I within the block?</span></span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  j <span class="op">=</span> <span class="fu">blockIdx</span>().x;   <span class="co"># What block am I in?</span></span>
@@ -1028,7 +1047,7 @@ Device 0: "NVIDIA A100 80GB PCIe"
 <p>In many cases we’ll have more tasks than the total number of GPU cores. As long as we don’t exceed the maximum size of a block or grid, we can just ask for as many threads as we have tasks and rely on the GPU to manage assigning the tasks to the GPU cores.</p>
 <p>We’d want to check that the number/dimension of the block here does not exceed the maximum block size. I didn’t do that, but it ran, so it must have been ok!</p>
 <p>Here we’ll run the computation we ran earlier when we did not write our own kernel and just relied on Julia to offload to the GPU behind the scenese.</p>
-<div id="24c2444f" class="cell" data-execution_count="15">
+<div id="349f76fb" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="fl">250000000</span>;</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>x_gpu <span class="op">=</span> CUDA.<span class="fu">randn</span>(n);</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>nthreads <span class="op">=</span> <span class="fl">1024</span>;</span>
@@ -1055,7 +1074,7 @@ Device 0: "NVIDIA A100 80GB PCIe"
 </section>
 <section id="further-investigations" class="level3">
 <h3 class="anchored" data-anchor-id="further-investigations">Further investigations</h3>
-<p>Depending on how much time we have in future classes and the focus of student presentations and projects, we may come back to this topic to explore GPU-based operations from Julia, in particular GPU-based computations on CuArrays and writing more interesting kernels.</p>
+<p>Depending on how much time we have in future classes and the focus of student presentations and projects, we may come back to this topic to explore GPU-based operations from Julia, in particular writing more interesting kernels.</p>
 
 
 </section>
