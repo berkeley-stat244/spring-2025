@@ -137,8 +137,12 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="comments">Comments</h2>
 <ul>
 <li>I haven’t fully worked these problems myself, so if you run into any strange issues, please post on Ed as there could be mistakes/oversights on my part.</li>
+<li><strong>You’ll need to use the SCF for the GPU work (and possibly the CPU-based parallelization). The <a href="../howtos/accessSCF.html">how-to on accessing the SCF</a> and the <a href="https://statistics.berkeley.edu/computing/servers/cluster/quick-start">SCF quick-start guide</a> and <a href="https://statistics.berkeley.edu/computing/servers/cluster/gpus">the page on submitting GPU jobs</a> give guidance. Please ask questions on Ed or in office hours or in class.</strong></li>
 <li>Please submit as a PDF to Gradescope.</li>
-<li>Please generate the PDF using Quarto. Feel free to work in a Jupyter notebook and then convert to Quarto before rendering to PDF. Other formats that look professional and are designed for working with code and math notation may also be fine - just check with me via a public post on Ed first.</li>
+<li>Please generate the PDF using Quarto. Feel free to work in a Jupyter notebook and then convert to Quarto before rendering to PDF. Other formats that look professional and are designed for working with code and math notation may also be fine - just check with me via a public post on Ed first.
+<ul>
+<li><strong>Given that this PS involves parallelization, it’s fine to set your code chunks not to execute and to copy-paste output from running your code separately from the rendering of your solution.</strong></li>
+</ul></li>
 <li>Remember to note at the start of your document the names of any other students that you worked with on the problem set (or indicating you didn’t work with anyone if that was the case) and then indicate in the text or in code comments any specific ideas or code you borrowed from another student or any online reference (including ChatGPT or the like).</li>
 <li>In general, your solution should not just be code - you should have text describing how you approached the problem and what decisions/conclusions you made, though for simple problems, this can be quite short. Your code should have comments indicating what each function or block of code does, and for any lines of code or code constructs that may be hard to understand, a comment indicating what that code does.</li>
 <li>You do not need to (and should not) show exhaustive output, but in general you should show short examples of what your code does to demonstrate its functionality. The output should be produced as a result of the code chunks being run during the rendering process, not by copy-pasting of output from running the code separately (and definitely not as screenshots).</li>
@@ -147,66 +151,25 @@ window.Quarto = {
 </section>
 <section id="problems" class="level2">
 <h2 class="anchored" data-anchor-id="problems">Problems</h2>
-<p>[UNDER CONSTRUCTION]</p>
-</section>
-<section id="problem-1" class="level2">
-<h2 class="anchored" data-anchor-id="problem-1">Problem 1</h2>
-<p>Gaussian processes provide a distribution over functions, allowing us to simulate random time series and images, amongst other things. We’ll focus on using Gaussian processes in one dimension.</p>
-<p>Consider a set of values <span class="math inline">\({x_1,\ldots,x_n} \in \Re\)</span>. We will simulate <span class="math inline">\(y \sim MVN(\mu 1, \Sigma)\)</span>, where <span class="math inline">\(\mu\)</span> is (for simplicity) a scalar mean and <span class="math inline">\(1\)</span> is a vector of ones. The covariance matrix, <span class="math inline">\(\Sigma\)</span> is constructed as <span class="math inline">\(\Sigma_{i,j} = f(x_i, x_j)\)</span> for some positive definite covariance function, <span class="math inline">\(f\)</span>. Some examples are the exponential covariance, <span class="math inline">\(f(x_i,x_j) = \sigma^2 \exp(-d_{i,j}/rho)\)</span> for <span class="math inline">\(d_{i,j}=|x_i-x_j|\)</span> and the squared exponential <span class="math inline">\(f(x_i,x_j) = \sigma^2 \exp(-d_{i,j}^2/rho^2)\)</span>. Note that in both cases these are simple stationary covariance functions that are functions of the distance between the two points (more complicated covariance functions are possible). To simulate a random function (in the one-d case, you can think of this as a random time series), we compute</p>
-<p><span class="math display">\[ \mu 1 + L z \]</span> where <span class="math inline">\(L\)</span> is the lower-triangular Cholesky decomposition of <span class="math inline">\(\Sigma\)</span> and <span class="math inline">\(z\)</span> is a vector of <span class="math inline">\(n\)</span> numbers simulated independently from a standard normal.</p>
-<section id="problem-1a" class="level3">
-<h3 class="anchored" data-anchor-id="problem-1a">Problem 1a</h3>
-<ul>
-<li>Use structs and functions with type annotation to implement this in Julia. Make sure to continue to cache information effectively for cases where a user wants to simulate multiple time series. We’ll discuss linear algebra further in Weeks 5 or 6. Include logging and exceptions as you did in PS2.</li>
-</ul>
-<p>An object-oriented implementation is available in Python here. https://stat243.berkeley.edu/fall-2024/units/unit5-programming.html#classes-in-python</p>
-<p>Distances.jl has a Euclidean() distance function.</p>
-</section>
-<section id="problem-1b" class="level3">
-<h3 class="anchored" data-anchor-id="problem-1b">Problem 1b</h3>
-<p>Take this grid: $x = 0:0.1:1. Use Float64 and Float16 representations to compute <span class="math inline">\(\Sigma\)</span> and its Cholesky. See what happens with the coarser and finer grids.</p>
-<p>x = 0:0.1:1 xFine = 0:0.01:1</p>
-<p>dists64 = pairwise(Euclidean(), x); dists16 = Float16.(dists64); SigmaExp = exp.(.- dists64 ./ rho); SigmaExp16 = exp.(.- dists16 ./ rho); SigmaSquExp = exp.(.- dists64 .^2 ./ rho^2); SigmaSquExp16 = exp.(.- dists16 .^2 ./rho^2);</p>
-<p>using LinearAlgebra LExp = cholesky(SigmaExp).L LExp16 = cholesky(SigmaExp16).L LSquExp = cholesky(SigmaSquExp).L LSquExp16 = cholesky(SigmaSquExp16).L # fails with 0.1</p>
-<p>One (slightly awkward) workaround is to add a small epsilon to the diagonal of <span class="math inline">\(\Sigma\)</span> for non-numerically positive definite cases.</p>
-<p>Plot a random time series with the finer grid and notice the difference in smoothness between the exponential and squared exponential cases.</p>
-</section>
-<section id="problem-1c" class="level3">
-<h3 class="anchored" data-anchor-id="problem-1c">Problem 1c</h3>
-<ul>
-<li>Allow your code to use GPUs if available on the system (but fall back to the CPU if no GPU is available). Benchmark your code on an SCF GPU (or your own if you happen to have one or have access to one), making sure to report which type of GPU you used for your work. In your time comparisons, also compare to using multiple CPU cores via the threaded BLAS.</li>
-</ul>
-</section>
-<section id="problem-1d" class="level3">
-<h3 class="anchored" data-anchor-id="problem-1d">Problem 1d</h3>
-<ul>
-<li>Suppose your users want to generate many time series at once (e.g., for a simulation study). So the output should be a n x m where m is the number of simulations. Use threaded or multi-process parallelization (your choice) to generate the time series in parallel, using the same underlying cholesky decomposition. [investigate parallel RNG and whether they should just use different seed]</li>
-</ul>
-</section>
-</section>
-<section id="problem-2" class="level2">
-<h2 class="anchored" data-anchor-id="problem-2">Problem 2</h2>
-</section>
-<section id="problem-2a" class="level2">
-<h2 class="anchored" data-anchor-id="problem-2a">Problem 2a</h2>
-<p>Write a kernel using Julia that computes a kernel density estimate in two dimensions using a normal density with bandwidth $h = <span class="math inline">\(\sigma\)</span> for some input dataset with <span class="math inline">\(n\)</span> data points. Your code should compute the KDE on a grid of points, for <span class="math inline">\(m\)</span> points, with each evaluation point handled in a separate thread. This means that each thread will access the full dataset (more on this in part (c).</p>
-<p>You’ll presumably want a value of h somewhere between, say, 10 km and 300 km.</p>
-<p>Apply your code to the data on the location of wildfires in the US (https://www.stat.berkeley.edu/~paciorek/transfer/fire.csv), which contains information on the location, year, and size of fires in the US from the federal government’s wildfire database (obtained from kaggle here: https://www.kaggle.com/code/behroozsohrabi/us-wildfires-dataset-exploration) and then modified to remove various columns and project to an Albers equal area projection in meters, so that we can directly work with Euclidean distances.</p>
-<p>https://www.fs.usda.gov/rds/archive/catalog/RDS-2013-0009.6</p>
-<p>paciorek@smeagol:/scratch/users/paciorek/fire_data</p>
-<p>Feel free to subset to a portion of the US of interest to you. And feel free to choose a square region and implement your code assuming a regular square grid of evaluation points to keep things simpler. There are 2.3 million fires in the dataset, most of them quite small.</p>
-</section>
-<section id="problem-2b" class="level2">
-<h2 class="anchored" data-anchor-id="problem-2b">Problem 2b</h2>
-<p>Now consider using 10-fold cross-validation to find the best value of <span class="math inline">\(h\)</span> from a (small-ish) grid of potential values (possibly equally-spaced on the log scale rather than the original scale), evaluating the log of the kernel density estimate on the test set. First time this by calling your kernel from part (a) 10 times for each value of <span class="math inline">\(h\)</span>.</p>
-<p>Next, include the calculation of the density for each value of <span class="math inline">\(h\)</span> in a loop within the kernel. Call your kernel 10 times. Compare the timing when you avoid having to re-access the data for each value of $h.</p>
-<p>(Note that one could go further by embedding the cross-validation in the kernel too…)</p>
-</section>
-<section id="problem-2c." class="level2">
-<h2 class="anchored" data-anchor-id="problem-2c.">Problem 2c.</h2>
-<p>Now consider using the shared memory amongst the threads in a block via <code>CuStaticSharedArray</code>. Load the data in blocks of size equal to the number of threads into the shared array in parallel using the threads in the block. Then use your code from earlier to calculate the density for the block of data for each evaluation point in a thread. Finally wrap this by looping over all the data blocks.</p>
-<p>Compare the speed here with Problem 2a.</p>
-<p>Note that rather than having each thread handle a single evaluation point on the grid, one could have each thread handle a single data point. This would reduce memory access, but there would then need to be a shared reduction operation, which involves <em>atomic</em> calls. Ideally one would first do the partial reduction across the data points within each block in shared memory.</p>
+<ol type="1">
+<li><p>Gaussian processes provide a distribution over functions, allowing us to simulate random time series and images, amongst other things. We’ll focus on using Gaussian processes in one dimension.</p>
+<p>Consider a set of values <span class="math inline">\(x = {{x_1,\ldots,x_n}} \in \Re\)</span>. We will simulate from a multivariate normal, <span class="math inline">\(y \sim \mbox{MVN}(\mu 1, \Sigma)\)</span>, where <span class="math inline">\(\mu\)</span> is (for simplicity) a scalar mean and <span class="math inline">\(1\)</span> is a vector of ones. The covariance matrix, <span class="math inline">\(\Sigma\)</span> is constructed as <span class="math inline">\(\Sigma_{i,j} = f(x_i, x_j)\)</span> for some positive definite covariance function, <span class="math inline">\(f\)</span>. Some examples are the exponential covariance, <span class="math inline">\(f(x_i,x_j) = \sigma^2 \exp(-d_{i,j}/\rho)\)</span> for <span class="math inline">\(d_{i,j}=|x_i-x_j|\)</span> and the squared exponential <span class="math inline">\(f(x_i,x_j) = \sigma^2 \exp(-d_{i,j}^2/\rho^2)\)</span>. To simulate a random function (in the one-d case, you can think of this as a random time series), we compute</p>
+<p><span class="math display">\[ \mu 1 + L z \]</span> where <span class="math inline">\(L\)</span> is the lower-triangular Cholesky decomposition of <span class="math inline">\(\Sigma\)</span> and <span class="math inline">\(z\)</span> is a vector of <span class="math inline">\(n\)</span> numbers simulated independently from a standard normal. Note that for both of the <span class="math inline">\(f\)</span> functions above, these are simple stationary covariance functions that are functions of the distance between the two points and a range/length scale parameter <span class="math inline">\(\rho\)</span> that determines how “wiggly” the generated time series are (more complicated covariance functions are possible).</p>
+<ol type="a">
+<li><p>Use struct(s) and functions/methods with type annotation to implement this in Julia. Make sure to cache information effectively for cases where a user wants to simulate multiple time series with the same <span class="math inline">\(x\)</span>, <span class="math inline">\(f\)</span>, <span class="math inline">\(\sigma\)</span>, and <span class="math inline">\(\rho\)</span>. Include logging and exception handling as you did in PS2. An object-oriented implementation is available <a href="https://stat243.berkeley.edu/fall-2024/units/unit5-programming.html#classes-in-python">in Python here</a>. Tip: <code>Distances.jl</code> has a <code>Euclidean()</code> distance function.</p></li>
+<li><p>Consider a coarse grid, <span class="math inline">\(x = 0:0.1:1\)</span>, and a fine grid, <span class="math inline">\(x = 0:0.01:1\)</span>. Use <code>Float64</code> and <code>Float16</code> representations to compute <span class="math inline">\(\Sigma\)</span> and its Cholesky. You’ll find numerical issues in some cases. Plot a random time series with the finer grid and notice the difference in smoothness between the exponential and squared exponential cases. Note that one (slightly awkward) workaround to add a small epsilon to the diagonal of <span class="math inline">\(\Sigma\)</span> for the situations where the matrix is not (numerically) positive definite.</p></li>
+<li><p>Allow your code to use GPUs if available on the system (but fall back to the CPU if no GPU is available). Benchmark your code on an SCF GPU (or your own if you happen to have one or have access to one), making sure to report which type of GPU you used for your work. In your time comparisons, also compare to using multiple CPU cores via the threaded BLAS.</p></li>
+<li><p>Suppose your users want to generate many time series at once (e.g., for a simulation study). So the output should be an <span class="math inline">\(n \times m\)</span> matrix, where <span class="math inline">\(m\)</span> is the number of simulated time series. Use threaded or multi-process parallelization (your choice) to generate the time series in parallel, using the same underlying Cholesky decomposition.</p></li>
+</ol></li>
+<li><p>This problem asks you to implement kernel density estimation by writing your own GPU kernel in Julia. (Unfortunately, “kernel” will mean both the statistical kernel used for the averaging and the GPU kernel used to implement the calculations.)</p>
+<ol type="a">
+<li><p>Write a GPU kernel using Julia that computes a kernel density estimate (KDE) in two dimensions using a normal density with bandwidth <span class="math inline">\(h\)</span> equal to the standard deviation of the normal density. The estimate should be based on an input dataset with <span class="math inline">\(n\)</span> data points. Your code should compute the KDE on a grid of points, for <span class="math inline">\(m\)</span> points, with each evaluation point handled in a separate thread. This means that each thread will access the full dataset (more on this in part (c)). Check that your code works by applying it to a moderately-sized simulated dataset - e.g., you could simulate <span class="math inline">\(n\)</span> points using a mixture of 2-d normal densities.</p></li>
+<li><p>Apply your code to <a href="https://www.stat.berkeley.edu/~paciorek/transfer/fire.csv">data on the location of wildfires in the US</a>, which contains information on the location, year, and size of fires in the US from the <a href="https://www.fs.usda.gov/rds/archive/catalog/RDS-2013-0009.6">federal government’s wildfire database</a>, which I obtained from <a href="https://www.kaggle.com/code/behroozsohrabi/us-wildfires-dataset-exploration">Kaggle</a> and then modified to remove various columns and project to an Albers equal area projection (in meters), so that we can directly work with Euclidean distances. You’ll presumably want a value of <span class="math inline">\(h\)</span> somewhere between, say, 10 km and 300 km. Feel free to subset to a portion of the US of interest to you. And feel free to choose a square region and implement your code assuming a regular square grid of evaluation points to keep things simpler. There are 2.3 million fires in the dataset, most of them quite small.</p></li>
+<li><p>Now consider using 10-fold cross-validation to find the best value of <span class="math inline">\(h\)</span> from a (small-ish) grid of potential values (possibly equally-spaced on the log scale rather than the original scale), evaluating the log of the kernel density estimate on the held-out points. First, time this by calling your kernel from part (a) for the 10 folds for each value of <span class="math inline">\(h\)</span>. Next, include the calculation of the density for each value of <span class="math inline">\(h\)</span> in a loop within the kernel. Call your kernel on the 10 folds. Compare the timing when you avoid having to re-access the data for each value of $h. (Note that one could go further by embedding the cross-validation in the kernel too…)</p></li>
+<li><p>Now consider using shared memory amongst the threads in a block via <code>CuStaticSharedArray</code>. Load the data in chunks of size equal to the number of threads in a block into the shared array in parallel using the threads in the block. Then use your code from earlier to calculate the density for the chunk of data, with each thread doing an evaluation point (as before). Finally wrap the chunk-specific code by looping over all the chunks needed to process the full dataset. Compare the speed when using shared memory with the original implementation in part (a) (i.e., for this comparison you don’t need to do cross-validation and can use a single <span class="math inline">\(h\)</span> value).</p></li>
+</ol>
+<p>Side note: rather than having each thread handle a single evaluation point on the grid of <span class="math inline">\(m\)</span> points, one could have each thread handle a single data point and loop over all <span class="math inline">\(m\)</span> points. This would reduce memory access, but there would then need to be a shared reduction operation, which involves <em>atomic</em> calls to avoid conflicts between the threads accessing the same output. Ideally one would first do the partial reduction across the data points within each block in shared memory.</p></li>
+</ol>
 
 
 </section>
