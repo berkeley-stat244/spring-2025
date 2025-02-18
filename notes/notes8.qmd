@@ -679,7 +679,7 @@ We use `@cuda` to compile and run the kernel.
 #| eval: false
 function my_kernel(x)
   idx = threadIdx().x;   # What thread am I?
-  if idx < length(x)
+  if idx <= length(x)
     x[idx] = tan(x[idx]) + 3*sin(x[idx]);
   end
   return
@@ -749,7 +749,7 @@ n = 200;
 x_gpu = CUDA.randn(n);
 nthreads = 100;
 nblocks = Int(ceil(n/nthreads));
-@cuda threads=nthreads blocks=nblocks my_kernel(x_gpu);
+@cuda threads=nthreads blocks=nblocks my_kernel_print(x_gpu);
 ```
 
 When we run this, notice the output seems to be grouped based on warps of 32 threads (apart from the last set since `n=200` is not a multiple of 32).
