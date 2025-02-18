@@ -95,7 +95,7 @@ true
 
 ::: {.callout-important title="Invoke `using CUDA` on a machine with a GPU"}
 
-I invoked `using CUDA` on a machine without a GPU and it caused some pre-compilation that then prevented me from using the GPU on a machine with a GPU, giving messages like "Error: CUDA.jl could not find an appropriate CUDA runtime to use". Untangling that took some effort (in particular manually removing CUDA-related Julia packages via `rm ~/.julia/compiled/v1.10/CUDA*`).
+I invoked `using CUDA` on a machine without a GPU and it caused some pre-compilation that then prevented me from using the GPU on a machine with a GPU, giving messages like "Error: CUDA.jl could not find an appropriate CUDA runtime to use". Untangling that took some effort (in particular manually removing CUDA-related Julia packages via `rm -r ~/.julia/compiled/v1.10/CUDA*`).
 
 So if you're on a cluster or other system with multiple machines (such as the SCF), some with and without GPUs, it's best if you only use `CUDA` on a machine with a GPU.
 :::
@@ -109,7 +109,7 @@ Before we get into the complexities of how GPUs work and what one has to do to w
 The main package we'll use is the [CUDA package](https://cuda.juliagpu.org/stable/). It provides:
 
  - the `CuArray` type for working with arrays on the GPU,
- - wrappers for NVIDIA's CUDA library (distinct from the Julia CUDA package) functions that allow one to use Julia functions/operators with CuArrays, and
+ - wrappers for functions in NVIDIA's CUDA libraries (the NVIDIA CUDA toolkit is distinct from the Julia CUDA package) that allow one to use Julia functions/operators with CuArrays, and
  - tooling for writing CUDA kernels in Julia.
 
 In this section we'll see the first two, before looking at writing kernels in the last section of these notes.
@@ -194,7 +194,7 @@ Some comments on timing GPU code:
 
 Given that we use `*` with two `CuArray` matrices, Julia's multiple dispatch system is clearly involved in determining what code to call to execute the matrix multiplication on the GPU.
 
-Digging around a bit in the source code for the `LinearAlgebra` and `CUDA` packages, it looks like the result of the dispatch is to call `LinearAlgebra.generic_matmatmul!`, with the method that works for CuArrays in the `lib/cublas/linalg.jl` file in the CUDA package. That presumably invokes the cuBLAS versions of the BLAS functions found in `lib/cublas/libcublas.jl` and `lib/cublas/wrappers.jl` where we see calls out to native cuBLAS functions. 
+Digging around a bit in the source code for the `LinearAlgebra` and `CUDA` packages, it looks like the result of the dispatch is to call `LinearAlgebra.generic_matmatmul!`, with the method that works for CuArrays in the `lib/cublas/linalg.jl` file in the CUDA package. That presumably invokes the cuBLAS versions of the BLAS functions found in `lib/cublas/libcublas.jl` and `lib/cublas/wrappers.jl` where we see calls out to native C-based cuBLAS functions. But I don't see where the C code is.
 
 At a high level that makes sense, though the details of all the wrapping and type inheritance/dispatch that is going on might be hard to trace through carefully.
 
@@ -291,9 +291,9 @@ It does make sense that the transfer back takes about half as long.
 
 ### Interacting with NVIDIA's CUDA libraries
 
-Working with objects on the GPU requires interfacing with functions provided by the CUDA Toolkit and its related packages such as `cuBLAS`, `cuRAND`, `cuFFT`, etc. These are provided for Julia with the CUDA package (see `CUDA/<version_string>/lib`) so all that you need installed on the machine with the GPU is the NVIDIA driver software and the Julia CUDA package. You don't actually need NVIDIA's CUDA Toolkit.
+Working with objects on the GPU requires interfacing with functions provided by the CUDA Toolkit and its libraries such as `cuBLAS`, `cuRAND`, `cuFFT`, etc. These are provided for Julia with the CUDA package (see `CUDA/<version_string>/lib`) so all that you need installed on the machine with the GPU is the NVIDIA driver software and the Julia CUDA package. You don't actually need NVIDIA's CUDA Toolkit.
 
-Only some operations are possible on the GPU, since Julia is calling out to CUDA functions to run code on the GPU.
+Since Julia is calling out to CUDA functions to run code on the GPU, there may be functions that won't work on a CuArray, but the various things I tried all seem to work.
 
 ```{julia}
 #| eval: false
@@ -309,13 +309,17 @@ y_gpu + y_gpu
 
 ```{julia}
 #| eval: false
-sin(y_gpu)
+sin.(y_gpu)
 ```
 ```
-ERROR: MethodError: no method matching sin(::CuArray{Float32, 1, CUDA.DeviceMemory})
+3-element CuArray{Float32, 1, CUDA.DeviceMemory}:
+ -0.986312
+ -0.784628
+  0.7079291
 ```
 
-And we can't work with scalar elements of the array because that tries to do a non-vectorized calculation on a GPU-based array.
+
+However, we can't work with scalar elements of the array because that tries to do a non-vectorized calculation on a GPU-based array.
 
 ```{julia}
 #| eval: false
@@ -355,7 +359,7 @@ x_gpu = CuArray(x);
 # 9.041 s (0 allocations: 0 bytes)
 
 # GPU calculation:
-# Try to flush out any compilation/transformation time.
+# Try to flush out any compilation time.
 test = CuArray([1.1, 2.2])
 CUDA.@sync vec_calc(test);  # This seems to take surprisingly long.
 
@@ -367,10 +371,10 @@ CUDA.@time CUDA.@sync vec_calc(x_gpu);
 
 I'm not sure why the initial call on `test` takes so long. I'm also not sure what explains the big difference between running the calculation on the full vector the first and second times (including why the first call involves so many separate allocations). The first time represents a 91-fold speedup and the second time a surprising 2400-fold speedup.
 
-I'm also not sure of what is going on behind the scenes in terms of the Julia interpeter and/or compiler processing the `vec_calc` code to allow it to be run via CUDA calls on the GPU. `@code_native vec_calc(x_gpu)` indicates use of the `GPUArrays` package, in particular use of `gpu_call` to run a kernel on the GPU. So I think the main questions are (1) how Julia creates a Julia-coded kernel function (such as [this example Julia kernel](#gpu-kernels) and (2) how that function is transformed to CUDA code.
+I'm also not sure of what is going on behind the scenes in terms of the Julia interpeter and/or compiler processing the `vec_calc` code to allow it to be run via CUDA calls on the GPU. `@code_native vec_calc(x_gpu)` indicates use of the `GPUArrays` package, in particular use of `gpu_call` to run a kernel on the GPU. So I think the main question is) how Julia creates a Julia-coded kernel function (such as [this example Julia kernel](#gpu-kernels). (Once the kernel function is created, there seem to be tools to convert LLVM code to code that runs on the GPU (more [later](#gpu-kernels)).
 
 ::: {.callout-tip title="Exercise"}
-See how small `n` can be before the time of doing the GPU calculation exceeds that of the CPU calculation.
+See how small `n` can be before the time of doing the calculation on the GPU exceeds the time for doing it on the CPU.
 
 Then, consider how the transfer time to/from the GPU affects the trade-off (in this case presuming the only
 calculation you were doing was `vec_calc` and that you needed the full output back on the host for a later calculation that can't be done on the GPU.
@@ -387,7 +391,7 @@ GPUs have thousands of "slow" (slower than the CPU) cores. Their speed comes fro
 
 Each individual computation or series of computations on the GPU is done in a thread. Threads are organized into blocks and blocks of threads are organized in a grid. The blocks and grids can be 1-, 2-, or 3-dimensional. E.g., you might have a 1-d block of 256 threads, with a grid of 3 x 3 such blocks, for a total of 256×9=2304 threads.
 
-The choice of the grid/block arrangement can affect efficiency. I'm not an expert at this level of detail but we'll see some about this in the worked example below. Note that using more than 1-dimensional grids and blocks is purely for the conceptual convenience of the programmer and doesn't correspond to anything on the hardware. So for the most part we'll use a one-dimensional grid of blocks and a one-dimensional blocks of threads.
+The choice of the grid/block arrangement can affect efficiency. I'm not an expert at this level of detail but we'll see some about this in the kernel example below. Note that using more than 1-dimensional grids and blocks is purely for the conceptual convenience of the programmer and doesn't correspond to anything on the hardware. So for the most part we'll use a one-dimensional grid of blocks and a one-dimensional blocks of threads.
 
 In general you'd want each independent calculation done in a separate thread, but one might want to do a sequence of calculations on each thread. In general, you'll want to pipeline together multiple operations within a computation to avoid copying from CPU to GPU and back. Alternatively, this can be done by keeping the data on the GPU and calling a second kernel.
 
@@ -398,7 +402,7 @@ In general you'd want each independent calculation done in a separate thread, bu
  - *blocks*: threads are grouped into blocks
  - *grid*: blocks are grouped into a grid
  - *warp*: a group of (usually) 32 threads that operate together 
- - *kernel*: a C function that runs on the GPU
+ - *kernel*: a function that runs on the GPU (usually one thinks of a C function, but we'll write Julia-coded kernels)
  - *device*: the GPU and its memory
  - *host*: the CPU and its memory
 
@@ -410,9 +414,9 @@ Some facts about the organization of threads on a GPU.
 Threads:
 
  - threads grouped into a warp (on A100 and possibly most others, 32 threads per warp)
- - threads in a warp operate in lock step (so an `if` statement causes threads to pause to wait for other threads that follow other branches).
+ - threads in a warp operate in lock step (so an `if` statement causes threads to pause to wait for other threads that follow other branches)
  - GPU can switch between warps very quickly
- - threads should be cache-aware
+ - threads should be cache-aware (best to have adjacent threads use adjacent memory)
 
 Blocks:
 
@@ -426,15 +430,15 @@ Grid
  - 1, 2, or 3-dimensional grid of blocks (again for code clarity only)
  - A100 GPU has up to 2147483647 blocks in the grid (I think)
 
-### GPU execution
+### GPU execution and efficiency
 
- - GPUS are good at executing the same computation across many data elements at once.
+ - GPUS are good at executing the same computation across many data elements at once (called "SIMD" for "single instruction, multiple data".
  - Threads in a block have access to some shared memory, which is on the chip, so access is very fast.
  - Threads operate in a warp of 32 threads.
- - Threads in a warp operate in lock-step, so if statements can be inefficient (some threads have to wait while a branch of the if statement is run for other threads.
+ - Threads in a warp operate in lock-step, so `if` statements can be inefficient (some threads have to wait while a branch of the `if` statement is run for other threads).
  - GPUs can switch between warps very quickly, which would happen while a warp waits for data.
  - Threads in a warp should use neighboring values in an array for efficiency (note our discussion of the cache in the CPU context).
- - Computations on a GPU generally use single precision (4 byte floats), which will often run much faster than with doubles (8 byte floats).
+ - Computations on a GPU generally use single precision (32 bit floats) (or even 16 or 8 byte floats), which will often run much faster than with doubles (64 bit floats).
 
 ## GPU monitoring - details
 
@@ -542,7 +546,7 @@ Fri Jan  3 14:16:11 2025
 
 The `deviceQuery` utility provided with CUDA will give details on the GPU hardware.
 
-Here's an example with one of the SCF GPU servers, showing information about the processors available on the A100 GPU and the threads/blocks/grids that are possible (more on this later).
+Here's an example with one of the SCF GPU servers, showing information about the processors available on the A100 GPU and the number of threads and blocks that are possible.
 
 ```
 paciorek@saruman:~> deviceQuery
@@ -661,13 +665,13 @@ A *kernel* is a function that can be run on the GPU.
 
 Next we'll see that we can actually [write a kernel](https://cuda.juliagpu.org/stable/development/kernel/) in Julia and then call that kernel. Kernels are functions that encode the core computational operations that are executed in parallel.
 
-In other languages, the basic mode of operation with a GPU when you are writing your own GPU code is to write a kernel using CUDA (basically C) code and then call the kernel in parallel via C, R, or Python code. In Julia, we can write the kernel using Julia syntax (though many operations will not run on the GPU...).
+In other languages, the basic mode of operation with a GPU when you are writing your own GPU code is to write a kernel using CUDA (basically C) code and then call the kernel in parallel via C, R, or Python code. In Julia, we can write the kernel using Julia syntax (though many operations (particularly non-numerical ones) will not run on the GPU...).
 
-I have not investigated much to see what Julia does behind the scenes with the kernel code for it to be able to run on the GPU, but [this blog post](https://robertcunningham.xyz/how-does-cuda-jl-work/) seems helpful. I *think* the steps involve going from LLVM code to PTX code (an assembly language for GPUs) that is then converted to GPU machine code. These steps involve tooling available outside of Julia.
+I have not investigated much to see what Julia does behind the scenes with the kernel code for it to be able to run on the GPU, but [this blog post](https://robertcunningham.xyz/how-does-cuda-jl-work/) seems helpful. I *think* the steps involve going from LLVM code to PTX code (an assembly language for GPUs) that is then converted to GPU machine code. These steps involve tooling available outside of Julia, which seems like a reflection of the benefit of choosing to have Julia's compilation system use LLVM.
 
 ### Basic example
 
-Here's a basic example in which we'll exponentiate a vector in place. We run 1000 scalar calculations using 1000 threads.
+Here's a basic example in which we'll do a calculation in place. We run 1000 scalar calculations using 1000 threads.
 
 We use `@cuda` to compile and run the kernel.
 
@@ -723,7 +727,7 @@ initial = Array(x_gpu)[n]
 nblocks = Int(ceil(n/nthreads));
 
 @cuda threads=nthreads blocks=nblocks my_kernel(x_gpu);
-(initial, Array(x_gpu)[n])
+(initial, Array(x_gpu)[n])  # Check that calculation was done.
 ```
 
 Let's do a smaller test run in which we can check on the thread and block indexing.
@@ -736,7 +740,7 @@ function my_kernel_print(x)
   idx =  (j-1)*blockDim().x + i;
   if idx <= length(x)
     x[idx] = tan(x[idx]) + 3*sin(x[idx]);
-  @cuprintln idx, i, j, blockDim().x, blockDim().y;
+    @cuprintln idx, i, j, blockDim().x, blockDim().y;
   end
   return
 end
@@ -748,7 +752,7 @@ nblocks = Int(ceil(n/nthreads));
 @cuda threads=nthreads blocks=nblocks my_kernel(x_gpu);
 ```
 
-When we run this, notice the output seems to be grouped based on warps of 32 threads (apart from the last set since `n=200` is not a multiple of 32.
+When we run this, notice the output seems to be grouped based on warps of 32 threads (apart from the last set since `n=200` is not a multiple of 32).
 
 ### Larger computations
 
@@ -756,7 +760,7 @@ In many cases we'll have more tasks than the total number of GPU cores. As long 
 
 We'd want to check that the number/dimension of the block here does not exceed the maximum block size. I didn't do that, but it ran, so it must have been ok!
 
-Here we'll run the computation we ran earlier when we did not write our own kernel and just relied on Julia to offload to the GPU behind the scenese.
+Here we'll run the computation we ran earlier when we did not write our own kernel and just relied on Julia to offload to the GPU behind the scene.
 
 ```{julia}
 #| eval: false
@@ -785,6 +789,3 @@ To effectively use the GPU, one generally wants to have a computation in which t
 
 Situations with a lot of conditionality (if-else branching), small data sizes, and lots of data transfer to/from the GPU are generally not good use cases for the GPU.
 
-### Further investigations
-
-Depending on how much time we have in future classes and the focus of student presentations and projects, we may come back to this topic to explore GPU-based operations from Julia, in particular writing more interesting kernels.
