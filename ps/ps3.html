@@ -152,7 +152,7 @@ window.Quarto = {
 <section id="problem-1" class="level2">
 <h2 class="anchored" data-anchor-id="problem-1">Problem 1</h2>
 <p>Gaussian processes provide a distribution over functions, allowing us to simulate random time series and images, amongst other things. We’ll focus on using Gaussian processes in one dimension.</p>
-<p>Consider a set of values <span class="math inline">\({x_1,\ldots,x_n} \in \Re\)</span>. We will simulate <span class="math inline">\(y \sim MVN(\mu 1, \Sigma)\)</span>, where <span class="math inline">\(\mu\)</span> is (for simplicity) a scalar mean and <span class="math inline">\(1\)</span> is a vector of ones. The covariance matrix, <span class="math inline">\(\Sigma\)</span> is constructed as <span class="math inline">\(\Sigma_{i,j} = f(x_i, x_j)\)</span> for some positive definite covariance function, <span class="math inline">\(f\)</span>. Some examples are the exponential covariance, <span class="math inline">\(f(x_i,x_j) = \sigma^2 \exp(-d_{i,j}/rho)\)</span> for <span class="math inline">\(d_{i,j}=|x_i-x_j}\)</span>and the squared exponential <span class="math inline">\(f(x_i,x_j) = \sigma^2 \exp(-d_{i,j}^2^2/rho^2)\)</span>. Note that in both cases these are simple stationary covariance functions that are functions of the distance between the two points (more complicated covariance functions are possible). To simulate a random function (in the one-d case, you can think of this as a random time series), we compute</p>
+<p>Consider a set of values <span class="math inline">\({x_1,\ldots,x_n} \in \Re\)</span>. We will simulate <span class="math inline">\(y \sim MVN(\mu 1, \Sigma)\)</span>, where <span class="math inline">\(\mu\)</span> is (for simplicity) a scalar mean and <span class="math inline">\(1\)</span> is a vector of ones. The covariance matrix, <span class="math inline">\(\Sigma\)</span> is constructed as <span class="math inline">\(\Sigma_{i,j} = f(x_i, x_j)\)</span> for some positive definite covariance function, <span class="math inline">\(f\)</span>. Some examples are the exponential covariance, <span class="math inline">\(f(x_i,x_j) = \sigma^2 \exp(-d_{i,j}/rho)\)</span> for <span class="math inline">\(d_{i,j}=|x_i-x_j|\)</span> and the squared exponential <span class="math inline">\(f(x_i,x_j) = \sigma^2 \exp(-d_{i,j}^2/rho^2)\)</span>. Note that in both cases these are simple stationary covariance functions that are functions of the distance between the two points (more complicated covariance functions are possible). To simulate a random function (in the one-d case, you can think of this as a random time series), we compute</p>
 <p><span class="math display">\[ \mu 1 + L z \]</span> where <span class="math inline">\(L\)</span> is the lower-triangular Cholesky decomposition of <span class="math inline">\(\Sigma\)</span> and <span class="math inline">\(z\)</span> is a vector of <span class="math inline">\(n\)</span> numbers simulated independently from a standard normal.</p>
 <section id="problem-1a" class="level3">
 <h3 class="anchored" data-anchor-id="problem-1a">Problem 1a</h3>
@@ -191,7 +191,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="problem-2a">Problem 2a</h2>
 <p>Write a kernel using Julia that computes a kernel density estimate in two dimensions using a normal density with bandwidth $h = <span class="math inline">\(\sigma\)</span> for some input dataset with <span class="math inline">\(n\)</span> data points. Your code should compute the KDE on a grid of points, for <span class="math inline">\(m\)</span> points, with each evaluation point handled in a separate thread. This means that each thread will access the full dataset (more on this in part (c).</p>
 <p>You’ll presumably want a value of h somewhere between, say, 10 km and 300 km.</p>
-<p>Apply your code to the data on the location of wildfires in the US (fire.csv), which contains information on the location, year, and size of fires in the US from the federal government’s wildfire database (obtained from kaggle here: https://www.kaggle.com/code/behroozsohrabi/us-wildfires-dataset-exploration) and then modified to remove various columns and project to an Albers equal area projection in meters, so that we can directly work with Euclidean distances.</p>
+<p>Apply your code to the data on the location of wildfires in the US (https://www.stat.berkeley.edu/~paciorek/transfer/fire.csv), which contains information on the location, year, and size of fires in the US from the federal government’s wildfire database (obtained from kaggle here: https://www.kaggle.com/code/behroozsohrabi/us-wildfires-dataset-exploration) and then modified to remove various columns and project to an Albers equal area projection in meters, so that we can directly work with Euclidean distances.</p>
 <p>https://www.fs.usda.gov/rds/archive/catalog/RDS-2013-0009.6</p>
 <p>paciorek@smeagol:/scratch/users/paciorek/fire_data</p>
 <p>Feel free to subset to a portion of the US of interest to you. And feel free to choose a square region and implement your code assuming a regular square grid of evaluation points to keep things simpler. There are 2.3 million fires in the dataset, most of them quite small.</p>
@@ -207,60 +207,8 @@ window.Quarto = {
 <p>Now consider using the shared memory amongst the threads in a block via <code>CuStaticSharedArray</code>. Load the data in blocks of size equal to the number of threads into the shared array in parallel using the threads in the block. Then use your code from earlier to calculate the density for the block of data for each evaluation point in a thread. Finally wrap this by looping over all the data blocks.</p>
 <p>Compare the speed here with Problem 2a.</p>
 <p>Note that rather than having each thread handle a single evaluation point on the grid, one could have each thread handle a single data point. This would reduce memory access, but there would then need to be a shared reduction operation, which involves <em>atomic</em> calls. Ideally one would first do the partial reduction across the data points within each block in shared memory.</p>
-<section id="section" class="level20">
-<p class="heading"></p>
-<p>Have each thread</p>
-<p>have them create 2-d grid KDE in various dimensions; on cpu program cross-vali? layer in cross-validation (perhaps on a grid) - how does timing scale with number of cv points? is this better than calling the kernel p times? extend to load chunk of data into shared memory within a block so that not all threads are accessing global memory at once</p>
-<p>CuStaticSharedArray</p>
-<p>could have each thread handle a data point; then need shared reduction operation which involves atomic calls. Ideally one would first do the partial reduction within each block in shared memory.</p>
-<p>can one call another fxn in the kernel? yes</p>
-<p>function kde_kernel_shared!(densities, eval_points, data, n_eval, n_data, bandwidth) # Get thread and block indices tidx = threadIdx().x bidx = blockIdx().x</p>
-<pre><code># Calculate global index for evaluation point
-eval_idx = tidx + (bidx - 1) * blockDim().x
-
-# Shared memory for data points
-# Each block loads a subset of data points at a time
-shared_data = @cuDynamicSharedMem(Float32, blockDim().x)
-
-# Initialize density accumulator for this evaluation point
-density = 0.0f0
-
-# Only continue if this thread has a valid evaluation point
-if eval_idx &lt;= n_eval
-    x = eval_points[eval_idx]
-    
-    # Process data in tiles
-    for tile_start = 1:blockDim().x:n_data
-        # Number of points in this tile
-        tile_size = min(blockDim().x, n_data - tile_start + 1)
-        
-        # Load data into shared memory
-        if tidx &lt;= tile_size
-            shared_data[tidx] = data[tile_start + tidx - 1]
-        end
-        
-        # Wait for all threads to finish loading
-        sync_threads()
-        
-        # Process all points in this tile
-        for i = 1:tile_size
-            u = (x - shared_data[i]) / bandwidth
-            density += exp(-0.5f0 * u * u)
-        end
-        
-        # Wait for all threads to finish using shared memory
-        sync_threads()
-    end
-    
-    # Normalize and store final result
-    densities[eval_idx] = density / (n_data * bandwidth * sqrt(2.0f0 * π))
-end
-
-return nothing</code></pre>
-<p>end</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
