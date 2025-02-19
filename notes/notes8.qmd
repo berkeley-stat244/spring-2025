@@ -783,11 +783,182 @@ Array(x_gpu)[n]
 
 The 2.0 ms is reasonably comparable to the 3.7 ms when we just had Julia run the [vectorized computation on the GPU](./#vectorized-example) (from the last time we ran it). That used 64-bit floats. When I reran the code above using 64-bit floats, the time was 5.2 ms.
 
-## Final comments (for now)
+## Efficient memory access
 
-### When to use the GPU
+We'll explore two final topics related to efficiently accessing data in memory: first accessing global GPU memory efficiently and second making use of shared GPU memory.
+
+### Coalesced access to global memory
+
+If adjacent threads in a block access adjacent memory locations,  a chunk of data can be obtained in a single access to global memory.
+
+Here's a very basic example where we see that reading a matrix by column is more efficient than reading by row. From what I've read, I was expecting to see more of a difference, but we do get almost a 2-fold speedup working by column rather than by row.
+
+```{julia}
+#| eval: false
+n = 1000;
+in_gpu = CUDA.randn(n,n);
+out_gpu = CUDA.zeros(n,n);
+
+in_gpu_small = CUDA.randn(5,5);
+out_gpu_small = CUDA.zeros(5,5);
+
+# Good: Adjacent threads process same column.
+function kernel_bycol!(output, input)
+    idx_x = threadIdx().x    # Column index
+    idx_y = blockIdx().x     # Row index
+    
+    if idx_x <= size(input, 1) && idx_y <= size(input, 2)
+        output[idx_x, idx_y] = input[idx_x, idx_y]
+    end
+    return nothing
+end
+
+nthreads = n;
+nblocks = n;
+
+# Flush out any compilation time.
+CUDA.@sync @cuda threads=nthreads blocks=nblocks kernel_bycol!(out_gpu_small, in_gpu_small);
+
+CUDA.@time CUDA.@sync @cuda threads=nthreads blocks=nblocks kernel_bycol!(out_gpu, in_gpu);
+# 0.000106 seconds (33 CPU allocations: 960 bytes)
+
+# Bad: Adjacent threads process same row.
+function kernel_byrow!(output, input)
+    idx_x = blockIdx().x     # Column index
+    idx_y = threadIdx().x    # Row index
+    
+    if idx_x <= size(input, 1) && idx_y <= size(input, 2)
+        output[idx_x, idx_y] = input[idx_x, idx_y]
+    end
+    return nothing
+end
+
+# Flush out any compilation time.
+CUDA.@sync @cuda threads=nthreads blocks=nblocks kernel_byrow!(out_gpu_small, in_gpu_small);
+
+CUDA.@time CUDA.@sync @cuda threads=nthreads blocks=nblocks kernel_byrow!(out_gpu, in_gpu);
+# 0.000254 seconds (33 CPU allocations: 960 bytes)
+```
+
+### Using shared memory
+
+Accessing global GPU memory is much slower than doing computation on the GPU. So we'd like to avoid repeated access to global memory (e.g., a bad scenario would be a ratio of one arithmetic calculation per retrieval from global memory). One strategy is for multiple threads in a block to cooperate to load data from global memory into shared memory accessible by all the threads in the block. The computation can then be done on the data in shared memory.
+
+Here's a simplified example that shows how to load the data into shared memory. There's no actual computation, but if we think of the kernel density estimation problem in PS 3, one could imagine that each thread would then each do a computation that uses the entire chunk of data in shared memory.
+
+```{julia}
+#| eval: false
+function kernel_reader_bycol(x::CuDeviceArray{T}) where T
+  i = threadIdx().x;  # What thread am I within the block?
+  j = blockIdx().x;   # What block am I in?
+  idx =  (j-1)*blockDim().x + i;
+  dims = size(x);
+  
+  # Setup shared memory for the subset of data.
+  shared_data = CuDynamicSharedArray(T, (blockDim().x, dims[2]));
+
+  for chunk_start = 1:blockDim().x:dims[1]
+    chunk_size = min(blockDim().x, dims[1] - chunk_start + 1);
+    ## Transfer a chunk of rows in parallel, one row per thread.
+    if i <= chunk_size
+      for col in 1:dims[2]
+        shared_data[i, col] = x[chunk_start + i - 1, col];
+      end
+    end
+    sync_threads()
+    
+    # At this point we'd insert code to do the actual computation, based on `idx`.
+    # Each thread now has the opportunity to compute on all the data in the chunk in
+    # `shared_data`.
+    
+  end
+
+  return
+end
+
+n = 10000000;
+m = 10;
+x_gpu = CUDA.randn(n, m);
+x_gpu_small = CUDA.randn(5, m);
+
+nthreads = 1024;
+nblocks = 100;  # This is arbitrary in this example as we are not doing an actual computation.
+
+memsize = nthreads * m * 4;
+
+CUDA.@sync @cuda threads=nthreads blocks=nblocks shmem=memsize kernel_reader_bycol(x_gpu_small);
+
+CUDA.@time @cuda threads=nthreads blocks=nblocks shmem=memsize kernel_reader_bycol(x_gpu);
+# 0.138480 seconds (24 CPU allocations: 752 bytes)
+```
+
+If `m` gets much bigger, we get an error "ERROR: Amount of dynamic shared memory exceeds device limit (400.000 KiB > 48.000 KiB)." So for larger `m` we'd need to rework how we manipulate the data.
+
+Let's close by seeing if the memory access patterns make a difference in this example. Instead of accessing by column, we'll access by row, but with the matrix transposed so it is very wide instead of very long.
+
+My initial thought was that accessing by row would be slower because adjacent threads are not reading from adjacent locations in global memory.
+
+```{julia}
+#| eval: false
+function kernel_reader_byrow(x::CuDeviceArray{T}) where T
+  i = threadIdx().x;  # What thread am I within the block?
+  j = blockIdx().x;   # What block am I in?
+  idx =  (j-1)*blockDim().x + i;
+  dims = size(x);
+  
+  # Setup shared memory for the subset of data.
+  shared_data = CuDynamicSharedArray(T, (dims[1], blockDim().x));
+
+  for chunk_start = 1:blockDim().x:dims[2]
+    chunk_size = min(blockDim().x, dims[2] - chunk_start + 1);
+    ## Transfer a chunk of rows in parallel, one column per thread.
+    if i <= chunk_size
+      for row in 1:dims[1]
+        shared_data[row, i] = x[row, chunk_start + i - 1];
+      end
+    end
+    sync_threads()
+    
+    # At this point we'd insert code to do the actual computation, based on `idx`.
+    # Each thread now has the opportunity to compute on all the data in the chunk in
+    # `shared_data`.
+    
+  end
+
+  return
+end
+
+n = 10000000;
+m = 10;
+x_gpu = CUDA.randn(m, n);
+x_gpu_small = CUDA.randn(m, 5);
+
+nthreads = 1024;
+nblocks = 100;  # This is arbitrary in this example as we are not doing an actual computation.
+
+memsize = nthreads * m * 4;
+
+CUDA.@sync @cuda threads=nthreads blocks=nblocks shmem=memsize kernel_reader_byrow(x_gpu);
+
+CUDA.@time CUDA.@sync @cuda threads=nthreads blocks=nblocks shmem=memsize kernel_reader_byrow(x_gpu);
+# 0.105434 seconds (25 CPU allocations: 1008 bytes)
+```
+
+We see that the access by row here is (a bit) faster. I think this is because the entire chunk of data in the wide matrix lives in a small area of global memory, while in the long matrix, each column in the chunk has adjacent values but separate columns are very far apart because the matrix is so long.
+
+We might be able to improve efficiency with the wide matrix by operating by column within the wide matrix. This would involve more work to manage the indexing because we wouldn't just have each thread manage a column (unless we used very few threads, which would presumably reduce efficiency).
+
+Clearly there's more to investigate/understand here, but I believe that PS3 will illustrate the potential benefit of using shared memory. 
+
+## Final comments - when to use the GPU
 
 To effectively use the GPU, one generally wants to have a computation in which the same calculation is being done on many data elements. Things like the vectorized examples and matrix multiplication seen above, pixel-wise processing of images/video, simulations with many independent samples, etc.
 
 Situations with a lot of conditionality (if-else branching), small data sizes, and lots of data transfer to/from the GPU are generally not good use cases for the GPU.
+
+
+
+
+
+
 
