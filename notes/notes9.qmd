@@ -1,0 +1,410 @@
+---
+title: "Notes 9: Numerical considerations"
+author: "Chris Paciorek"
+date: "2025-02-20"
+format:
+  pdf:
+    documentclass: article
+    margin-left: 30mm
+    margin-right: 30mm
+    toc: true
+  html:
+    theme: cosmo
+    css: ../assets/styles.css
+    toc: true
+    code-copy: true
+    code-block-background: true
+engine: jupyter
+ipynb-shell-interactivity: all
+execute:
+  daemon: false
+---
+
+## Introduction
+
+This document is the ninth of a set of notes, this document focusing on numerical questions, random number generation, and linear algebra. The notes are not meant to be particularly complete in terms of useful functions (Google and LLMs can now provide that quite well), but rather to introduce the language and consider key programming concepts in the context of Julia.
+
+Given that, the document heavily relies on demos, with interpretation in some cases left to the reader.
+
+## Random number generation
+
+### The seed
+
+As usual, it's best to set the random number seed.
+
+```{julia}
+using Random
+Random.seed!(1234);      # Seed number 1234
+println(rand(3))
+println(rand(5))
+```
+```{julia}
+Random.seed!(1234);     # Re-seed with same number - will give the same sequence of random numbers
+println(rand(2))
+println(rand(6))
+```
+
+`rand` has a variety of methods.
+
+```{julia}
+rand(1:10, 3)
+```
+```{julia}
+rand(['a','b','c'], 5)
+```
+
+### Generators
+
+The manual discusses the [available generators](https://docs.julialang.org/en/v1/stdlib/Random/#Random-Numbers).
+
+The default RNG is `Xoshiro256++`, but there are details related to random number streams for a given Task that I haven't delved into.
+
+```{julia}
+Random.default_rng();
+Random.seed!(1234)
+println(rand(3))
+rng = Random.Xoshiro(1234)
+println(rand(rng, 3))
+```
+
+The default used to be the Mersenne Twister (still the default in R and formerly the default in Python/numpy).
+
+```{julia}
+rng = Random.MersenneTwister(1234);
+println(rand(rng, 3))
+```
+
+## Distributions
+
+```{julia}
+using Distributions
+beta_dist = Beta(2, 5)
+beta_samples = rand(beta_dist, 100)
+
+beta_density = pdf.(beta_dist, beta_samples[1:5])
+beta_logDensity = logpdf.(beta_dist, beta_samples[1:5])
+```
+
+## Floating point issues
+
+### Integer and floating point types
+
+64 bit integers can represent $-2^63 \ldots 2^63$.
+32 bit integers can represent $-2^31 \ldots 2^31$.
+
+Similarly for 16 and 128 bit integers.
+
+Values outside that range *overflow*.
+
+```{julia}
+#| error: true
+xi::Int64 = 2^62
+xi::Int64 = 2^70  # Overflows
+xi::Int64 = 2^63  # Just overflows.
+
+yi::Int128 = 2^63  # Hmmm.
+yi::Int128 = Int128(2)^63
+Int64(yi)
+
+xi::Int64 = 2^63 - 1  # Shouldn't this overflow when calculating 2^63?
+```
+
+```{julia}
+x = parse(BigInt, "1234567890123456789012345678901234567890")
+x+1
+```
+
+There are 16, 32, and 64 bit floating point numbers, as well as `BigFloat`s.
+
+More a bit later.
+
+
+### Floating point precision
+
+Let's consider how much precision we have with real-valued numbers because of limited floating point precision.
+
+For 64-bit floats, 53 bits are used for precision, which translates to approximately 16 digits of accuracy in base 10, regardless of the magnitude of the number. How many digits of accuracy do we have with 32-bit and 16-bit floats?
+
+```{julia}
+using Printf
+@sprintf("%.20f", Float64(1/3))
+@sprintf("%.20f", Float32(1/3))
+@sprintf("%.20f", Float16(1/3))
+```
+
+
+```{julia}
+BigFloat(1/3)  # Hmmm.
+BigFloat(1) / BigFloat(3)
+BigFloat("0.3")
+BigFloat("0.3", precision=500)  
+```
+
+Computation with `BigFloat`s will be slow, so you wouldn't want to do matrix operations with a matrix of them.
+
+### Floating point details
+
+With Float64, any number is stored as a base 2 number of the form:
+
+$$(-1)^{S}\times1.d\times2^{e-1023}=(-1)^{S}\times1.d_{1}d_{2}\ldots d_{52}\times2^{e-1023}$$
+where the computer uses base 2, $b=2$, (so $d_{i}\in\{0,1\}$) because
+base-2 arithmetic is faster than base-10 arithmetic. The leading 1
+normalizes the number; i.e., ensures there is a unique representation
+for a given computer number. This avoids representing any number in
+multiple ways, e.g., either
+$1=1.0\times2^{0}=0.1\times2^{1}=0.01\times2^{2}$. For a double, we have
+8 bytes=64 bits. Consider our representation as ($S,d,e$) where $S$ is
+the sign. The leading 1 is the *hidden bit* and doesn't need to be
+stored because it is always present. In general $e$ is
+represented using 11 bits ($2^{11}=2048$), and the subtraction takes the
+place of having a sign bit for the exponent. (Note that in our
+discussion we'll just think of $e$ in terms of its base 10
+representation, although it is of course represented in base 2.) This
+leaves $p=52 = 64-1-11$ bits for $d$.
+
+
+### Overflow 
+
+Integer numbers can be represented exactly by Float64 up to $2^53$. 
+
+```{julia}
+function pri(x)
+  @sprintf("%.20i", x)
+end
+
+pri(2.0^52)
+pri(2.0^52 + 1)
+pri(2.0^53)
+pri(2.0^53 + 1)
+pri(2.0^53 + 2)
+pri(2.0^63)
+pri(2.0^70)     # No overflow here unlike Int64.
+pri(12345678123456781234.0)  # Not exact.
+```
+
+Float64 overflow is not until ~$2^{1023} \approx 10^{308}$.
+
+```{julia}
+function prf(x)
+  @sprintf("%.20f", x)
+end
+
+prf(2.0^1022)
+prf(2.0^1023)
+prf(2.0^1024)
+```
+But Int64s that big do overflow.
+```{julia}
+pri(10^307)
+pri(10^310)
+```
+
+### Implications for comparisons and calculations
+
+```{julia}
+prf(1-2/3)
+prf(1/3)
+prf(2/3-1/3)
+prf(0.3 - 0.2)
+prf(0.1)
+0.3 - 0.2 == 0.1
+```
+
+Here's an example of catastrophic cancellation:
+
+```{julia}
+prf(123456781234.56 - 123456781234.00)
+```
+
+And here the precision is that of the larger magnitude number:
+
+```{julia}
+prf(1.0 + 1e-8)
+prf(1.0 + 1e-17)
+```
+
+### Avoid multiplying/dividing many numbers
+
+```{julia}
+using Distributions
+norm = Normal(0, 1)
+samples = rand(norm, 1000);
+prod(pdf.(norm, samples))  # Log-likelihood/log-density
+```
+```{julia}
+sum(logpdf.(norm, samples))
+sum(logpdf.(norm, samples[1:100]))
+```
+
+We see that a likelihood with only as many as 1000 terms underflows. (In other cases it could overflow.)
+
+## Linear algebra
+
+We'll see that linear algebra operations heavily exploit Julia's multiple dispatch system, calling the most appropriate method for different kinds of input matrices.
+
+### Arithmetic
+
+```{julia}
+A = rand(3, 3);
+B = rand(3, 3);
+A + B   # Element-wise
+A .+ B  # Element-wise
+A * B   # Matrix multiplication
+A .* B  # Element-wise multiplication
+```
+
+### Solving systems of equations / inversion
+
+```{julia}
+using LinearAlgebra
+
+AtA = A'A;    # A' * A
+b = rand(3);
+AtA \ b       # Solve system of equations (AtA^{-1} b)
+inv(AtA) * b  # Not as efficient
+eigvals(AtA)
+det(AtA)      # Be careful of over/underflow!
+logdet(AtA)
+tr(A)
+```
+
+```{julia}
+chol = cholesky(AtA)
+chol \ b                # Automatically exploits triangularity.
+chol.U \ (chol.L \ b)   # Manual equivalent solution.
+```
+
+```{julia}
+typeof(chol)            # Special type of object
+typeof(chol.U)          # Special kind of matrix.
+```
+
+This works in Julia but is having problems via Quarto, so I'll just paste in some timings.
+
+```{julia, solve-eff}
+#| eval: false
+using BenchmarkTools
+
+n = 5000
+A = rand(n, n);
+AtA = A'A;
+b = rand(n);
+@btime AtA \ b;       # Solve system of equations (AtA^{-1} b) via Gaussian elimination (LU)
+# 633.046 ms (6 allocations: 190.81 MiB)
+@btime inv(AtA) * b;  # Not as efficient
+#  2.538 s (8 allocations: 193.25 MiB)
+@btime cholesky(AtA) \ b;  # Best if matrix is positive definite.
+#  546.957 ms (5 allocations: 190.77 MiB)
+@btime chol = cholesky(AtA); chol.U \ (chol.L \ b);  # As good but verbose.
+#  520.021 ms (3 allocations: 190.73 MiB)
+```
+
+In principle, the Cholesky approach should involve $n^3/6$ calculations and the Gaussian elimination $n^3/3$, but we don't see a two-fold difference here in practice.
+
+### Spectral (eigen) decomposition
+
+```{julia}
+Γ = eigvecs(AtA);
+λ = eigvals(AtA);
+result = Γ * diagm(λ) * Γ';
+
+result[1:3,1:3]
+AtA[1:3,1:3]
+result == AtA
+isapprox(result, AtA)
+result ≈ AtA  # \approx TAB
+```
+
+### Don't forget floating point issues
+
+```{julia}
+det(AtA)      # Could easily over/underflow for large matrices.
+logdet(AtA)
+```
+
+Here's a positive definite matrix (mathematically) that has all real, positive eigenvalues.
+On a computer, it's not positive definite, and therefore not invertible/full rank.
+
+```{julia}
+#| error: true
+xs = 0:99
+# Compute distance matrix.
+dists = abs.(xs .- xs')  # Using broadcasting with ' (an "outer" operation).
+# Create correlation matrix.
+corr_matrix = exp.(-(dists/10).^2)
+# Compute eigenvalues and get last 20
+eigvals(corr_matrix)[1:20] 
+
+chol = cholesky(corr_matrix);
+```
+
+One should be able to use an approximate pivoted Cholesky that sets diagonal elements to zero corresponding to the rank deficiency.
+I'm having trouble seeing how to do that.
+
+This does seem to work to solve the system of equations. We'd have to investigate to know what Julia is doing behind the scenes,
+but it's probably using a pivoted LU decomposition.
+
+```{julia}
+b = rand(100);
+out = corr_matrix \ b;
+```
+
+### Smart factorization
+
+```{julia}
+n = 500
+A = rand(n, n);
+typeof(factorize(A'A))
+typeof(factorize(A))           # I wouldn't have guessed that A is invertible!
+typeof(factorize(A[:,1:10]))   
+```
+
+The orthogonal matrices generated by certain factorizations can most efficiently be worked with by having them
+treated as "matrix-backed, function-based linear operators".
+
+```{julia}
+QRresult = qr(A[:,1:10]);
+typeof(QRresult.Q)
+QRresult.Q * rand(10);
+```
+
+### Use known structure!
+
+```{julia}
+using BenchmarkTools
+
+n = 5000
+A = rand(n, n);
+AtA = A'A;
+b = rand(n);
+chol = cholesky(AtA);
+typeof(chol.U)
+@btime chol.U \ b;
+
+U_dense = Matrix(chol.U);
+@btime U_dense \ b;
+
+@btime logdet(chol.U);
+@btime logdet(U_dense);
+@btime sum(log.(diag(chol.U)));
+```
+
+```{julia}
+using SparseArrays
+
+n = 5000;
+A = Matrix(1.0I, n, n);
+A[1,3] = 7.7;
+A[5,9] = 2.3;
+sA = sparse(A);
+
+sizeof(A)
+sizeof(sA)  # Ok, so that's not helpful given the pointers involved.
+
+# sA. TAB  # What are the components of `sA`?
+sizeof(sA.colptr) + sizeof(sA.nzval) + sizeof(sA.rowval)
+
+b = rand(n);
+@btime A * b;
+@btime sA * b;
+```
