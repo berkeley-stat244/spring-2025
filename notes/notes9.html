@@ -9,7 +9,7 @@
 <meta name="author" content="Chris Paciorek">
 <meta name="dcterms.date" content="2025-02-20">
 
-<title>Notes 9: Numerical considerations</title>
+<title>Notes 9: Numerics</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -145,7 +145,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notes/notes1.html">Course Notes</a></li><li class="breadcrumb-item"><a href="../notes/notes9.html">Notes 9: Numerical considerations</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notes/notes1.html">Course Notes</a></li><li class="breadcrumb-item"><a href="../notes/notes9.html">Notes 9: Numerics</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -260,7 +260,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notes/notes9.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Notes 9: Numerical considerations</span></a>
+ <span class="menu-text">Notes 9: Numerics</span></a>
   </div>
 </li>
       </ul>
@@ -394,9 +394,9 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notes/notes1.html">Course Notes</a></li><li class="breadcrumb-item"><a href="../notes/notes9.html">Notes 9: Numerical considerations</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notes/notes1.html">Course Notes</a></li><li class="breadcrumb-item"><a href="../notes/notes9.html">Notes 9: Numerics</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Notes 9: Numerical considerations</h1>
+<h1 class="title">Notes 9: Numerics</h1>
 </div>
 
 
@@ -435,38 +435,46 @@ window.Quarto = {
 <section id="the-seed" class="level3">
 <h3 class="anchored" data-anchor-id="the-seed">The seed</h3>
 <p>As usual, it’s best to set the random number seed.</p>
-<div id="6337de9d" class="cell" data-execution_count="1">
+<div id="326e4ddc" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Random</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Random</span>.<span class="fu">seed!</span>(<span class="fl">1234</span>);      <span class="co"># Seed number 1234</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="fu">rand</span>(<span class="fl">3</span>))</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="fu">rand</span>(<span class="fl">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="fu">rand</span>(<span class="fl">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[0.32597672886359486, 0.5490511363155669, 0.21858665481883066]
-[0.8942454282009883, 0.35311164439921205, 0.39425536741585077, 0.9531246272848422, 0.7955469475347194]</code></pre>
+<pre><code>[0.32597672886359486, 0.5490511363155669, 0.21858665481883066]</code></pre>
 </div>
 </div>
-<div id="1a16aa0c" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Random</span>.<span class="fu">seed!</span>(<span class="fl">1234</span>);     <span class="co"># Re-seed with same number - will give the same sequence of random numbers</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="fu">rand</span>(<span class="fl">2</span>))</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="fu">rand</span>(<span class="fl">6</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="343e2b47" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="fu">rand</span>(<span class="fl">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[0.32597672886359486, 0.5490511363155669]
-[0.21858665481883066, 0.8942454282009883, 0.35311164439921205, 0.39425536741585077, 0.9531246272848422, 0.7955469475347194]</code></pre>
+<pre><code>[0.8942454282009883, 0.35311164439921205, 0.39425536741585077, 0.9531246272848422, 0.7955469475347194]</code></pre>
+</div>
+</div>
+<div id="78dbf688" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Random</span>.<span class="fu">seed!</span>(<span class="fl">1234</span>);     <span class="co"># Re-seed with same number - will give the same sequence of random numbers</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="fu">rand</span>(<span class="fl">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[0.32597672886359486, 0.5490511363155669]</code></pre>
+</div>
+</div>
+<div id="8ce63268" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="fu">rand</span>(<span class="fl">6</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[0.21858665481883066, 0.8942454282009883, 0.35311164439921205, 0.39425536741585077, 0.9531246272848422, 0.7955469475347194]</code></pre>
 </div>
 </div>
 <p><code>rand</code> has a variety of methods.</p>
-<div id="85602dcb" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rand</span>(<span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
+<div id="480ae313" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rand</span>(<span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
 <pre><code>3-element Vector{Int64}:
  5
  8
  6</code></pre>
 </div>
 </div>
-<div id="ac010ec0" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rand</span>([<span class="ch">'a'</span>,<span class="ch">'b'</span>,<span class="ch">'c'</span>], <span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="5">
+<div id="0b3bbad7" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rand</span>([<span class="ch">'a'</span>,<span class="ch">'b'</span>,<span class="ch">'c'</span>], <span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
 <pre><code>5-element Vector{Char}:
  'c': ASCII/Unicode U+0063 (category Ll: Letter, lowercase)
  'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)
@@ -480,21 +488,25 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="generators">Generators</h3>
 <p>The manual discusses the <a href="https://docs.julialang.org/en/v1/stdlib/Random/#Random-Numbers">available generators</a>.</p>
 <p>The default RNG is <code>Xoshiro256++</code>, but there are details related to random number streams for a given Task that I haven’t delved into.</p>
-<div id="b7d2477e" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Random</span>.<span class="fu">default_rng</span>();</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Random</span>.<span class="fu">seed!</span>(<span class="fl">1234</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="fu">rand</span>(<span class="fl">3</span>))</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> <span class="bu">Random</span>.<span class="fu">Xoshiro</span>(<span class="fl">1234</span>)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="fu">rand</span>(rng, <span class="fl">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="2fd9ee1e" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Random</span>.<span class="fu">default_rng</span>();</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Random</span>.<span class="fu">seed!</span>(<span class="fl">1234</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="fu">rand</span>(<span class="fl">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[0.32597672886359486, 0.5490511363155669, 0.21858665481883066]
-[0.32597672886359486, 0.5490511363155669, 0.21858665481883066]</code></pre>
+<pre><code>[0.32597672886359486, 0.5490511363155669, 0.21858665481883066]</code></pre>
+</div>
+</div>
+<div id="87a62012" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> <span class="bu">Random</span>.<span class="fu">Xoshiro</span>(<span class="fl">1234</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="fu">rand</span>(rng, <span class="fl">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[0.32597672886359486, 0.5490511363155669, 0.21858665481883066]</code></pre>
 </div>
 </div>
 <p>The default used to be the Mersenne Twister (still the default in R and formerly the default in Python/numpy).</p>
-<div id="2e29ee24" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> <span class="bu">Random</span>.<span class="fu">MersenneTwister</span>(<span class="fl">1234</span>);</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="fu">rand</span>(rng, <span class="fl">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="ad3ab145" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> <span class="bu">Random</span>.<span class="fu">MersenneTwister</span>(<span class="fl">1234</span>);</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="fu">rand</span>(rng, <span class="fl">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[0.5908446386657102, 0.7667970365022592, 0.5662374165061859]</code></pre>
 </div>
@@ -503,14 +515,38 @@ window.Quarto = {
 </section>
 <section id="distributions" class="level2">
 <h2 class="anchored" data-anchor-id="distributions">Distributions</h2>
-<div id="284a4ca4" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Distributions</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>beta_dist <span class="op">=</span> <span class="fu">Beta</span>(<span class="fl">2</span>, <span class="fl">5</span>)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>beta_samples <span class="op">=</span> <span class="fu">rand</span>(beta_dist, <span class="fl">100</span>)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>beta_density <span class="op">=</span> <span class="fu">pdf</span>.(beta_dist, beta_samples[<span class="fl">1</span><span class="op">:</span><span class="fl">5</span>])</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>beta_logDensity <span class="op">=</span> <span class="fu">logpdf</span>.(beta_dist, beta_samples[<span class="fl">1</span><span class="op">:</span><span class="fl">5</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="8">
+<div id="2d1efad0" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Distributions</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>beta_dist <span class="op">=</span> <span class="fu">Beta</span>(<span class="fl">2</span>, <span class="fl">5</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>beta_samples <span class="op">=</span> <span class="fu">rand</span>(beta_dist, <span class="fl">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre><code>10-element Vector{Float64}:
+ 0.4542940512832609
+ 0.27004146470644036
+ 0.3870672630509891
+ 0.21116529046475746
+ 0.5041249425689261
+ 0.2784321400052276
+ 0.6829933994934323
+ 0.1295297689806119
+ 0.43795698919772685
+ 0.39395847238977155</code></pre>
+</div>
+</div>
+<div id="5f5eda1c" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>beta_density <span class="op">=</span> <span class="fu">pdf</span>.(beta_dist, beta_samples[<span class="fl">1</span><span class="op">:</span><span class="fl">5</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>5-element Vector{Float64}:
+ 1.2086291289041646
+ 2.300088115277408
+ 1.6389245754521693
+ 2.4529451430316644
+ 0.9144258514892248</code></pre>
+</div>
+</div>
+<div id="34a87da8" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>beta_logDensity <span class="op">=</span> <span class="fu">logpdf</span>.(beta_dist, beta_samples[<span class="fl">1</span><span class="op">:</span><span class="fl">5</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
 <pre><code>5-element Vector{Float64}:
   0.1894867660152757
   0.8329474331914342
@@ -527,16 +563,38 @@ window.Quarto = {
 <p>64 bit integers can represent <span class="math inline">\(-2^63 \ldots 2^63\)</span>. 32 bit integers can represent <span class="math inline">\(-2^31 \ldots 2^31\)</span>.</p>
 <p>Similarly for 16 and 128 bit integers.</p>
 <p>Values outside that range <em>overflow</em>.</p>
-<div id="91313863" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>xi<span class="op">::</span><span class="dt">Int64 </span><span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="fl">62</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>xi<span class="op">::</span><span class="dt">Int64 </span><span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="fl">70</span>  <span class="co"># Overflows</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>xi<span class="op">::</span><span class="dt">Int64 </span><span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="fl">63</span>  <span class="co"># Just overflows.</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>yi<span class="op">::</span><span class="dt">Int128 </span><span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="fl">63</span>  <span class="co"># Hmmm.</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>yi<span class="op">::</span><span class="dt">Int128 </span><span class="op">=</span> <span class="fu">Int128</span>(<span class="fl">2</span>)<span class="op">^</span><span class="fl">63</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="fu">Int64</span>(yi)</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>xi<span class="op">::</span><span class="dt">Int64 </span><span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="fl">63</span> <span class="op">-</span> <span class="fl">1</span>  <span class="co"># Shouldn't this overflow when calculating 2^63?</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f8394117" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>xi<span class="op">::</span><span class="dt">Int64 </span><span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="fl">62</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>4611686018427387904</code></pre>
+</div>
+</div>
+<div id="f9873014" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>xi<span class="op">::</span><span class="dt">Int64 </span><span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="fl">70</span>  <span class="co"># Overflows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>0</code></pre>
+</div>
+</div>
+<div id="3e279231" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>xi<span class="op">::</span><span class="dt">Int64 </span><span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="fl">63</span>  <span class="co"># Just overflows.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>-9223372036854775808</code></pre>
+</div>
+</div>
+<div id="66e1a36a" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>yi<span class="op">::</span><span class="dt">Int128 </span><span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="fl">63</span>  <span class="co"># Hmmm.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>-9223372036854775808</code></pre>
+</div>
+</div>
+<div id="568b281b" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>yi<span class="op">::</span><span class="dt">Int128 </span><span class="op">=</span> <span class="fu">Int128</span>(<span class="fl">2</span>)<span class="op">^</span><span class="fl">63</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>9223372036854775808</code></pre>
+</div>
+</div>
+<div id="7f7e9dc3" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Int64</span>(yi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>LoadError: InexactError: trunc(Int64, 9223372036854775808)
 InexactError: trunc(Int64, 9223372036854775808)
@@ -551,13 +609,24 @@ Stacktrace:
  [4] Int64(x::Int128)
    @ Core ./boot.jl:784
  [5] top-level scope
-   @ In[9]:7</code></pre>
+   @ In[19]:1</code></pre>
 </div>
 </div>
-<div id="79cb73dd" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fu">parse</span>(<span class="dt">BigInt</span>, <span class="st">"1234567890123456789012345678901234567890"</span>)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>x<span class="op">+</span><span class="fl">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="10">
+<div id="5554d60b" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>xi<span class="op">::</span><span class="dt">Int64 </span><span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="fl">63</span> <span class="op">-</span> <span class="fl">1</span>  <span class="co"># Shouldn't this overflow when calculating 2^63?</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>9223372036854775807</code></pre>
+</div>
+</div>
+<div id="e0e1c1b1" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fu">parse</span>(<span class="dt">BigInt</span>, <span class="st">"1234567890123456789012345678901234567890"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<pre><code>1234567890123456789012345678901234567890</code></pre>
+</div>
+</div>
+<div id="d7cd8240" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>x<span class="op">+</span><span class="fl">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="22">
 <pre><code>1234567890123456789012345678901234567891</code></pre>
 </div>
 </div>
@@ -568,21 +637,46 @@ Stacktrace:
 <h3 class="anchored" data-anchor-id="floating-point-precision">Floating point precision</h3>
 <p>Let’s consider how much precision we have with real-valued numbers because of limited floating point precision.</p>
 <p>For 64-bit floats, 53 bits are used for precision, which translates to approximately 16 digits of accuracy in base 10, regardless of the magnitude of the number. How many digits of accuracy do we have with 32-bit and 16-bit floats?</p>
-<div id="65fc72aa" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Printf</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@sprintf</span>(<span class="st">"%.20f"</span>, <span class="fu">Float64</span>(<span class="fl">1</span><span class="op">/</span><span class="fl">3</span>))</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@sprintf</span>(<span class="st">"%.20f"</span>, <span class="fu">Float32</span>(<span class="fl">1</span><span class="op">/</span><span class="fl">3</span>))</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@sprintf</span>(<span class="st">"%.20f"</span>, <span class="fu">Float16</span>(<span class="fl">1</span><span class="op">/</span><span class="fl">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="11">
+<div id="cd253472" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Printf</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@sprintf</span>(<span class="st">"%.20f"</span>, <span class="fu">Float64</span>(<span class="fl">1</span><span class="op">/</span><span class="fl">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<pre><code>"0.33333333333333331483"</code></pre>
+</div>
+</div>
+<div id="c5a47b3a" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@sprintf</span>(<span class="st">"%.20f"</span>, <span class="fu">Float32</span>(<span class="fl">1</span><span class="op">/</span><span class="fl">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="24">
+<pre><code>"0.33333334326744079590"</code></pre>
+</div>
+</div>
+<div id="a609120c" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@sprintf</span>(<span class="st">"%.20f"</span>, <span class="fu">Float16</span>(<span class="fl">1</span><span class="op">/</span><span class="fl">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="25">
 <pre><code>"0.33325195312500000000"</code></pre>
 </div>
 </div>
-<div id="07de9336" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BigFloat</span>(<span class="fl">1</span><span class="op">/</span><span class="fl">3</span>)  <span class="co"># Hmmm.</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">BigFloat</span>(<span class="fl">1</span>) <span class="op">/</span> <span class="fu">BigFloat</span>(<span class="fl">3</span>)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">BigFloat</span>(<span class="st">"0.3"</span>)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">BigFloat</span>(<span class="st">"0.3"</span>, precision<span class="op">=</span><span class="fl">500</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="12">
+<div id="bd520d06" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BigFloat</span>(<span class="fl">1</span><span class="op">/</span><span class="fl">3</span>)  <span class="co"># Hmmm.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="26">
+<pre><code>0.333333333333333314829616256247390992939472198486328125</code></pre>
+</div>
+</div>
+<div id="2a326102" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BigFloat</span>(<span class="fl">1</span>) <span class="op">/</span> <span class="fu">BigFloat</span>(<span class="fl">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="27">
+<pre><code>0.3333333333333333333333333333333333333333333333333333333333333333333333333333348</code></pre>
+</div>
+</div>
+<div id="360f8f4f" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BigFloat</span>(<span class="st">"0.3"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="28">
+<pre><code>0.3000000000000000000000000000000000000000000000000000000000000000000000000000017</code></pre>
+</div>
+</div>
+<div id="290bd3cc" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BigFloat</span>(<span class="st">"0.3"</span>, precision<span class="op">=</span><span class="fl">500</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="29">
 <pre><code>0.30000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006</code></pre>
 </div>
 </div>
@@ -596,90 +690,175 @@ Stacktrace:
 <section id="overflow" class="level3">
 <h3 class="anchored" data-anchor-id="overflow">Overflow</h3>
 <p>Integer numbers can be represented exactly by Float64 up to <span class="math inline">\(2^53\)</span>.</p>
-<div id="b0f5c84b" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">pri</span>(x)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="pp">@sprintf</span>(<span class="st">"%.20i"</span>, x)</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="fu">pri</span>(<span class="fl">2.0</span><span class="op">^</span><span class="fl">52</span>)</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="fu">pri</span>(<span class="fl">2.0</span><span class="op">^</span><span class="fl">52</span> <span class="op">+</span> <span class="fl">1</span>)</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="fu">pri</span>(<span class="fl">2.0</span><span class="op">^</span><span class="fl">53</span>)</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="fu">pri</span>(<span class="fl">2.0</span><span class="op">^</span><span class="fl">53</span> <span class="op">+</span> <span class="fl">1</span>)</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="fu">pri</span>(<span class="fl">2.0</span><span class="op">^</span><span class="fl">53</span> <span class="op">+</span> <span class="fl">2</span>)</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="fu">pri</span>(<span class="fl">2.0</span><span class="op">^</span><span class="fl">63</span>)</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="fu">pri</span>(<span class="fl">2.0</span><span class="op">^</span><span class="fl">70</span>)     <span class="co"># No overflow here unlike Int64.</span></span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="fu">pri</span>(<span class="fl">12345678123456781234.0</span>)  <span class="co"># Not exact.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="13">
+<div id="4564e94e" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">pri</span>(x)</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="pp">@sprintf</span>(<span class="st">"%.20i"</span>, x)</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a><span class="fu">pri</span>(<span class="fl">2.0</span><span class="op">^</span><span class="fl">52</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="30">
+<pre><code>"4503599627370496"</code></pre>
+</div>
+</div>
+<div id="65439d4c" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pri</span>(<span class="fl">2.0</span><span class="op">^</span><span class="fl">52</span> <span class="op">+</span> <span class="fl">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="31">
+<pre><code>"4503599627370497"</code></pre>
+</div>
+</div>
+<div id="9fc583ef" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pri</span>(<span class="fl">2.0</span><span class="op">^</span><span class="fl">53</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="32">
+<pre><code>"9007199254740992"</code></pre>
+</div>
+</div>
+<div id="1a0484a0" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pri</span>(<span class="fl">2.0</span><span class="op">^</span><span class="fl">53</span> <span class="op">+</span> <span class="fl">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="33">
+<pre><code>"9007199254740992"</code></pre>
+</div>
+</div>
+<div id="acef97bf" class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pri</span>(<span class="fl">2.0</span><span class="op">^</span><span class="fl">53</span> <span class="op">+</span> <span class="fl">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="34">
+<pre><code>"9007199254740994"</code></pre>
+</div>
+</div>
+<div id="20e47bc0" class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pri</span>(<span class="fl">2.0</span><span class="op">^</span><span class="fl">63</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="35">
+<pre><code>"9223372036854775808"</code></pre>
+</div>
+</div>
+<div id="1a7c9f6f" class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pri</span>(<span class="fl">2.0</span><span class="op">^</span><span class="fl">70</span>)     <span class="co"># No overflow here unlike Int64.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="36">
+<pre><code>"1180591620717411303424"</code></pre>
+</div>
+</div>
+<div id="448d7819" class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pri</span>(<span class="fl">12345678123456781234.0</span>)  <span class="co"># Not exact.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="37">
 <pre><code>"12345678123456780288"</code></pre>
 </div>
 </div>
 <p>Float64 overflow is not until ~<span class="math inline">\(2^{1023} \approx 10^{308}\)</span>.</p>
-<div id="cc866cbb" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">prf</span>(x)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="pp">@sprintf</span>(<span class="st">"%.20f"</span>, x)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="fu">prf</span>(<span class="fl">2.0</span><span class="op">^</span><span class="fl">1022</span>)</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="fu">prf</span>(<span class="fl">2.0</span><span class="op">^</span><span class="fl">1023</span>)</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="fu">prf</span>(<span class="fl">2.0</span><span class="op">^</span><span class="fl">1024</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="14">
+<div id="848aa32e" class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">prf</span>(x)</span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="pp">@sprintf</span>(<span class="st">"%.20f"</span>, x)</span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a><span class="fu">prf</span>(<span class="fl">2.0</span><span class="op">^</span><span class="fl">1022</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="38">
+<pre><code>"44942328371557897693232629769725618340449424473557664318357520289433168951375240783177119330601884005280028469967848339414697442203604155623211857659868531094441973356216371319075554900311523529863270738021251442209537670585615720368478277635206809290837627671146574559986811484619929076208839082406056034304.00000000000000000000"</code></pre>
+</div>
+</div>
+<div id="a9e6e58d" class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prf</span>(<span class="fl">2.0</span><span class="op">^</span><span class="fl">1023</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="39">
+<pre><code>"89884656743115795386465259539451236680898848947115328636715040578866337902750481566354238661203768010560056939935696678829394884407208311246423715319737062188883946712432742638151109800623047059726541476042502884419075341171231440736956555270413618581675255342293149119973622969239858152417678164812112068608.00000000000000000000"</code></pre>
+</div>
+</div>
+<div id="977fed70" class="cell" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prf</span>(<span class="fl">2.0</span><span class="op">^</span><span class="fl">1024</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="40">
 <pre><code>"Inf"</code></pre>
 </div>
 </div>
 <p>But Int64s that big do overflow.</p>
-<div id="08ebdb95" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pri</span>(<span class="fl">10</span><span class="op">^</span><span class="fl">307</span>)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pri</span>(<span class="fl">10</span><span class="op">^</span><span class="fl">310</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="15">
+<div id="5838cb40" class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pri</span>(<span class="fl">10</span><span class="op">^</span><span class="fl">307</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="41">
+<pre><code>"00000000000000000000"</code></pre>
+</div>
+</div>
+<div id="e67e387b" class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pri</span>(<span class="fl">10</span><span class="op">^</span><span class="fl">310</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="42">
 <pre><code>"00000000000000000000"</code></pre>
 </div>
 </div>
 </section>
 <section id="implications-for-comparisons-and-calculations" class="level3">
 <h3 class="anchored" data-anchor-id="implications-for-comparisons-and-calculations">Implications for comparisons and calculations</h3>
-<div id="a4c306d2" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prf</span>(<span class="fl">1</span><span class="op">-</span><span class="fl">2</span><span class="op">/</span><span class="fl">3</span>)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">prf</span>(<span class="fl">1</span><span class="op">/</span><span class="fl">3</span>)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">prf</span>(<span class="fl">2</span><span class="op">/</span><span class="fl">3</span><span class="op">-</span><span class="fl">1</span><span class="op">/</span><span class="fl">3</span>)</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="fu">prf</span>(<span class="fl">0.3</span> <span class="op">-</span> <span class="fl">0.2</span>)</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="fu">prf</span>(<span class="fl">0.1</span>)</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="fl">0.3</span> <span class="op">-</span> <span class="fl">0.2</span> <span class="op">==</span> <span class="fl">0.1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="16">
+<div id="dfa7485f" class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prf</span>(<span class="fl">1</span><span class="op">-</span><span class="fl">2</span><span class="op">/</span><span class="fl">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="43">
+<pre><code>"0.33333333333333337034"</code></pre>
+</div>
+</div>
+<div id="6745471c" class="cell" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prf</span>(<span class="fl">1</span><span class="op">/</span><span class="fl">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="44">
+<pre><code>"0.33333333333333331483"</code></pre>
+</div>
+</div>
+<div id="4d104310" class="cell" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prf</span>(<span class="fl">2</span><span class="op">/</span><span class="fl">3</span><span class="op">-</span><span class="fl">1</span><span class="op">/</span><span class="fl">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="45">
+<pre><code>"0.33333333333333331483"</code></pre>
+</div>
+</div>
+<div id="0ad1d6b7" class="cell" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prf</span>(<span class="fl">0.3</span> <span class="op">-</span> <span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="46">
+<pre><code>"0.09999999999999997780"</code></pre>
+</div>
+</div>
+<div id="3b147078" class="cell" data-execution_count="46">
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prf</span>(<span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="47">
+<pre><code>"0.10000000000000000555"</code></pre>
+</div>
+</div>
+<div id="8f83567d" class="cell" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fl">0.3</span> <span class="op">-</span> <span class="fl">0.2</span> <span class="op">==</span> <span class="fl">0.1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="48">
 <pre><code>false</code></pre>
 </div>
 </div>
 <p>Here’s an example of catastrophic cancellation:</p>
-<div id="a5e091b2" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prf</span>(<span class="fl">123456781234.56</span> <span class="op">-</span> <span class="fl">123456781234.00</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="17">
+<div id="98d3e513" class="cell" data-execution_count="48">
+<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prf</span>(<span class="fl">123456781234.56</span> <span class="op">-</span> <span class="fl">123456781234.00</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="49">
 <pre><code>"0.55999755859375000000"</code></pre>
 </div>
 </div>
 <p>And here the precision is that of the larger magnitude number:</p>
-<div id="3815d366" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prf</span>(<span class="fl">1.0</span> <span class="op">+</span> <span class="fl">1e-8</span>)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">prf</span>(<span class="fl">1.0</span> <span class="op">+</span> <span class="fl">1e-17</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="18">
+<div id="82505b56" class="cell" data-execution_count="49">
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prf</span>(<span class="fl">1.0</span> <span class="op">+</span> <span class="fl">1e-8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="50">
+<pre><code>"1.00000000999999993923"</code></pre>
+</div>
+</div>
+<div id="43b3b216" class="cell" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prf</span>(<span class="fl">1.0</span> <span class="op">+</span> <span class="fl">1e-17</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="51">
 <pre><code>"1.00000000000000000000"</code></pre>
 </div>
 </div>
 </section>
 <section id="avoid-multiplyingdividing-many-numbers" class="level3">
 <h3 class="anchored" data-anchor-id="avoid-multiplyingdividing-many-numbers">Avoid multiplying/dividing many numbers</h3>
-<div id="76488513" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Distributions</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>norm <span class="op">=</span> <span class="fu">Normal</span>(<span class="fl">0</span>, <span class="fl">1</span>)</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>samples <span class="op">=</span> <span class="fu">rand</span>(norm, <span class="fl">1000</span>);</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="fu">prod</span>(<span class="fu">pdf</span>.(norm, samples))  <span class="co"># Log-likelihood/log-density</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="19">
+<div id="868a9d78" class="cell" data-execution_count="51">
+<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Distributions</span></span>
+<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a>normd <span class="op">=</span> <span class="fu">Normal</span>(<span class="fl">0</span>, <span class="fl">1</span>)</span>
+<span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a>samples <span class="op">=</span> <span class="fu">rand</span>(normd, <span class="fl">1000</span>);</span>
+<span id="cb101-4"><a href="#cb101-4" aria-hidden="true" tabindex="-1"></a><span class="fu">prod</span>(<span class="fu">pdf</span>.(normd, samples))  <span class="co"># Log-likelihood/log-density</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="52">
 <pre><code>0.0</code></pre>
 </div>
 </div>
-<div id="b3f5c5d4" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">logpdf</span>.(norm, samples))</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">logpdf</span>.(norm, samples[<span class="fl">1</span><span class="op">:</span><span class="fl">100</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="20">
-<pre><code>-129.19954130188353</code></pre>
+<div id="6452687d" class="cell" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">logpdf</span>.(normd, samples))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="53">
+<pre><code>-1446.1968973565636</code></pre>
+</div>
+</div>
+<div id="086d5b7c" class="cell" data-execution_count="53">
+<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">logpdf</span>.(normd, samples[<span class="fl">1</span><span class="op">:</span><span class="fl">100</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="54">
+<pre><code>-137.28793148618522</code></pre>
 </div>
 </div>
 <p>We see that a likelihood with only as many as 1000 terms underflows. (In other cases it could overflow.)</p>
@@ -690,115 +869,220 @@ Stacktrace:
 <p>We’ll see that linear algebra operations heavily exploit Julia’s multiple dispatch system, calling the most appropriate method for different kinds of input matrices.</p>
 <section id="arithmetic" class="level3">
 <h3 class="anchored" data-anchor-id="arithmetic">Arithmetic</h3>
-<div id="f6b58e4d" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">3</span>, <span class="fl">3</span>);</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">3</span>, <span class="fl">3</span>);</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>A <span class="op">+</span> B   <span class="co"># Element-wise</span></span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>A <span class="op">.+</span> B  <span class="co"># Element-wise</span></span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>A <span class="op">*</span> B   <span class="co"># Matrix multiplication</span></span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>A <span class="op">.*</span> B  <span class="co"># Element-wise multiplication</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="21">
-<pre><code>3×3 Matrix{Float64}:
- 0.0276482  0.236249  0.171679
- 0.395872   0.679686  0.0332463
- 0.011653   0.207803  0.0440653</code></pre>
-</div>
+<div id="ccba31a6" class="cell" data-execution_count="54">
+<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">3</span>, <span class="fl">3</span>);</span>
+<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">3</span>, <span class="fl">3</span>);</span>
+<span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a>A <span class="op">+</span> B   <span class="co"># Element-wise</span></span>
+<span id="cb107-4"><a href="#cb107-4" aria-hidden="true" tabindex="-1"></a>A <span class="op">.+</span> B  <span class="co"># Element-wise</span></span>
+<span id="cb107-5"><a href="#cb107-5" aria-hidden="true" tabindex="-1"></a>A <span class="op">*</span> B   <span class="co"># Matrix multiplication</span></span>
+<span id="cb107-6"><a href="#cb107-6" aria-hidden="true" tabindex="-1"></a>A <span class="op">.*</span> B  <span class="co"># Element-wise multiplication</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="solving-systems-of-equations-inversion" class="level3">
 <h3 class="anchored" data-anchor-id="solving-systems-of-equations-inversion">Solving systems of equations / inversion</h3>
-<div id="5673c6f5" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">LinearAlgebra</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>AtA <span class="op">=</span> A<span class="op">'</span>A;    <span class="co"># A' * A</span></span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">3</span>);</span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>AtA <span class="op">\</span> b       <span class="co"># Solve system of equations (AtA^{-1} b)</span></span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="fu">inv</span>(AtA) <span class="op">*</span> b  <span class="co"># Not as efficient</span></span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a><span class="fu">eigvals</span>(AtA)</span>
-<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a><span class="fu">det</span>(AtA)      <span class="co"># Be careful of over/underflow!</span></span>
-<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a><span class="fu">logdet</span>(AtA)</span>
-<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tr</span>(A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>WARNING: using LinearAlgebra.norm in module Main conflicts with an existing identifier.</code></pre>
-</div>
-<div class="cell-output cell-output-display" data-execution_count="22">
-<pre><code>1.4211993913545244</code></pre>
-</div>
-</div>
-<div id="70f980ff" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>chol <span class="op">=</span> <span class="fu">cholesky</span>(AtA)</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>chol <span class="op">\</span> b                <span class="co"># Automatically exploits triangularity.</span></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>chol.U <span class="op">\</span> (chol.L <span class="op">\</span> b)   <span class="co"># Manual equivalent solution.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="23">
+<div id="ac5005e2" class="cell" data-execution_count="55">
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">LinearAlgebra</span></span>
+<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">3</span>, <span class="fl">3</span>);</span>
+<span id="cb108-4"><a href="#cb108-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-5"><a href="#cb108-5" aria-hidden="true" tabindex="-1"></a>AtA <span class="op">=</span> A<span class="op">'</span>A;    <span class="co"># A' * A</span></span>
+<span id="cb108-6"><a href="#cb108-6" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">3</span>);</span>
+<span id="cb108-7"><a href="#cb108-7" aria-hidden="true" tabindex="-1"></a>AtA <span class="op">\</span> b       <span class="co"># Solve system of equations (AtA^{-1} b)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="55">
 <pre><code>3-element Vector{Float64}:
-    8.74487788082876
-  228.3125434904836
- -247.36634206937015</code></pre>
+ -5839.367752001243
+   237.62992428763377
+  1388.1477149501256</code></pre>
 </div>
 </div>
-<div id="183747ab" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(chol)            <span class="co"># Special type of object</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(chol.U)          <span class="co"># Special kind of matrix.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="24">
+<div id="905da6a7" class="cell" data-execution_count="56">
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">inv</span>(AtA) <span class="op">*</span> b  <span class="co"># Not as efficient</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="56">
+<pre><code>3-element Vector{Float64}:
+ -5839.367752001244
+   237.62992428763377
+  1388.1477149501254</code></pre>
+</div>
+</div>
+<div id="3da518d7" class="cell" data-execution_count="57">
+<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="fu">eigvals</span>(AtA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="57">
+<pre><code>3-element Vector{Float64}:
+ 1.0406188999502348e-5
+ 0.20302101952602597
+ 2.8527433608929575</code></pre>
+</div>
+</div>
+<div id="dd289955" class="cell" data-execution_count="58">
+<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="fu">det</span>(AtA)      <span class="co"># Be careful of over/underflow!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="58">
+<pre><code>6.026919865436598e-6</code></pre>
+</div>
+</div>
+<div id="aa5650ab" class="cell" data-execution_count="59">
+<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="fu">logdet</span>(AtA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="59">
+<pre><code>-12.019274479480647</code></pre>
+</div>
+</div>
+<div id="5c5b1d2d" class="cell" data-execution_count="60">
+<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tr</span>(A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="60">
+<pre><code>1.3719983709419976</code></pre>
+</div>
+</div>
+<div id="42950e22" class="cell" data-execution_count="61">
+<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a>chol <span class="op">=</span> <span class="fu">cholesky</span>(AtA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="61">
+<pre><code>Cholesky{Float64, Matrix{Float64}}
+U factor:
+3×3 UpperTriangular{Float64, Matrix{Float64}}:
+ 0.290417  1.25712    1.00661
+  ⋅        0.605775  -0.103239
+  ⋅         ⋅         0.0139545</code></pre>
+</div>
+</div>
+<div id="5dc1c523" class="cell" data-execution_count="62">
+<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a>chol <span class="op">\</span> b                <span class="co"># Automatically exploits triangularity.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="62">
+<pre><code>3-element Vector{Float64}:
+ -5839.3677520089905
+   237.62992428794826
+  1388.1477149519676</code></pre>
+</div>
+</div>
+<div id="50fc4a85" class="cell" data-execution_count="63">
+<div class="sourceCode cell-code" id="cb124"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a>chol.U <span class="op">\</span> (chol.L <span class="op">\</span> b)   <span class="co"># Manual equivalent solution.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="63">
+<pre><code>3-element Vector{Float64}:
+ -5839.3677520089905
+   237.62992428794826
+  1388.1477149519676</code></pre>
+</div>
+</div>
+<div id="47c24b12" class="cell" data-execution_count="64">
+<div class="sourceCode cell-code" id="cb126"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(chol)            <span class="co"># Special type of object</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="64">
+<pre><code>Cholesky{Float64, Matrix{Float64}}</code></pre>
+</div>
+</div>
+<div id="274816f9" class="cell" data-execution_count="65">
+<div class="sourceCode cell-code" id="cb128"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(chol.U)          <span class="co"># Special kind of matrix.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="65">
 <pre><code>UpperTriangular{Float64, Matrix{Float64}}</code></pre>
 </div>
 </div>
 <p>This works in Julia but is having problems via Quarto, so I’ll just paste in some timings.</p>
-<div id="b7649b23" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">BenchmarkTools</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="fl">5000</span></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> <span class="fu">rand</span>(n, n);</span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>AtA <span class="op">=</span> A<span class="op">'</span>A;</span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="fu">rand</span>(n);</span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> AtA <span class="op">\</span> b;       <span class="co"># Solve system of equations (AtA^{-1} b) via Gaussian elimination (LU)</span></span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 633.046 ms (6 allocations: 190.81 MiB)</span></span>
-<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> <span class="fu">inv</span>(AtA) <span class="op">*</span> b;  <span class="co"># Not as efficient</span></span>
-<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a><span class="co">#  2.538 s (8 allocations: 193.25 MiB)</span></span>
-<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> <span class="fu">cholesky</span>(AtA) <span class="op">\</span> b;  <span class="co"># Best if matrix is positive definite.</span></span>
-<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a><span class="co">#  546.957 ms (5 allocations: 190.77 MiB)</span></span>
-<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> chol <span class="op">=</span> <span class="fu">cholesky</span>(AtA); chol.U <span class="op">\</span> (chol.L <span class="op">\</span> b);  <span class="co"># As good but verbose.</span></span>
-<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a><span class="co">#  520.021 ms (3 allocations: 190.73 MiB)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="c9968690" class="cell" data-execution_count="66">
+<div class="sourceCode cell-code" id="cb130"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb130-1"><a href="#cb130-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">BenchmarkTools</span></span>
+<span id="cb130-2"><a href="#cb130-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb130-3"><a href="#cb130-3" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="fl">5000</span></span>
+<span id="cb130-4"><a href="#cb130-4" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> <span class="fu">rand</span>(n, n);</span>
+<span id="cb130-5"><a href="#cb130-5" aria-hidden="true" tabindex="-1"></a>AtA <span class="op">=</span> A<span class="op">'</span>A;</span>
+<span id="cb130-6"><a href="#cb130-6" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="fu">rand</span>(n);</span>
+<span id="cb130-7"><a href="#cb130-7" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> AtA <span class="op">\</span> b;       <span class="co"># Solve system of equations (AtA^{-1} b) via Gaussian elimination (LU)</span></span>
+<span id="cb130-8"><a href="#cb130-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 633.046 ms (6 allocations: 190.81 MiB)</span></span>
+<span id="cb130-9"><a href="#cb130-9" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> <span class="fu">inv</span>(AtA) <span class="op">*</span> b;  <span class="co"># Not as efficient</span></span>
+<span id="cb130-10"><a href="#cb130-10" aria-hidden="true" tabindex="-1"></a><span class="co">#  2.538 s (8 allocations: 193.25 MiB)</span></span>
+<span id="cb130-11"><a href="#cb130-11" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> <span class="fu">cholesky</span>(AtA) <span class="op">\</span> b;  <span class="co"># Best if matrix is positive definite.</span></span>
+<span id="cb130-12"><a href="#cb130-12" aria-hidden="true" tabindex="-1"></a><span class="co">#  546.957 ms (5 allocations: 190.77 MiB)</span></span>
+<span id="cb130-13"><a href="#cb130-13" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> chol <span class="op">=</span> <span class="fu">cholesky</span>(AtA); chol.U <span class="op">\</span> (chol.L <span class="op">\</span> b);  <span class="co"># As good but verbose.</span></span>
+<span id="cb130-14"><a href="#cb130-14" aria-hidden="true" tabindex="-1"></a><span class="co">#  520.021 ms (3 allocations: 190.73 MiB)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In principle, the Cholesky approach should involve <span class="math inline">\(n^3/6\)</span> calculations and the Gaussian elimination <span class="math inline">\(n^3/3\)</span>, but we don’t see a two-fold difference here in practice.</p>
 </section>
 <section id="spectral-eigen-decomposition" class="level3">
 <h3 class="anchored" data-anchor-id="spectral-eigen-decomposition">Spectral (eigen) decomposition</h3>
-<div id="426fc2ac" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>Γ <span class="op">=</span> <span class="fu">eigvecs</span>(AtA);</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>λ <span class="op">=</span> <span class="fu">eigvals</span>(AtA);</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> Γ <span class="op">*</span> <span class="fu">diagm</span>(λ) <span class="op">*</span> Γ<span class="ch">';</span></span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>result[<span class="fl">1</span><span class="op">:</span><span class="fl">3</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">3</span>]</span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>AtA[<span class="fl">1</span><span class="op">:</span><span class="fl">3</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">3</span>]</span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>result <span class="op">==</span> AtA</span>
-<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a><span class="fu">isapprox</span>(result, AtA)</span>
-<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>result <span class="op">≈</span> AtA  <span class="co"># \approx TAB</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="25">
+<div id="83db2870" class="cell" data-execution_count="67">
+<div class="sourceCode cell-code" id="cb131"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb131-1"><a href="#cb131-1" aria-hidden="true" tabindex="-1"></a>Γ <span class="op">=</span> <span class="fu">eigvecs</span>(AtA);</span>
+<span id="cb131-2"><a href="#cb131-2" aria-hidden="true" tabindex="-1"></a>λ <span class="op">=</span> <span class="fu">eigvals</span>(AtA);</span>
+<span id="cb131-3"><a href="#cb131-3" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> Γ <span class="op">*</span> <span class="fu">diagm</span>(λ) <span class="op">*</span> Γ<span class="ch">';</span></span>
+<span id="cb131-4"><a href="#cb131-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb131-5"><a href="#cb131-5" aria-hidden="true" tabindex="-1"></a>result[<span class="fl">1</span><span class="op">:</span><span class="fl">3</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="66">
+<pre><code>3×3 Matrix{Float64}:
+ 0.0843421  0.365089  0.292337
+ 0.365089   1.94732   1.20289
+ 0.292337   1.20289   1.02412</code></pre>
+</div>
+</div>
+<div id="1aeac5df" class="cell" data-execution_count="68">
+<div class="sourceCode cell-code" id="cb133"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb133-1"><a href="#cb133-1" aria-hidden="true" tabindex="-1"></a>AtA[<span class="fl">1</span><span class="op">:</span><span class="fl">3</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="67">
+<pre><code>3×3 Matrix{Float64}:
+ 0.0843421  0.365089  0.292337
+ 0.365089   1.94732   1.20289
+ 0.292337   1.20289   1.02412</code></pre>
+</div>
+</div>
+<div id="11705dd2" class="cell" data-execution_count="69">
+<div class="sourceCode cell-code" id="cb135"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb135-1"><a href="#cb135-1" aria-hidden="true" tabindex="-1"></a>result <span class="op">==</span> AtA</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="68">
+<pre><code>false</code></pre>
+</div>
+</div>
+<div id="b5faa4c0" class="cell" data-execution_count="70">
+<div class="sourceCode cell-code" id="cb137"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb137-1"><a href="#cb137-1" aria-hidden="true" tabindex="-1"></a><span class="fu">isapprox</span>(result, AtA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="69">
+<pre><code>true</code></pre>
+</div>
+</div>
+<div id="64e7f582" class="cell" data-execution_count="71">
+<div class="sourceCode cell-code" id="cb139"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb139-1"><a href="#cb139-1" aria-hidden="true" tabindex="-1"></a>result <span class="op">≈</span> AtA  <span class="co"># \approx TAB</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="70">
 <pre><code>true</code></pre>
 </div>
 </div>
 </section>
 <section id="dont-forget-floating-point-issues" class="level3">
 <h3 class="anchored" data-anchor-id="dont-forget-floating-point-issues">Don’t forget floating point issues</h3>
-<div id="273bae20" class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">det</span>(AtA)      <span class="co"># Could easily over/underflow for large matrices.</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">logdet</span>(AtA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="26">
-<pre><code>-9.56136858463502</code></pre>
+<div id="13c24020" class="cell" data-execution_count="72">
+<div class="sourceCode cell-code" id="cb141"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb141-1"><a href="#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="fu">det</span>(AtA)      <span class="co"># Could easily over/underflow for large matrices.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="71">
+<pre><code>6.026919865436598e-6</code></pre>
+</div>
+</div>
+<div id="0c9534ef" class="cell" data-execution_count="73">
+<div class="sourceCode cell-code" id="cb143"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb143-1"><a href="#cb143-1" aria-hidden="true" tabindex="-1"></a><span class="fu">logdet</span>(AtA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="72">
+<pre><code>-12.019274479480647</code></pre>
 </div>
 </div>
 <p>Here’s a positive definite matrix (mathematically) that has all real, positive eigenvalues. On a computer, it’s not positive definite, and therefore not invertible/full rank.</p>
-<div id="07656cfc" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>xs <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">99</span></span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute distance matrix.</span></span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>dists <span class="op">=</span> <span class="fu">abs</span>.(xs <span class="op">.-</span> xs<span class="op">'</span>)  <span class="co"># Using broadcasting with ' (an "outer" operation).</span></span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create correlation matrix.</span></span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>corr_matrix <span class="op">=</span> <span class="fu">exp</span>.(<span class="fu">-</span>(dists<span class="op">/</span><span class="fl">10</span>)<span class="op">.^</span><span class="fl">2</span>)</span>
-<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute eigenvalues and get last 20</span></span>
-<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a><span class="fu">eigvals</span>(corr_matrix)[<span class="fl">1</span><span class="op">:</span><span class="fl">20</span>] </span>
-<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>chol <span class="op">=</span> <span class="fu">cholesky</span>(corr_matrix);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fd44c622" class="cell" data-execution_count="74">
+<div class="sourceCode cell-code" id="cb145"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb145-1"><a href="#cb145-1" aria-hidden="true" tabindex="-1"></a>xs <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">99</span></span>
+<span id="cb145-2"><a href="#cb145-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute distance matrix.</span></span>
+<span id="cb145-3"><a href="#cb145-3" aria-hidden="true" tabindex="-1"></a>dists <span class="op">=</span> <span class="fu">abs</span>.(xs <span class="op">.-</span> xs<span class="op">'</span>)  <span class="co"># Using broadcasting with ' (an "outer" operation).</span></span>
+<span id="cb145-4"><a href="#cb145-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create correlation matrix.</span></span>
+<span id="cb145-5"><a href="#cb145-5" aria-hidden="true" tabindex="-1"></a>corr_matrix <span class="op">=</span> <span class="fu">exp</span>.(<span class="fu">-</span>(dists<span class="op">/</span><span class="fl">10</span>)<span class="op">.^</span><span class="fl">2</span>)</span>
+<span id="cb145-6"><a href="#cb145-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute eigenvalues and get last 20</span></span>
+<span id="cb145-7"><a href="#cb145-7" aria-hidden="true" tabindex="-1"></a><span class="fu">eigvals</span>(corr_matrix)[<span class="fl">1</span><span class="op">:</span><span class="fl">20</span>] </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="73">
+<pre><code>20-element Vector{Float64}:
+ -5.050107193681261e-15
+ -3.975288045003424e-15
+ -3.0343039148117795e-15
+ -2.3309913036821875e-15
+ -1.5093549661154687e-15
+ -1.3511621460923302e-15
+ -1.2848549714671506e-15
+ -1.0472866233731733e-15
+ -8.644575073124488e-16
+ -8.364136467422076e-16
+ -7.989065965702987e-16
+ -6.829697931404996e-16
+ -6.091008178138255e-16
+ -6.030845253775599e-16
+ -5.700968077566563e-16
+ -5.37906121536584e-16
+ -4.615826595950015e-16
+ -4.4365869197860045e-16
+ -4.0894133652379844e-16
+ -3.580464402267892e-16</code></pre>
+</div>
+</div>
+<div id="e2753057" class="cell" data-execution_count="75">
+<div class="sourceCode cell-code" id="cb147"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb147-1"><a href="#cb147-1" aria-hidden="true" tabindex="-1"></a>chol <span class="op">=</span> <span class="fu">cholesky</span>(corr_matrix);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>LoadError: PosDefException: matrix is not positive definite; Cholesky factorization failed.
 PosDefException: matrix is not positive definite; Cholesky factorization failed.
@@ -819,83 +1103,131 @@ Stacktrace:
  [7] cholesky(A::Matrix{Float64})
    @ LinearAlgebra /system/linux/julia-1.10.4/share/julia/stdlib/v1.10/LinearAlgebra/src/cholesky.jl:401
  [8] top-level scope
-   @ In[27]:7</code></pre>
+   @ In[74]:1</code></pre>
 </div>
 </div>
 <p>One should be able to use an approximate pivoted Cholesky that sets diagonal elements to zero corresponding to the rank deficiency. I’m having trouble seeing how to do that.</p>
 <p>This does seem to work to solve the system of equations. We’d have to investigate to know what Julia is doing behind the scenes, but it’s probably using a pivoted LU decomposition.</p>
-<div id="036b00ca" class="cell" data-execution_count="28">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">100</span>);</span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> corr_matrix <span class="op">\</span> b;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="dbe5abb0" class="cell" data-execution_count="76">
+<div class="sourceCode cell-code" id="cb149"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb149-1"><a href="#cb149-1" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">100</span>);</span>
+<span id="cb149-2"><a href="#cb149-2" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> corr_matrix <span class="op">\</span> b;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="smart-factorization" class="level3">
 <h3 class="anchored" data-anchor-id="smart-factorization">Smart factorization</h3>
-<div id="e3641682" class="cell" data-execution_count="29">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="fl">500</span></span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> <span class="fu">rand</span>(n, n);</span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(<span class="fu">factorize</span>(A<span class="op">'</span>A))</span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(<span class="fu">factorize</span>(A))           <span class="co"># I wouldn't have guessed that A is invertible!</span></span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(<span class="fu">factorize</span>(A[<span class="op">:</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span>]))   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="29">
+<div id="dd68316c" class="cell" data-execution_count="77">
+<div class="sourceCode cell-code" id="cb150"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb150-1"><a href="#cb150-1" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="fl">500</span></span>
+<span id="cb150-2"><a href="#cb150-2" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> <span class="fu">rand</span>(n, n);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="7bf46f53" class="cell" data-execution_count="78">
+<div class="sourceCode cell-code" id="cb151"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb151-1"><a href="#cb151-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(<span class="fu">factorize</span>(A<span class="op">'</span>A))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="77">
+<pre><code>Cholesky{Float64, Matrix{Float64}}</code></pre>
+</div>
+</div>
+<div id="169b1d6e" class="cell" data-execution_count="79">
+<div class="sourceCode cell-code" id="cb153"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb153-1"><a href="#cb153-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(<span class="fu">factorize</span>(A))           <span class="co"># I wouldn't have guessed that A is invertible!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="78">
+<pre><code>LU{Float64, Matrix{Float64}, Vector{Int64}}</code></pre>
+</div>
+</div>
+<div id="52be06ee" class="cell" data-execution_count="80">
+<div class="sourceCode cell-code" id="cb155"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb155-1"><a href="#cb155-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(<span class="fu">factorize</span>(A[<span class="op">:</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span>]))   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="79">
 <pre><code>QRPivoted{Float64, Matrix{Float64}, Vector{Float64}, Vector{Int64}}</code></pre>
 </div>
 </div>
 <p>The orthogonal matrices generated by certain factorizations can most efficiently be worked with by having them treated as “matrix-backed, function-based linear operators”.</p>
-<div id="72ad04b5" class="cell" data-execution_count="30">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>QRresult <span class="op">=</span> <span class="fu">qr</span>(A[<span class="op">:</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span>]);</span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(QRresult.Q)</span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>QRresult.Q <span class="op">*</span> <span class="fu">rand</span>(<span class="fl">10</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="1d9a10b5" class="cell" data-execution_count="81">
+<div class="sourceCode cell-code" id="cb157"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb157-1"><a href="#cb157-1" aria-hidden="true" tabindex="-1"></a>QRresult <span class="op">=</span> <span class="fu">qr</span>(A[<span class="op">:</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span>]);</span>
+<span id="cb157-2"><a href="#cb157-2" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(QRresult.Q)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="80">
+<pre><code>LinearAlgebra.QRCompactWYQ{Float64, Matrix{Float64}, Matrix{Float64}}</code></pre>
+</div>
+</div>
+<div id="28def06c" class="cell" data-execution_count="82">
+<div class="sourceCode cell-code" id="cb159"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb159-1"><a href="#cb159-1" aria-hidden="true" tabindex="-1"></a>QRresult.Q <span class="op">*</span> <span class="fu">rand</span>(<span class="fl">10</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="use-known-structure" class="level3">
 <h3 class="anchored" data-anchor-id="use-known-structure">Use known structure!</h3>
-<div id="43082621" class="cell" data-execution_count="31">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">BenchmarkTools</span></span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="fl">5000</span></span>
-<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> <span class="fu">rand</span>(n, n);</span>
-<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>AtA <span class="op">=</span> A<span class="op">'</span>A;</span>
-<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="fu">rand</span>(n);</span>
-<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>chol <span class="op">=</span> <span class="fu">cholesky</span>(AtA);</span>
-<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(chol.U)</span>
-<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> chol.U <span class="op">\</span> b;</span>
-<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a>U_dense <span class="op">=</span> <span class="fu">Matrix</span>(chol.U);</span>
-<span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> U_dense <span class="op">\</span> b;</span>
-<span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-14"><a href="#cb59-14" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> <span class="fu">logdet</span>(chol.U);</span>
-<span id="cb59-15"><a href="#cb59-15" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> <span class="fu">logdet</span>(U_dense);</span>
-<span id="cb59-16"><a href="#cb59-16" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> <span class="fu">sum</span>(<span class="fu">log</span>.(<span class="fu">diag</span>(chol.U)));</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d018903a" class="cell" data-execution_count="83">
+<div class="sourceCode cell-code" id="cb160"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb160-1"><a href="#cb160-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">BenchmarkTools</span></span>
+<span id="cb160-2"><a href="#cb160-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb160-3"><a href="#cb160-3" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="fl">5000</span></span>
+<span id="cb160-4"><a href="#cb160-4" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> <span class="fu">rand</span>(n, n);</span>
+<span id="cb160-5"><a href="#cb160-5" aria-hidden="true" tabindex="-1"></a>AtA <span class="op">=</span> A<span class="op">'</span>A;</span>
+<span id="cb160-6"><a href="#cb160-6" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="fu">rand</span>(n);</span>
+<span id="cb160-7"><a href="#cb160-7" aria-hidden="true" tabindex="-1"></a>chol <span class="op">=</span> <span class="fu">cholesky</span>(AtA);</span>
+<span id="cb160-8"><a href="#cb160-8" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(chol.U)</span>
+<span id="cb160-9"><a href="#cb160-9" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> chol.U <span class="op">\</span> b;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  6.004 ms (3 allocations: 39.12 KiB)
-  14.619 ms (2 allocations: 39.11 KiB)
-  105.523 μs (2 allocations: 32 bytes)
-  631.731 ms (5 allocations: 190.77 MiB)
-  122.804 μs (7 allocations: 78.27 KiB)</code></pre>
+<pre><code>  6.279 ms (3 allocations: 39.12 KiB)</code></pre>
 </div>
 </div>
-<div id="c9027cc5" class="cell" data-execution_count="32">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">SparseArrays</span></span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="fl">5000</span>;</span>
-<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> <span class="fu">Matrix</span>(<span class="fl">1.0</span>I, n, n);</span>
-<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>A[<span class="fl">1</span>,<span class="fl">3</span>] <span class="op">=</span> <span class="fl">7.7</span>;</span>
-<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>A[<span class="fl">5</span>,<span class="fl">9</span>] <span class="op">=</span> <span class="fl">2.3</span>;</span>
-<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>sA <span class="op">=</span> <span class="fu">sparse</span>(A);</span>
-<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a><span class="fu">sizeof</span>(A)</span>
-<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sizeof</span>(sA)  <span class="co"># Ok, so that's not helpful given the pointers involved.</span></span>
-<span id="cb61-11"><a href="#cb61-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-12"><a href="#cb61-12" aria-hidden="true" tabindex="-1"></a><span class="co"># sA. TAB  # What are the components of `sA`?</span></span>
-<span id="cb61-13"><a href="#cb61-13" aria-hidden="true" tabindex="-1"></a><span class="fu">sizeof</span>(sA.colptr) <span class="op">+</span> <span class="fu">sizeof</span>(sA.nzval) <span class="op">+</span> <span class="fu">sizeof</span>(sA.rowval)</span>
-<span id="cb61-14"><a href="#cb61-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-15"><a href="#cb61-15" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="fu">rand</span>(n);</span>
-<span id="cb61-16"><a href="#cb61-16" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> A <span class="op">*</span> b;</span>
-<span id="cb61-17"><a href="#cb61-17" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> sA <span class="op">*</span> b;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="c9487f69" class="cell" data-execution_count="84">
+<div class="sourceCode cell-code" id="cb162"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb162-1"><a href="#cb162-1" aria-hidden="true" tabindex="-1"></a>U_dense <span class="op">=</span> <span class="fu">Matrix</span>(chol.U);</span>
+<span id="cb162-2"><a href="#cb162-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> U_dense <span class="op">\</span> b;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  9.553 ms (2 allocations: 39.11 KiB)
-  20.384 μs (2 allocations: 39.11 KiB)</code></pre>
+<pre><code>  15.034 ms (2 allocations: 39.11 KiB)</code></pre>
+</div>
+</div>
+<div id="fda3f457" class="cell" data-execution_count="85">
+<div class="sourceCode cell-code" id="cb164"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb164-1"><a href="#cb164-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> <span class="fu">logdet</span>(chol.U);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  102.764 μs (2 allocations: 32 bytes)</code></pre>
+</div>
+</div>
+<div id="eb882865" class="cell" data-execution_count="86">
+<div class="sourceCode cell-code" id="cb166"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb166-1"><a href="#cb166-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> <span class="fu">logdet</span>(U_dense);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  608.393 ms (5 allocations: 190.77 MiB)</code></pre>
+</div>
+</div>
+<div id="1363a7ac" class="cell" data-execution_count="87">
+<div class="sourceCode cell-code" id="cb168"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb168-1"><a href="#cb168-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> <span class="fu">sum</span>(<span class="fu">log</span>.(<span class="fu">diag</span>(chol.U)));</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  122.797 μs (7 allocations: 78.27 KiB)</code></pre>
+</div>
+</div>
+<div id="13842e71" class="cell" data-execution_count="88">
+<div class="sourceCode cell-code" id="cb170"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb170-1"><a href="#cb170-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">SparseArrays</span></span>
+<span id="cb170-2"><a href="#cb170-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb170-3"><a href="#cb170-3" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="fl">5000</span>;</span>
+<span id="cb170-4"><a href="#cb170-4" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> <span class="fu">Matrix</span>(<span class="fl">1.0</span>I, n, n);</span>
+<span id="cb170-5"><a href="#cb170-5" aria-hidden="true" tabindex="-1"></a>A[<span class="fl">1</span>,<span class="fl">3</span>] <span class="op">=</span> <span class="fl">7.7</span>;</span>
+<span id="cb170-6"><a href="#cb170-6" aria-hidden="true" tabindex="-1"></a>A[<span class="fl">5</span>,<span class="fl">9</span>] <span class="op">=</span> <span class="fl">2.3</span>;</span>
+<span id="cb170-7"><a href="#cb170-7" aria-hidden="true" tabindex="-1"></a>sA <span class="op">=</span> <span class="fu">sparse</span>(A);</span>
+<span id="cb170-8"><a href="#cb170-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb170-9"><a href="#cb170-9" aria-hidden="true" tabindex="-1"></a><span class="fu">sizeof</span>(A)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="87">
+<pre><code>200000000</code></pre>
+</div>
+</div>
+<div id="be9e216b" class="cell" data-execution_count="89">
+<div class="sourceCode cell-code" id="cb172"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb172-1"><a href="#cb172-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sizeof</span>(sA)  <span class="co"># Ok, so that's not helpful given the pointers involved.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="88">
+<pre><code>40</code></pre>
+</div>
+</div>
+<div id="e79e86f1" class="cell" data-execution_count="90">
+<div class="sourceCode cell-code" id="cb174"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb174-1"><a href="#cb174-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sA. TAB  # What are the components of `sA`?</span></span>
+<span id="cb174-2"><a href="#cb174-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sizeof</span>(sA.colptr) <span class="op">+</span> <span class="fu">sizeof</span>(sA.nzval) <span class="op">+</span> <span class="fu">sizeof</span>(sA.rowval)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="89">
+<pre><code>120040</code></pre>
+</div>
+</div>
+<div id="c3e628b3" class="cell" data-execution_count="91">
+<div class="sourceCode cell-code" id="cb176"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb176-1"><a href="#cb176-1" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="fu">rand</span>(n);</span>
+<span id="cb176-2"><a href="#cb176-2" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> A <span class="op">*</span> b;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  9.957 ms (2 allocations: 39.11 KiB)</code></pre>
+</div>
+</div>
+<div id="f8ce2576" class="cell" data-execution_count="92">
+<div class="sourceCode cell-code" id="cb178"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb178-1"><a href="#cb178-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> sA <span class="op">*</span> b;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  20.483 μs (2 allocations: 39.11 KiB)</code></pre>
 </div>
 </div>
 
