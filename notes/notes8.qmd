@@ -144,9 +144,9 @@ typeof(x_gpu)
 CUDA.total_memory()
 # 85097971712         # This is using an A100 GPU with 85 GB GPU memory.
 CUDA.used_memory()
-# 1600000000
+# 784000000
 n*n*8*2               # "Theoretical" memory use.
-# 1600000000
+# 784000000
 ```
 
 Now let's compare the speed of the multiplication on CPU (host) vs. GPU (device). As usual we'll put our computation into functions to allow for JIT compilation and avoid use of global variables whose type can change. 
@@ -189,6 +189,8 @@ Some comments on timing GPU code:
  - We could also use `CUDA.@time`.
  - Since GPU code is executed asynchronously, we should use `CUDA.@sync` or `synchronize` to make sure the execution is finished.
 :::
+
+GPUs use a lot of electricity. It's possible that an administrator of a computing cluster might throttle the power consumption of a GPU server and this could affect computational speed.
 
 ### Multiple dispatch with GPU operations
 
