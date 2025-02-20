@@ -61,7 +61,7 @@ rand(['a','b','c'], 5)
 
 The manual discusses the [available generators](https://docs.julialang.org/en/v1/stdlib/Random/#Random-Numbers).
 
-The default RNG is `Xoshiro256++`, but there are details related to random number streams for a given Task that I haven't delved into.
+The default RNG is `Xoshiro256++`, but there are details related to random number streams when working in parallel that I have not absorbed yet. 
 
 ```{julia}
 Random.default_rng();
@@ -82,24 +82,26 @@ println(rand(rng, 3))
 
 ## Distributions
 
+As with distributions in SciPy in Python, we first define the distribution of interest and then carry out distributional operations with it.
+
 ```{julia}
 using Distributions
 beta_dist = Beta(2, 5)
 beta_samples = rand(beta_dist, 10)
 ```
 ```{julia}
-beta_density = pdf.(beta_dist, beta_samples[1:5])
+pdf.(beta_dist, beta_samples[1:5])
 ```
 ```{julia}
-beta_logDensity = logpdf.(beta_dist, beta_samples[1:5])
+logpdf.(beta_dist, beta_samples[1:5])
 ```
 
 ## Floating point issues
 
 ### Integer and floating point types
 
-64 bit integers can represent $-2^63 \ldots 2^63$.
-32 bit integers can represent $-2^31 \ldots 2^31$.
+64 bit integers can represent $-2^{63} \ldots 2^{63}$.
+32 bit integers can represent $-2^{31} \ldots 2^{31}$.
 
 Similarly for 16 and 128 bit integers.
 
@@ -201,10 +203,14 @@ discussion we'll just think of $e$ in terms of its base 10
 representation, although it is of course represented in base 2.) This
 leaves $p=52 = 64-1-11$ bits for $d$.
 
+53 bits of precision in base 10 is about 16 digits. And 11 bits for the magnitude
+corresponds with when over/underflow occur. For 32-bit floats, we have both
+less precision and more easily over/underflow.
+
 
 ### Overflow 
 
-Integer numbers can be represented exactly by Float64 up to $2^53$. 
+Integer numbers can be represented exactly by Float64 up to $2^{53}$. 
 
 ```{julia}
 function pri(x)
@@ -282,6 +288,8 @@ prf(0.1)
 Here's an example of catastrophic cancellation:
 
 ```{julia}
+prf(123456781234.56)
+prf(123456781234.00)
 prf(123456781234.56 - 123456781234.00)
 ```
 
@@ -292,22 +300,21 @@ prf(1.0 + 1e-8)
 ```
 ```{julia}
 prf(1.0 + 1e-17)
+1.0 + 1e-17 == 1.0
 ```
 
 ### Avoid multiplying/dividing many numbers
 
 ```{julia}
 using Distributions
-norm = Normal(0, 1)
-samples = rand(norm, 1000);
-prod(pdf.(norm, samples))  # Log-likelihood/log-density
+normd = Normal(0, 1)
+samples = rand(normd, 1000);
+prod(pdf.(normd, samples))  # Log-likelihood/log-density
 ```
 ```{julia}
-sum(logpdf.(norm, samples))
+sum(logpdf.(normd, samples))
 ```
-```{julia}
-sum(logpdf.(norm, samples[1:100]))
-```
+
 
 We see that a likelihood with only as many as 1000 terms underflows. (In other cases it could overflow.)
 
@@ -331,6 +338,8 @@ A .* B  # Element-wise multiplication
 
 ```{julia}
 using LinearAlgebra
+
+A = rand(3, 3);
 
 AtA = A'A;    # A' * A
 b = rand(3);
@@ -382,11 +391,11 @@ b = rand(n);
 @btime AtA \ b;       # Solve system of equations (AtA^{-1} b) via Gaussian elimination (LU)
 # 633.046 ms (6 allocations: 190.81 MiB)
 @btime inv(AtA) * b;  # Not as efficient
-#  2.538 s (8 allocations: 193.25 MiB)
+# 2.538 s (8 allocations: 193.25 MiB)
 @btime cholesky(AtA) \ b;  # Best if matrix is positive definite.
-#  546.957 ms (5 allocations: 190.77 MiB)
+# 546.957 ms (5 allocations: 190.77 MiB)
 @btime chol = cholesky(AtA); chol.U \ (chol.L \ b);  # As good but verbose.
-#  520.021 ms (3 allocations: 190.73 MiB)
+# 520.021 ms (3 allocations: 190.73 MiB)
 ```
 
 In principle, the Cholesky approach should involve $n^3/6$ calculations and the Gaussian elimination $n^3/3$, but we don't see a two-fold difference here in practice.
