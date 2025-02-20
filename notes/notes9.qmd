@@ -90,6 +90,9 @@ beta_dist = Beta(2, 5)
 beta_samples = rand(beta_dist, 10)
 ```
 ```{julia}
+using Plots
+grid = 0:.01:1
+plot(grid, pdf.(beta_dist, grid))
 pdf.(beta_dist, beta_samples[1:5])
 ```
 ```{julia}
@@ -134,10 +137,8 @@ Int64(yi)
 ```
 ```{julia}
 #| error: true
-
-xi::Int64 = 2^63 - 1  # Shouldn't this overflow when calculating 2^63?
+xi::Int64 = 2^63 - 1  # A mystery: shouldn't this overflow when calculating 2^63?
 ```
-
 ```{julia}
 x = parse(BigInt, "1234567890123456789012345678901234567890")
 ```
@@ -145,7 +146,7 @@ x = parse(BigInt, "1234567890123456789012345678901234567890")
 x+1
 ```
 
-There are 16, 32, and 64 bit floating point numbers, as well as `BigFloat`s.
+There are 16, 32, and 64 bit floating point numbers, as well as a `BigFloat` type.
 
 More a bit later.
 
@@ -203,9 +204,13 @@ discussion we'll just think of $e$ in terms of its base 10
 representation, although it is of course represented in base 2.) This
 leaves $p=52 = 64-1-11$ bits for $d$.
 
+The representations for floating point numbers with more or fewer bits than 64 is
+similar in structure but with a different split of bits used for the magnitude and
+the precision.
+
 53 bits of precision in base 10 is about 16 digits. And 11 bits for the magnitude
 corresponds with when over/underflow occur. For 32-bit floats, we have both
-less precision and more easily over/underflow.
+less precision and we more easily over/underflow.
 
 
 ### Overflow 
@@ -254,6 +259,9 @@ prf(2.0^1022)
 prf(2.0^1023)
 ```
 ```{julia}
+prf(10.0^308)
+```
+```{julia}
 prf(2.0^1024)
 ```
 But Int64s that big do overflow.
@@ -289,7 +297,11 @@ Here's an example of catastrophic cancellation:
 
 ```{julia}
 prf(123456781234.56)
+```
+```{julia}
 prf(123456781234.00)
+```
+```{julia}
 prf(123456781234.56 - 123456781234.00)
 ```
 
@@ -300,23 +312,26 @@ prf(1.0 + 1e-8)
 ```
 ```{julia}
 prf(1.0 + 1e-17)
+```
+```{julia}
 1.0 + 1e-17 == 1.0
 ```
 
 ### Avoid multiplying/dividing many numbers
 
+How large does $n$ need to be to see underflow here? In other cases it could overflow.
+
 ```{julia}
+#| eval: false
 using Distributions
 normd = Normal(0, 1)
-samples = rand(normd, 1000);
+samples = rand(normd, n);
 prod(pdf.(normd, samples))  # Log-likelihood/log-density
 ```
 ```{julia}
 sum(logpdf.(normd, samples))
 ```
 
-
-We see that a likelihood with only as many as 1000 terms underflows. (In other cases it could overflow.)
 
 ## Linear algebra
 
@@ -328,10 +343,10 @@ We'll see that linear algebra operations heavily exploit Julia's multiple dispat
 #| eval: false
 A = rand(3, 3);
 B = rand(3, 3);
-A + B   # Element-wise
-A .+ B  # Element-wise
-A * B   # Matrix multiplication
-A .* B  # Element-wise multiplication
+A + B;   # Element-wise addition
+A .+ B;  # Element-wise addition
+A * B;   # Matrix multiplication
+A .* B;  # Element-wise multiplication
 ```
 
 ### Solving systems of equations / inversion
@@ -364,9 +379,14 @@ tr(A)
 ```{julia}
 chol = cholesky(AtA)
 ```
+
+We have $ (U^\{top}U)^{-1}b = U^{-1}(U^{\top}^{-1}b) $, which in Julia
+is implemented internally.
+
 ```{julia}
 chol \ b                # Automatically exploits triangularity.
 ```
+
 ```{julia}
 chol.U \ (chol.L \ b)   # Manual equivalent solution.
 ```
@@ -384,7 +404,7 @@ This works in Julia but is having problems via Quarto, so I'll just paste in som
 #| eval: false
 using BenchmarkTools
 
-n = 5000
+n = 5000;
 A = rand(n, n);
 AtA = A'A;
 b = rand(n);
@@ -425,7 +445,7 @@ result ≈ AtA  # \approx TAB
 ### Don't forget floating point issues
 
 ```{julia}
-n=500
+n=500;
 A = rand(n, n);
 det(A'A)     
 ```
@@ -530,7 +550,7 @@ sA = sparse(A);
 sizeof(A)
 ```
 ```{julia}
-sizeof(sA)  # Ok, so that's not helpful given the pointers involved.
+sizeof(sA)  # Not helpful given the pointers involved.
 ```
 ```{julia}
 
