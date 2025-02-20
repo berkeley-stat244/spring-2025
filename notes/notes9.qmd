@@ -425,10 +425,12 @@ result ≈ AtA  # \approx TAB
 ### Don't forget floating point issues
 
 ```{julia}
-det(AtA)      # Could easily over/underflow for large matrices.
+n=500
+A = rand(n, n);
+det(A'A)     
 ```
 ```{julia}
-logdet(AtA)
+logdet(A'A)
 ```
 
 Here's a positive definite matrix (mathematically) that has all real, positive eigenvalues.
