@@ -1,0 +1,1059 @@
+---
+title: "Julia/R Interoperability + Graphs"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+format:
+  html:
+    css: styles-R-Julia_integration.css
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    number-sections: false
+
+engine: knitr
+---
+
+# R/Julia Interoperability 
+
+## Introduction
+
+**Interoperability of programming languages** refers to the ability for two or more languages to interact as part of the same system. Here, I'll demonstrate how to pass messages and data between **R** and **Julia**, first by calling to R in Julia and then by calling to Julia in R. One of the benefits to Julia/R interoperability is being able to combine the R library ecosystem with the speed of Julia's JIT. I'll finish with an example of how I see R and Julia being used together.
+
+The two main packages we'll use are:
+
+1. `RCall`: programming in a Julia environment and calling to R
+
+2. `JuliaCall`: programming in a R environment and calling to Julia
+
+## R in Julia
+
+We will use the `RCall` package to pass messages and data to and from R while in a Julia session. 
+
+We will first initialize the R process in the background:
+
+```{julia, class="chunk-blue"}
+# Julia
+using RCall
+```
+
+There are multiple ways of interacting with R in Julia:
+
+1. macros to transfer data
+2. messaging R expressions
+3. `RCall` API
+
+### Macros to transfer data
+
+The `@rput` and `@rget` macros can be used to transfer variables between Julia and R.
+
+`@rput` transfers data from Julia to R:
+
+```{julia, class="chunk-blue"}
+# Julia
+z = 1;
+@rput z;
+```
+Now, this R command will return the value of `z` passed from Julia.
+
+```{r, class="chunk-pink"}
+# R
+z
+```
+
+`@rget` transfers data from R to Julia. If we have defined `o` in R: 
+```{r, class="chunk-pink"}
+# R
+o = 2
+```
+
+Back in Julia, we do not yet have the variable `o` until we use the `@rget` macro:
+
+```{julia, class="chunk-blue"}
+# Julia
+@rget o
+```
+
+Multiple pieces of data can also be passed on one line:
+
+```{julia, class="chunk-blue"}
+# Julia
+foo = 2;
+bar = 4;
+@rput foo bar;
+```
+And then used in R:
+
+```{r, class="chunk-pink"}
+# R
+foo + bar
+```
+
+
+### Messaging R expressions
+
+We can also use the `R""` string macro to wrap an R expression.
+
+```{julia, class="chunk-blue"}
+# Julia
+x = R"rnorm(10)";
+typeof(x)
+```
+
+You can see that this returns the result as an `RObject`. An `RObject` is a Julia wrapper for an R object (known as an "S-expression" or "SEXP"). It is stored as a pointer which is protected from the R garbage collector.
+
+Since `RObject` is just a reference to an R object inside Julia, we can use `rcopy()` to extract the actual data and convert it into a Julia type. More on `rcopy` in a bit.
+
+```{julia, class="chunk-blue"}
+# Julia
+x_copy = rcopy(x);
+
+typeof(x_copy)
+```
+
+Variable substition of Julia objects can be done with the `$` symbol:
+
+```{julia, class="chunk-blue"}
+# Julia
+# generate random numbers in Julia
+a = randn(10);
+
+# calculate the mean in R
+mean_a = rcopy(R"mean($a)")
+```
+
+### RCall API
+
+The package `RCall` has an API with functions to interface with the package.
+
+1. `reval()`: evalues input string as R code in the R environment, and then returns the result as an `RObject`. This is identical to using the `R""` string macro.
+
+```{julia, class="chunk-blue"}
+# Julia
+# R's iris flower dataset
+iris = reval("iris");
+
+# look at column names
+names(iris)
+```
+
+Referencing a column in the dataframe corresponds to the pointer to the object in R:
+
+```{julia, class="chunk-blue"}
+# Julia
+iris[:Species]
+```
+
+2. `rcall()` to construct function calls
+
+Get dimensions of the iris dataset:
+
+```{julia, class="chunk-blue"}
+# Julia
+dims = rcall(:dim, iris);
+print(dims)
+```
+
+3. `rcopy()` converts `RObjects` to Julia objects
+
+This function uses a variety of heuristics to pick the most appropriate Julia type:
+
+```{julia, class="chunk-blue"}
+# Julia
+rcopy(R"dim(iris)")
+```
+
+This R function takes temperature and precipitation values and returns a happy index:
+
+```{julia, class="chunk-blue"}
+# Julia
+precip = 10;
+
+rcopy(
+  R"""
+  happy_index <- function(temperature, precipitation) {
+  
+     return(ifelse(temperature > 70 && precipitation < 5,
+                   'I am very happy', 'I am very sad'))
+  }
+
+  happy_index(80, $precip)
+  """
+)
+```
+
+Or you can pass the function itself to julia
+
+```{julia, class="chunk-blue"}
+# Julia
+happy_index = rcopy(
+  R"""
+  happy_index <- function(temperature, precipitation) {
+  
+      return(ifelse(temperature > 70 && precipitation < 5,
+                    'I am very happy', 'I am very sad'))
+  }  
+  """
+)
+```
+
+And then run the function:
+
+```{julia, class="chunk-blue"}
+# Julia
+happy_index(90, 0)
+```
+
+You can also force a specific type conversion by passing the output type as the first argument:
+
+```{julia, class="chunk-blue"}
+# Julia
+typeof(rcopy(R"sum(c(1, 2))"))
+```
+
+```{julia, class="chunk-blue"}
+# Julia
+rcopy(Array{Int}, R"sum(c(1, 2))")
+```
+
+### @rlibrary macro
+
+You can load exported functions of an R package to the Julia environment with the @rlibrary macro.
+
+Every function in the R package can automatically be called with Julia data structures as arguments, which will be automatically transformed into R data structures.
+
+```{julia, class="chunk-blue"}
+# Julia
+# create a dataframe in Julia
+using DataFrames, RCall
+df = DataFrame(A = repeat(1:50, inner = 50), B = repeat(1:50, outer = 50));
+
+# use tidyverse to update the data frame
+df2 = rcopy(
+  R"""
+  library(tidyverse)
+  $df %>% mutate(C = sin(A) + cos(B))
+  """
+);
+```
+
+```{julia, class="chunk-blue"}
+# Julia
+# load functions from R packages
+@rlibrary wesanderson
+@rlibrary ggplot2
+
+# use ggplot syntax in Julia
+p1 = ggplot(df2) +
+  geom_tile(aes(x = :A, y = :B, fill = :C)) +
+  scale_fill_gradientn(colors = wes_palette("Zissou1", 100, 
+                                            type = "continuous")) +
+  theme_minimal();
+R"ggsave('p1.png', plot=$p1, width=6, height=4, dpi=300)";
+```
+![](p1.png)
+
+One thing to be careful about: 
+
+A few issues can arise when R commands don't translate directly to Julia code, like a dot, which is often used in R arguments. For example, the dot in `na.rm`. 
+
+You can get around this using the `var` string macro in `RCall`:
+
+```{julia, class="chunk-blue"}
+# Julia
+p2 = ggplot(df2) +
+  geom_point(aes(x = :A, y = :B, color = :C),
+             var"na.rm" = true) +
+  scale_color_gradientn(colors = wes_palette("Zissou1", 100, 
+                                             type = "continuous")) +
+  theme_minimal();
+R"ggsave('p2.png', plot=$p2, width=6, height=4, dpi=300)";
+```
+![](p2.png)
+
+## Julia in R
+
+Now let's switch gears and work primarily in R, while passing messages and data to and from Julia, as well as calling Julia functions.  
+
+```{r, class="chunk-pink"}
+# R
+library(JuliaCall)
+```
+
+
+`julia_setup` sets up automatic type conversion and is necessary for every new R session to use the package. If not carried out manually, it will be invoked automatically before other `julia_xxx` functions.
+
+```{r, class="chunk-pink"}
+# R
+julia_setup()
+```
+
+### Useful operators
+
+These are the main commands for interacting between R and Julia.
+
+1. `julia_call():` Takes an argument from R, converts the argument to a Julia object, and then applies a Julia function. The value is then returned to R as an R object and can be assigned to a variable.
+
+Here, no values or variables are generated in Julia.
+
+```{r, class="chunk-pink"}
+# R
+julia_call("sqrt", 2.0)
+```
+
+Works for functions with multiple arguments:
+
+```{r, class="chunk-pink"}
+# R
+julia_call("max", 2.0, -1)
+```
+
+2. `julia_command()`: Evaluates string commands in Julia without returning the result back to R.
+
+```{r, class="chunk-pink"}
+# R
+julia_command("a = sqrt(2.0)")
+```
+
+You can run a series of commands, and the final value gets printed.
+
+```{r, class="chunk-pink"}
+# R
+julia_command("a = sqrt(2.0); b = a + 2")
+```
+
+Note that while `julia_command()` does not return a value to R, it prints the value and returns NULL. 
+
+```{r, class="chunk-pink"}
+# R
+a <- julia_command("a = sqrt(2.0);")
+print(a)
+```
+
+In addition to lines of Julia, we can also use `julia_command()` to create a function, and then use `julia_call()` to call that function. Here, we'll create a function that randomly generates aquatic or terrestrial animal names:
+
+```{r, class="chunk-pink"}
+# R
+julia_library("Random")
+
+julia_command(
+  "
+  function get_animal(n; aquatic = false)
+    
+    terra = [\"ibex\", \"snail\", \"armadillo\", \"lynx\", \"parrot\"]
+    aqua = [\"nautilus\", \"grey whale\", \"coho salmon\", 
+            \"siphonophore\", \"limpet\"]
+    
+    index = shuffle(1:5)[1:round(Int, n)]
+    
+    if aquatic == true
+       animals = aqua[index]
+       
+    else
+       animals = terra[index]
+    
+    end
+    
+    return animals
+end"
+)
+```
+
+And the call that Julia function in with arguments:
+
+```{r, class="chunk-pink"}
+# R
+julia_call("get_animal", 3, aquatic = as.logical(TRUE))
+```
+
+Note that keyword arguments can be separated by a comma, rather than a semicolon.
+
+3. `julia_eval()`: Evaluates string commands in Julia *and* returns the result back to R.
+
+```{r, class="chunk-pink"}
+# R
+a <- julia_eval("a = sqrt(2.0);")
+print(a)
+```
+
+And again, this can work on a series of expressions, with the value of the last command will be returned:
+
+```{r, class="chunk-pink"}
+# R
+c <- julia_eval("a = sqrt(2.0); b = a + 2; c = b / 4;")
+print(c)
+```
+
+
+**When do you use `julia_command()` vs. `julia_eval()`?**
+
+```{r, class="chunk-pink"}
+# R
+system.time(
+  julia_command("x = rand(10000000);")
+)
+```
+
+```{r, class="chunk-pink"}
+# R
+system.time(
+  julia_eval("x = rand(10000000);")
+)
+```
+
+4. `julia_assign()`: Takes an R object like a number, vector, matrix, etc., turns it into a Julia object and assigns a variable name to it. This variable can then be used in subsequent Julia commands.
+
+```{r, class="chunk-pink"}
+# R
+julia_assign("theta", c(1, 2, 3, 4)) # assign a vector to theta Julia object
+```
+
+```{r, class="chunk-pink"}
+# R
+julia_eval("sum(theta)") 
+```
+
+Since variables exist in different environments, there are no conflicts. Although it's probably bad practice to have the same variable names in different environments with different values.
+
+```{r, class="chunk-pink"}
+# R
+theta <- c(10, 20, 30, 40)
+```
+
+```{r, class="chunk-pink"}
+# R
+julia_eval("sum(theta)") 
+```
+
+We can also assign functions from R to Julia:
+
+```{r, class="chunk-pink"}
+# R
+calc_hypotenus <- function(a, b) {
+  c <- sqrt(a ^ 2 + b ^2)
+  return(c)
+}
+
+julia_assign("calc_hypotenus", calc_hypotenus)
+julia_eval("calc_hypotenus(2.5, 4)")
+```
+
+
+**One cool thing:** Even though vectorized operations need to be explicitly defined in Julia, we don't need to vectorize the function in R before passing it to Julia: 
+
+```{r, class="chunk-pink"}
+# R
+julia_eval("calc_hypotenus([2.5, 1], [4, 1])")
+```
+
+This scalar function works with vector arguments! (i.e., you don't have to do `calc_hypotenus.()`)
+
+### Note on type in R vs. Julia
+
+In R, these are both doubles:
+
+```{r, class="chunk-pink"}
+# R
+typeof(1) == typeof(1.0)
+```
+
+Whereas the type is different in Julia
+
+```{r, class="chunk-pink"}
+# R
+julia_command("typeof(1) == typeof(1.0)")
+```
+
+In R, you have to explicitly cast a number to an integer:
+
+```{r, class="chunk-pink"}
+# R
+typeof(as.integer(1))
+```
+
+Therefore, if a function requires natural numbers, explicitly make them an integer, because Julia will convert R doubles to floats.
+
+```{r, class="chunk-pink", eval = FALSE}
+# R
+julia_call("rand", 10)
+```
+
+Two ways to declare integer type:
+
+```{r, class="chunk-pink"}
+# R
+# option 1
+julia_call("rand", as.integer(10))
+
+# option 2
+julia_call("rand", 10L)
+```
+
+
+
+
+## Benefits of bilingualism
+
+Why should we care about the interoperability of R and Julia?!
+
+We can get the best of both worlds: increased speed and access to a larger software ecosystem.
+
+### Increased speed
+
+I'll demonstrate how using Julia can speed up computation, relative to R.
+
+Here I will be implementing a basic Metropolis-Hastings MCMC algorithm to simulate the posterior of a generalized linear model:
+
+$$
+Y = \beta_0 + \beta_1X_1 + \beta_2X_2 + \beta_3X_3  + \beta_4X_4 + \epsilon
+$$
+
+First I'll simulate data:
+
+```{r, class="chunk-pink"}
+# R
+# true params
+beta <- c(0.3, 0.1, -0.4, 0.9)
+sd <- 0.1
+
+# simulate data
+x <- cbind(rep(1, 100), rnorm(100, 0, 1), 
+           rnorm(100, 0, 1), rnorm(100, 0, 1))
+y <- x %*% beta + rnorm(100, 0, sd)
+```
+
+I'll then create an R function to implement one iteration of the MCMC algorithm:
+
+```{r, class="chunk-pink"}
+# R
+# function for each Metropolis-Hastings MCMC iteration
+MCMC_iter_R <- function(theta, y, x, proposal_std, priors) {
+  
+  # get predictions at current theta
+  y_current <- x %*% theta[1:ncol(x)]
+  
+  # calculate likelihood of current theta
+  lik_current <- (
+   sum(dnorm(y, mean = y_current, sd = exp(last(theta)), log = TRUE)) +
+     sum(sapply(seq_along(priors), 
+                function(i) dunif(theta[i], min = priors[[i]][1], 
+                                  max = priors[[i]][2], log = TRUE)))
+  )
+  
+  # get new theta
+  theta_new <- rnorm(length(theta), theta, proposal_std)
+  
+  # calculate likelihood of new theta
+  y_new <- x %*% theta_new[1:ncol(x)]
+  lik_new <- (
+   sum(dnorm(y, mean = y_new, sd = exp(last(theta_new)), log = TRUE)) +
+     sum(sapply(seq_along(priors), 
+                function(i) dunif(theta_new[i], min = priors[[i]][1], 
+                                  max = priors[[i]][2], log = TRUE)))
+  )
+  
+  # accept?
+  prob <- min(exp(lik_new - lik_current), 1)
+  
+  # return theta
+  if (runif(1) < prob) {
+    return(theta_new)  # Accept new theta
+  } else {
+    return(theta)      # Reject and keep old theta
+  }
+}
+```
+
+And then a function to implement `n` iterations of the algorithm.
+
+```{r, class="chunk-pink"}
+# R
+# function for entire algorithm
+get_samples_R <- function(iter, initial_values, y, x, 
+                          proposal_std, priors) {
+  
+  # create sample matrix
+  samples <- matrix(NA, nrow = iter, ncol = ncol(x) + 1)
+  
+  # add first values
+  samples[1, ] <- initial_values
+  
+  # loop through iterations
+  for (i in 2:iter) {
+    samples[i, ] <- MCMC_iter_R(samples[i - 1, ], 
+                                y, x, proposal_std, priors)
+  }
+  
+  return(samples)
+}
+
+```
+
+I will then rewrite these functions in Julia and use `julia_command()` to pass the functions to Julia.
+
+```{r, class="chunk-pink"}
+# R
+# write these functions in Julia
+
+julia_command(
+  "
+  
+  function MCMC_iter_julia(theta, y, x, proposal_std, priors)
+    
+    # Get predictions at current theta
+    y_current = x * theta[1:size(x, 2)]
+
+    # Calculate likelihood of current theta
+    lik_current = 0.0
+    for i in 1:length(y)
+        lik_current += logpdf(Normal(y_current[i], 
+                              exp(last(theta))), y[i])
+    end
+    for i in 1:length(theta)
+        lik_current += logpdf(Uniform(first(priors[i]), 
+                              last(priors[i])), theta[i])
+    end
+
+    # Get new theta by sampling from normal distribution
+    theta_new = zeros(length(theta))
+    for i in 1:length(theta)
+        theta_new[i] = rand(Normal(theta[i], proposal_std[i]))
+    end
+
+    # Calculate likelihood of new theta
+    y_new = x * theta_new[1:size(x, 2)]
+    lik_new = 0.0
+    for i in 1:length(y)
+        lik_new += logpdf(Normal(y_new[i], 
+                                 exp(last(theta_new))), y[i])
+    end
+    for i in 1:length(theta_new)
+        lik_new += logpdf(Uniform(first(priors[i]), 
+                          last(priors[i])), theta_new[i])
+    end
+
+    # Acceptance probability
+    prob = min(exp(lik_new - lik_current), 1)
+
+    # Accept or reject the new sample
+    return rand() < prob ? theta_new : theta
+  end
+"
+)
+
+julia_command(
+  "
+  function get_samples_julia(iter, initial_values, y, x, 
+                             proposal_std, priors)
+    # Create a matrix to store samples
+    samples = Matrix{Float64}(undef, iter, size(x, 2) + 1)
+
+    # Set the first row to the initial values
+    samples[1, :] = initial_values
+
+    # Loop through iterations
+    for i in 2:iter
+        samples[i, :] = MCMC_iter_julia(samples[i - 1, :], y, 
+                                        x, proposal_std, priors)
+    end
+
+    return samples
+end"
+)
+```
+
+Here I'll see how long it takes to run 100,000 iterations, and will provide initial values for the algorithm, data, information about the proposal distributions, and prior distributions for the parameters, $\theta$.
+
+```{r, class="chunk-pink"}
+# R
+system.time(
+ posterior_R <- get_samples_R(iter = 100000, initial_values = c(rep(0, 4), 
+                                                                log(0.05)), 
+                              y, x, proposal_std = rep(0.05, 5),
+                              priors = list(c(-100, 100), c(-100, 100), 
+                                            c(-100, 100), c(-100, 100), 
+                                            c(-100, 100))) 
+)
+```
+
+In R, I will load the `Distributions` library. This is the same as `using Distributions` in Julia.
+
+```{r, class="chunk-pink"}
+# R
+julia_library("Distributions")
+```
+
+And then I will time the execution of the function. Note the `100000L` iterations argument!
+
+```{r, class="chunk-pink"}
+# R
+system.time(
+  posterior_julia <- julia_call("get_samples_julia", 100000L, 
+                                c(rep(0, 4), log(0.05)), 
+                                y, x, rep(0.05, 5),
+                                list(c(-100, 100), c(-100, 100), 
+                                     c(-100, 100), c(-100, 100), 
+                                     c(-100, 100)))
+)
+```
+
+### Larger software ecosystem
+
+Integrating R and Julia gives us access to the much larger R software ecosystem, while working in Julia.
+
+Let's say we're back programming in the Julia environment and want to visualize the posterior samples.
+
+We will first get the posterior samples and true values of $\theta$ from R.
+
+```{julia, class="chunk-blue"}
+# Julia
+# get posterior from R environment
+@rget posterior_julia;
+
+# get true theta from R environment
+@rget beta;
+@rget sd;
+```
+
+
+We'll then do some computation in Julia to thin the posterior samples and discard burn-in.
+
+```{julia, class="chunk-blue"}
+# Julia
+thin_int = 5;
+burnin = 10000;
+
+posterior_sub = posterior_julia[burnin:thin_int:end, :];
+```
+
+We can then use the `R""` string macro to wrap an R expression to get pretty traceplots of the posterior samples using the `wesanderson`, `tidyverse`, and `patchwork` R packages:
+
+
+```{julia, class="chunk-blue"}
+# Julia
+R"""
+  library(wesanderson)
+  library(tidyverse)
+  library(patchwork)
+
+  colors <- wes_palette('AsteroidCity1')
+  
+  get_plot <- function(data, param_name, value, index, color) {
+     ggplot() +
+       geom_line(aes(x = 1:nrow(data), y = data[, index]),
+                alpha = 0.6) +
+       labs(x = 'iteration', y = param_name) +
+       geom_hline(aes(yintercept = value), linetype = 'dashed', 
+                  color = colors[color], linewidth = 2) +
+       theme_minimal()
+  }
+
+  final_plot <- get_plot($posterior_sub, 'beta1', beta[1], 1, 1) +
+                get_plot($posterior_sub, 'beta2', beta[2], 2, 2) +
+                get_plot($posterior_sub, 'beta3', beta[3], 3, 3) +
+                get_plot($posterior_sub, 'beta4', beta[4], 4, 4) +
+                get_plot(exp($posterior_sub), 'sd', sd, 5, 5) + 
+                plot_layout(nrow = 2)
+  
+  ggsave('traceplot.png', plot=final_plot, width=7, height=4, dpi=300)
+  """;
+```
+
+![](traceplot.png)
+
+```{julia, class="chunk-blue"}
+# Julia
+summary = rcopy(R"""
+  library(MCMCvis)
+  colnames($posterior_sub) <- c('beta1', 'beta2', 'beta3', 'beta4', 'sd')
+  
+  # summarize posterior
+  MCMCsummary($posterior_sub)
+  """);
+summary
+```
+
+## Resources
+
+RCall: [https://juliainterop.github.io/RCall.jl/stable/gettingstarted/](https://juliainterop.github.io/RCall.jl/stable/gettingstarted/)
+
+JuliaCall: [https://hwborchers.github.io/](https://hwborchers.github.io/)
+
+[https://avt.im/blog/archive/r-packages-ggplot-in-julia/](https://hwborchers.github.io/)
+
+# Graphs in Julia
+
+![](graphs/graph_diagram.png)
+
+Here, we will represent this 23 x 23 landscape resistance raster as a weighted simple graph.
+
+![](graphs/resistance_map.png)
+
+## Constructing the graph
+
+```{julia}
+using CSV, DataFrames
+
+resistance = CSV.read("graphs/resistance_data.csv", 
+                      DataFrame; select=2:24);
+```
+
+```{julia}
+size(resistance)
+```
+
+We will use the library `Graphs` and `Metagraphs`. `Metagraphs` is a wrapper of `Graphs` that allows us to add properties like node/vertex and edge attributes.
+
+```{julia}
+using Graphs, MetaGraphs
+
+# create a MetaGraph - generates vertices
+mg = MetaGraph(SimpleGraph(size(resistance)[1] * size(resistance)[2]))
+```
+
+Check the number of edges:
+
+```{julia}
+# right now has no edges
+ne(mg)
+```
+
+Generate a dictionary that defines which nodes are neighbors (i.e., contain an edge).
+
+```{julia}
+# create data structure with neighbors
+neighbors_dict = Dict{Int, Vector{Int}}();
+
+# convert (row, col) to linear index
+linear_index = (r, c) -> (r - 1) * size(resistance)[2] + c;
+
+# iterate through each position in the 23 × 23 grid
+for r in 1:size(resistance)[1]
+    for c in 1:size(resistance)[2]
+        index = linear_index(r, c)
+        neighbors = Int[]
+
+        # add neighbors (if valid)
+        if r > 1   push!(neighbors, linear_index(r - 1, c)) end  # Above
+        if r < size(resistance)[1] push!(neighbors, 
+                                         linear_index(r + 1, c)) end  # Below
+        if c > 1   push!(neighbors, linear_index(r, c - 1)) end  # Left
+        if c < size(resistance)[2] push!(neighbors, 
+                                         linear_index(r, c + 1)) end  # Right
+
+        # store in dictionary
+        neighbors_dict[index] = neighbors
+    end
+end
+
+```
+
+Quickly inspect the neighbor dictionary:
+
+```{julia}
+length(neighbors_dict)
+```
+
+```{julia}
+neighbors_dict[124]
+```
+
+## Add weighted edges
+
+Then we will add edges based on the neighborhood structure and set the "resistance" between nodes as the edge weight.
+
+```{julia}
+# add weighted edges based on graph neighbors
+ncell = size(resistance)[1] * size(resistance)[2];
+
+for i in 1:ncell
+    # get row and column of cell
+    row1 = ceil(Int, i / sqrt(ncell))
+    col1 = Int(mod(i, sqrt(ncell)))
+    if col1 == 0
+            col1 = size(resistance)[2]
+        end
+    for j in neighbors_dict[i]
+        # get row and column of neighbor
+        row2 = ceil(Int, j / sqrt(ncell))
+        col2 = Int(mod(j, sqrt(ncell)))
+        if col2 == 0
+            col2 = size(resistance)[2]
+        end
+        
+        # calculate mean resistance between two nodes
+        mean_resist = mean([resistance[row1, col1], resistance[row2, col2]])
+        
+        # add edge and set weight
+        add_edge!(mg, i, j) # add edge
+        set_prop!(mg, i, j, :weight, 
+                  mean_resist) # add edge weight (resistance)
+    end
+end
+```
+
+
+```{julia}
+# now the graph has edges
+ne(mg)
+```
+
+
+## Graph plotting
+
+We will use the library `GraphPlot` to create a plot of the graph, and the libraries `Compose` and `Cairo` to save to a file. Unfortunately, I couldn't figure out how to color the edges by the weight. :(
+
+```{julia}
+using GraphPlot, Compose, Cairo
+
+p = gplot(mg.graph); 
+
+# save the plot to a PNG file
+Compose.draw(PNG("graphs/graph.png", 16cm, 16cm), p);
+```
+
+
+![](graphs/graph.png)
+
+## Graph calculations
+
+We can then perform graph calculations. Calculating the **least cost path** between the animal populations is a relevant calculation here.
+
+![](graphs/resistance_map.png)
+
+First I'll create a ncell x ncell "distance matrix" to describe the weights between nodes.
+
+```{julia}
+# create the distance matrix (distmx)
+distmx = zeros(Float64, ncell, ncell);
+for i in 1:ncell
+    for j in neighbors_dict[i]
+        distmx[i, j] = get_prop(mg, i, j, :weight)
+    end
+end
+```
+
+```{julia}
+distmx[10, 11]
+```
+
+```{julia}
+distmx[10, 12]
+```
+
+And then designate the source and target nodes:
+
+```{julia}
+# two points
+pts_x = [12, 9];
+pts_y = [23, 2];
+
+# source
+source = linear_index(pts_x[1], pts_y[1]);
+
+# destination
+target = linear_index(pts_x[2], pts_y[2]);
+```
+
+And then finally calculate the shortest path With Astar method in the `Graphs` library.
+
+```{julia}
+shortest_path = Graphs.a_star(mg.graph, source, target, distmx);
+shortest_path
+```
+
+I can then calculate the total resistance (i.e., sum of resistance across this least cost path):
+
+```{julia}
+total_resistance = [];
+
+# iterate over the edges in the shortest path
+for e in 1:length(shortest_path)
+    # add the resistance between the nodes from the distance matrix
+    push!(total_resistance,distmx[Graphs.src(shortest_path[e]),
+                                  Graphs.dst(shortest_path[e])])
+end
+
+sum(total_resistance)
+```
+
+Get the nodes in the path:
+
+```{julia}
+nodes_in_path = [];
+for e in 1:length(shortest_path)
+    push!(nodes_in_path, Graphs.src(shortest_path[e]))  
+    push!(nodes_in_path, Graphs.dst(shortest_path[e])) 
+end
+```
+
+Plot the graph and highlight the least cost path between source and target nodes:
+
+```{julia}
+using Colors
+
+node_colors = Vector{Colorant}(undef, ncell);
+# set all nodes to green initially
+for i in 1:ncell
+    node_colors[i] = colorant"lightseagreen"  
+end
+
+# highlight nodes in the shortest path by setting their color to orange
+for i in nodes_in_path
+    node_colors[i] = colorant"orange"
+end
+
+p2 = gplot(mg.graph, nodefillc=node_colors);
+
+# save the plot to a PNG file
+Compose.draw(PNG("graphs/graph_with_shortest_path_nodes.png", 
+                 16cm, 16cm), p2)
+```
+
+![](graphs/graph_with_shortest_path_nodes.png)
+
+## Node removal
+
+From a landscape management perspective, we want to figure out how removing habitat will affect connectivity.
+
+Here we can experiment with node removal:
+
+![](graphs/node_removal.png)
+
+We can remove a few nodes/vertices from the graph:
+
+```{julia}
+Graphs.rem_vertex!(mg, linear_index(6, 23));
+Graphs.rem_vertex!(mg, linear_index(6, 22));
+Graphs.rem_vertex!(mg, linear_index(7, 23));
+Graphs.rem_vertex!(mg, linear_index(7, 22));
+Graphs.rem_vertex!(mg, linear_index(8, 23));
+Graphs.rem_vertex!(mg, linear_index(8, 22));
+```
+
+Calculate the new shortest path with this new graph:
+
+```{julia}
+shortest_path2 = Graphs.a_star(mg.graph, source, target, distmx);
+```
+
+And then see how the resistance between source and target nodes changes:
+
+```{julia}
+total_resistance2 = [];
+
+# iterate over the edges in the shortest path
+for e in 1:length(shortest_path2)
+    # add the resistance between the nodes from the distance matrix
+    push!(total_resistance2, distmx[Graphs.src(shortest_path2[e]),
+                                    Graphs.dst(shortest_path2[e])])
+end
+
+sum(total_resistance2)
+```
+
+
+
+

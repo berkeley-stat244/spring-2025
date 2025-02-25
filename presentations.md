@@ -5,3 +5,6 @@ title: Student Presentations
  - [Testing (link to repository)](https://github.com/kirstenlandsiedel/Example)
  - [Plotting (link to repository)](https://github.com/alissagordon/stat244plottingpresentation)
  - [JIT compilation](./presentations/jit.html)
+ - [R and Julia](./presentations/R-Julia_integration.html)
+ - [Python and Julia](https://github.com/swasinger/python-julia-integration)
+ - [PyTorch](./presentations/pytorch.html)
