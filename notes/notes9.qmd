@@ -566,3 +566,41 @@ b = rand(n);
 ```{julia}
 @btime sA * b;
 ```
+
+## Optimization
+
+A good place to start for a variety of standard optimization algorithms is [Optim.jl](https://julianlsolvers.github.io/Optim.jl/stable/).
+
+The main function is `optimize()`, and you provide the optimization method you want to use as an argument. For example, with the famous Rosenbrock multi-modal test function:
+
+```{julia}
+using Optim
+
+rosenbrock(x) =  (1.0 - x[1])^2 + 100.0 * (x[2] - x[1]^2)^2
+
+result = optimize(rosenbrock, zeros(2), BFGS())
+```
+```{julia}
+Optim.minimizer(result)
+```
+```{julia}
+Optim.minimum(result)
+```
+
+Some of the optimizers include:
+
+ - Derivative-free
+   - Nelder-Mead
+   - Simulated annealing
+   - Particle swarm
+ - Gradient-based
+   - Adam and AdaMax
+   - Conjugate gradient
+   - Gradient-descent
+   - BFGS and LBFGS (limited-memory BFGS)
+ - Hessian-based
+   - Newton
+   - Newton with trust region (recommended by the package developers)
+   - Interior point Newton
+
+This collection is somewhat similar to the optimizers available with `optim` in R and with `scipy.optimize` in Python.

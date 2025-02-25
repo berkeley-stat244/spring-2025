@@ -794,6 +794,7 @@ Here, we will represent this 23 x 23 landscape resistance raster as a weighted s
 ## Constructing the graph
 
 ```{julia}
+#| eval: false
 using CSV, DataFrames
 
 resistance = CSV.read("graphs/resistance_data.csv", 
@@ -801,12 +802,14 @@ resistance = CSV.read("graphs/resistance_data.csv",
 ```
 
 ```{julia}
+#| eval: false
 size(resistance)
 ```
 
 We will use the library `Graphs` and `Metagraphs`. `Metagraphs` is a wrapper of `Graphs` that allows us to add properties like node/vertex and edge attributes.
 
 ```{julia}
+#| eval: false
 using Graphs, MetaGraphs
 
 # create a MetaGraph - generates vertices
@@ -816,6 +819,7 @@ mg = MetaGraph(SimpleGraph(size(resistance)[1] * size(resistance)[2]))
 Check the number of edges:
 
 ```{julia}
+#| eval: false
 # right now has no edges
 ne(mg)
 ```
@@ -823,6 +827,7 @@ ne(mg)
 Generate a dictionary that defines which nodes are neighbors (i.e., contain an edge).
 
 ```{julia}
+#| eval: false
 # create data structure with neighbors
 neighbors_dict = Dict{Int, Vector{Int}}();
 
@@ -853,10 +858,12 @@ end
 Quickly inspect the neighbor dictionary:
 
 ```{julia}
+#| eval: false
 length(neighbors_dict)
 ```
 
 ```{julia}
+#| eval: false
 neighbors_dict[124]
 ```
 
@@ -865,6 +872,7 @@ neighbors_dict[124]
 Then we will add edges based on the neighborhood structure and set the "resistance" between nodes as the edge weight.
 
 ```{julia}
+#| eval: false
 # add weighted edges based on graph neighbors
 ncell = size(resistance)[1] * size(resistance)[2];
 
@@ -896,6 +904,7 @@ end
 
 
 ```{julia}
+#| eval: false
 # now the graph has edges
 ne(mg)
 ```
@@ -906,6 +915,7 @@ ne(mg)
 We will use the library `GraphPlot` to create a plot of the graph, and the libraries `Compose` and `Cairo` to save to a file. Unfortunately, I couldn't figure out how to color the edges by the weight. :(
 
 ```{julia}
+#| eval: false
 using GraphPlot, Compose, Cairo
 
 p = gplot(mg.graph); 
@@ -915,17 +925,15 @@ Compose.draw(PNG("graphs/graph.png", 16cm, 16cm), p);
 ```
 
 
-![](graphs/graph.png)
-
 ## Graph calculations
 
 We can then perform graph calculations. Calculating the **least cost path** between the animal populations is a relevant calculation here.
 
-![](graphs/resistance_map.png)
 
 First I'll create a ncell x ncell "distance matrix" to describe the weights between nodes.
 
 ```{julia}
+#| eval: false
 # create the distance matrix (distmx)
 distmx = zeros(Float64, ncell, ncell);
 for i in 1:ncell
@@ -936,16 +944,19 @@ end
 ```
 
 ```{julia}
+#| eval: false
 distmx[10, 11]
 ```
 
 ```{julia}
+#| eval: false
 distmx[10, 12]
 ```
 
 And then designate the source and target nodes:
 
 ```{julia}
+#| eval: false
 # two points
 pts_x = [12, 9];
 pts_y = [23, 2];
@@ -960,6 +971,7 @@ target = linear_index(pts_x[2], pts_y[2]);
 And then finally calculate the shortest path With Astar method in the `Graphs` library.
 
 ```{julia}
+#| eval: false
 shortest_path = Graphs.a_star(mg.graph, source, target, distmx);
 shortest_path
 ```
@@ -967,6 +979,7 @@ shortest_path
 I can then calculate the total resistance (i.e., sum of resistance across this least cost path):
 
 ```{julia}
+#| eval: false
 total_resistance = [];
 
 # iterate over the edges in the shortest path
@@ -982,6 +995,7 @@ sum(total_resistance)
 Get the nodes in the path:
 
 ```{julia}
+#| eval: false
 nodes_in_path = [];
 for e in 1:length(shortest_path)
     push!(nodes_in_path, Graphs.src(shortest_path[e]))  
@@ -992,6 +1006,7 @@ end
 Plot the graph and highlight the least cost path between source and target nodes:
 
 ```{julia}
+#| eval: false
 using Colors
 
 node_colors = Vector{Colorant}(undef, ncell);
@@ -1012,7 +1027,6 @@ Compose.draw(PNG("graphs/graph_with_shortest_path_nodes.png",
                  16cm, 16cm), p2)
 ```
 
-![](graphs/graph_with_shortest_path_nodes.png)
 
 ## Node removal
 
@@ -1020,11 +1034,11 @@ From a landscape management perspective, we want to figure out how removing habi
 
 Here we can experiment with node removal:
 
-![](graphs/node_removal.png)
 
 We can remove a few nodes/vertices from the graph:
 
 ```{julia}
+#| eval: false
 Graphs.rem_vertex!(mg, linear_index(6, 23));
 Graphs.rem_vertex!(mg, linear_index(6, 22));
 Graphs.rem_vertex!(mg, linear_index(7, 23));
@@ -1036,12 +1050,14 @@ Graphs.rem_vertex!(mg, linear_index(8, 22));
 Calculate the new shortest path with this new graph:
 
 ```{julia}
+#| eval: false
 shortest_path2 = Graphs.a_star(mg.graph, source, target, distmx);
 ```
 
 And then see how the resistance between source and target nodes changes:
 
 ```{julia}
+#| eval: false
 total_resistance2 = [];
 
 # iterate over the edges in the shortest path
