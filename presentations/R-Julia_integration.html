@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.43">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -57,16 +57,49 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="R-Julia_integration_files/libs/clipboard/clipboard.min.js"></script>
-<script src="R-Julia_integration_files/libs/quarto-html/quarto.js"></script>
-<script src="R-Julia_integration_files/libs/quarto-html/popper.min.js"></script>
-<script src="R-Julia_integration_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="R-Julia_integration_files/libs/quarto-html/anchor.min.js"></script>
-<link href="R-Julia_integration_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="R-Julia_integration_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="R-Julia_integration_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="R-Julia_integration_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="R-Julia_integration_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-cd173fadfbc59501cc53580d670575f8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -98,15 +131,19 @@ window.Quarto = {
 };
 </script>
 
+<link rel="stylesheet" href="../assets/styles.css">
 <link rel="stylesheet" href="styles-R-Julia_integration.css">
 </head>
 
-<body>
+<body class="docked">
 
-<div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
-<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
-  <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
    
   <ul>
   <li><a href="#rjulia-interoperability" id="toc-rjulia-interoperability" class="nav-link active" data-scroll-target="#rjulia-interoperability">R/Julia Interoperability</a>
@@ -141,9 +178,12 @@ window.Quarto = {
   </ul></li>
   </ul>
 </nav>
-</div>
-<div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-</div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -267,7 +307,7 @@ window.Quarto = {
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the mean in R</span></span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>mean_a <span class="op">=</span> <span class="fu">rcopy</span>(R<span class="st">"mean(</span><span class="sc">$</span>a<span class="st">)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>-0.20275794049089146</code></pre>
+<pre><code>-0.13877863876023375</code></pre>
 </div>
 </div>
 </section>
@@ -298,7 +338,7 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Julia</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>iris[<span class="op">:</span>Species]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Ptr{IntSxp} @0x00000172dfc84570</code></pre>
+<pre><code>Ptr{IntSxp} @0x00005619f6348900</code></pre>
 </div>
 </div>
 <ol start="2" type="1">
@@ -542,7 +582,7 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R</span></span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_call</span>(<span class="st">"get_animal"</span>, <span class="dv">3</span>, <span class="at">aquatic =</span> <span class="fu">as.logical</span>(<span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "siphonophore" "nautilus"     "grey whale"  </code></pre>
+<pre><code>[1] "coho salmon" "limpet"      "nautilus"   </code></pre>
 </div>
 </div>
 <p>Note that keyword arguments can be separated by a comma, rather than a semicolon.</p>
@@ -574,7 +614,7 @@ window.Quarto = {
 <span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   0.04    0.00    0.05 </code></pre>
+  0.062   0.024   0.087 </code></pre>
 </div>
 </div>
 <div class="cell chunk-pink">
@@ -584,7 +624,7 @@ window.Quarto = {
 <span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   0.09    0.03    0.14 </code></pre>
+  0.132   0.044   0.177 </code></pre>
 </div>
 </div>
 <ol start="4" type="1">
@@ -676,14 +716,14 @@ window.Quarto = {
 <span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="co"># option 1</span></span>
 <span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_call</span>(<span class="st">"rand"</span>, <span class="fu">as.integer</span>(<span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 0.51625312 0.02585834 0.29051553 0.60824865 0.10770622 0.28495983
- [7] 0.65681710 0.14033901 0.49021188 0.90007720</code></pre>
+<pre><code> [1] 0.51622848 0.84262731 0.34129541 0.93025432 0.06759346 0.24081745
+ [7] 0.97309952 0.61109445 0.09996454 0.84935517</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="co"># option 2</span></span>
 <span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a><span class="fu">julia_call</span>(<span class="st">"rand"</span>, <span class="dv">10</span>L)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 0.14827002 0.19762634 0.13970935 0.87105501 0.73232609 0.33377644
- [7] 0.03046948 0.61015226 0.88733685 0.37676666</code></pre>
+<pre><code> [1] 0.43617303 0.08442672 0.74123490 0.89668828 0.55354332 0.73677514
+ [7] 0.74437974 0.34326656 0.51127525 0.40824412</code></pre>
 </div>
 </div>
 </section>
@@ -866,7 +906,7 @@ Y = \beta_0 + \beta_1X_1 + \beta_2X_2 + \beta_3X_3  + \beta_4X_4 + \epsilon
 <span id="cb91-9"><a href="#cb91-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   8.65    0.11    8.87 </code></pre>
+ 13.667   0.012  13.688 </code></pre>
 </div>
 </div>
 <p>In R, I will load the <code>Distributions</code> library. This is the same as <code>using Distributions</code> in Julia.</p>
@@ -890,7 +930,7 @@ Y = \beta_0 + \beta_1X_1 + \beta_2X_2 + \beta_3X_3  + \beta_4X_4 + \epsilon
 <span id="cb94-9"><a href="#cb94-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.28    0.06    1.38 </code></pre>
+  1.671   0.040   1.711 </code></pre>
 </div>
 </div>
 </section>
@@ -959,14 +999,14 @@ Y = \beta_0 + \beta_1X_1 + \beta_2X_2 + \beta_3X_3  + \beta_4X_4 + \epsilon
 <span id="cb99-9"><a href="#cb99-9" aria-hidden="true" tabindex="-1"></a>summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>5×7 DataFrame
- Row │ mean       sd          2_5%        50%         97_5%      Rhat     n_ef ⋯
-     │ Float64    Float64     Float64     Float64     Float64    Bool?    Bool ⋯
+ Row │ mean        sd          2_5%        50%         97_5%      Rhat     n_e ⋯
+     │ Float64     Float64     Float64     Float64     Float64    Bool?    Boo ⋯
 ─────┼──────────────────────────────────────────────────────────────────────────
-   1 │  0.292755  0.00989933   0.274571    0.291957    0.312734  missing  miss ⋯
-   2 │  0.092212  0.00998995   0.0700671   0.0918752   0.111494  missing  miss
-   3 │ -0.396524  0.00943818  -0.415443   -0.39558    -0.377874  missing  miss
-   4 │  0.913608  0.0100846    0.892955    0.91464     0.933299  missing  miss
-   5 │ -2.37249   0.0715271   -2.50642    -2.37032    -2.21751   missing  miss ⋯
+   1 │  0.286574   0.00854313   0.269641    0.286493    0.302327  missing  mis ⋯
+   2 │  0.0880451  0.00979923   0.0685494   0.0890485   0.105717  missing  mis
+   3 │ -0.389892   0.00830685  -0.404643   -0.389801   -0.37145   missing  mis
+   4 │  0.907059   0.00875903   0.889855    0.907852    0.924886  missing  mis
+   5 │ -2.39868    0.07        -2.52381    -2.39383    -2.26059   missing  mis ⋯
                                                                 1 column omitted</code></pre>
 </div>
 </div>
@@ -994,278 +1034,218 @@ Y = \beta_0 + \beta_1X_1 + \beta_2X_2 + \beta_3X_3  + \beta_4X_4 + \epsilon
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb102"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="fu">size</span>(resistance)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>(23, 23)</code></pre>
-</div>
 </div>
 <p>We will use the library <code>Graphs</code> and <code>Metagraphs</code>. <code>Metagraphs</code> is a wrapper of <code>Graphs</code> that allows us to add properties like node/vertex and edge attributes.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Graphs</span>, <span class="bu">MetaGraphs</span></span>
-<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a><span class="co"># create a MetaGraph - generates vertices</span></span>
-<span id="cb104-4"><a href="#cb104-4" aria-hidden="true" tabindex="-1"></a>mg <span class="op">=</span> <span class="fu">MetaGraph</span>(<span class="fu">SimpleGraph</span>(<span class="fu">size</span>(resistance)[<span class="fl">1</span>] <span class="op">*</span> <span class="fu">size</span>(resistance)[<span class="fl">2</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>{529, 0} undirected Int64 metagraph with Float64 weights defined by :weight (default weight 1.0)</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Graphs</span>, <span class="bu">MetaGraphs</span></span>
+<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb103-3"><a href="#cb103-3" aria-hidden="true" tabindex="-1"></a><span class="co"># create a MetaGraph - generates vertices</span></span>
+<span id="cb103-4"><a href="#cb103-4" aria-hidden="true" tabindex="-1"></a>mg <span class="op">=</span> <span class="fu">MetaGraph</span>(<span class="fu">SimpleGraph</span>(<span class="fu">size</span>(resistance)[<span class="fl">1</span>] <span class="op">*</span> <span class="fu">size</span>(resistance)[<span class="fl">2</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Check the number of edges:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="co"># right now has no edges</span></span>
-<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ne</span>(mg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>0</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="co"># right now has no edges</span></span>
+<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ne</span>(mg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Generate a dictionary that defines which nodes are neighbors (i.e., contain an edge).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create data structure with neighbors</span></span>
-<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a>neighbors_dict <span class="op">=</span> <span class="fu">Dict</span><span class="dt">{Int, Vector{Int}}</span>();</span>
-<span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-4"><a href="#cb108-4" aria-hidden="true" tabindex="-1"></a><span class="co"># convert (row, col) to linear index</span></span>
-<span id="cb108-5"><a href="#cb108-5" aria-hidden="true" tabindex="-1"></a>linear_index <span class="op">=</span> (r, c) <span class="op">-&gt;</span> (r <span class="op">-</span> <span class="fl">1</span>) <span class="op">*</span> <span class="fu">size</span>(resistance)[<span class="fl">2</span>] <span class="op">+</span> c;</span>
-<span id="cb108-6"><a href="#cb108-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-7"><a href="#cb108-7" aria-hidden="true" tabindex="-1"></a><span class="co"># iterate through each position in the 23 × 23 grid</span></span>
-<span id="cb108-8"><a href="#cb108-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> r <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu">size</span>(resistance)[<span class="fl">1</span>]</span>
-<span id="cb108-9"><a href="#cb108-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> c <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu">size</span>(resistance)[<span class="fl">2</span>]</span>
-<span id="cb108-10"><a href="#cb108-10" aria-hidden="true" tabindex="-1"></a>        index <span class="op">=</span> <span class="fu">linear_index</span>(r, c)</span>
-<span id="cb108-11"><a href="#cb108-11" aria-hidden="true" tabindex="-1"></a>        neighbors <span class="op">=</span> <span class="dt">Int</span>[]</span>
-<span id="cb108-12"><a href="#cb108-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-13"><a href="#cb108-13" aria-hidden="true" tabindex="-1"></a>        <span class="co"># add neighbors (if valid)</span></span>
-<span id="cb108-14"><a href="#cb108-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> r <span class="op">&gt;</span> <span class="fl">1</span>   <span class="fu">push!</span>(neighbors, <span class="fu">linear_index</span>(r <span class="op">-</span> <span class="fl">1</span>, c)) <span class="cf">end</span>  <span class="co"># Above</span></span>
-<span id="cb108-15"><a href="#cb108-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> r <span class="op">&lt;</span> <span class="fu">size</span>(resistance)[<span class="fl">1</span>] <span class="fu">push!</span>(neighbors, </span>
-<span id="cb108-16"><a href="#cb108-16" aria-hidden="true" tabindex="-1"></a>                                         <span class="fu">linear_index</span>(r <span class="op">+</span> <span class="fl">1</span>, c)) <span class="cf">end</span>  <span class="co"># Below</span></span>
-<span id="cb108-17"><a href="#cb108-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> c <span class="op">&gt;</span> <span class="fl">1</span>   <span class="fu">push!</span>(neighbors, <span class="fu">linear_index</span>(r, c <span class="op">-</span> <span class="fl">1</span>)) <span class="cf">end</span>  <span class="co"># Left</span></span>
-<span id="cb108-18"><a href="#cb108-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> c <span class="op">&lt;</span> <span class="fu">size</span>(resistance)[<span class="fl">2</span>] <span class="fu">push!</span>(neighbors, </span>
-<span id="cb108-19"><a href="#cb108-19" aria-hidden="true" tabindex="-1"></a>                                         <span class="fu">linear_index</span>(r, c <span class="op">+</span> <span class="fl">1</span>)) <span class="cf">end</span>  <span class="co"># Right</span></span>
-<span id="cb108-20"><a href="#cb108-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-21"><a href="#cb108-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># store in dictionary</span></span>
-<span id="cb108-22"><a href="#cb108-22" aria-hidden="true" tabindex="-1"></a>        neighbors_dict[index] <span class="op">=</span> neighbors</span>
-<span id="cb108-23"><a href="#cb108-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb108-24"><a href="#cb108-24" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create data structure with neighbors</span></span>
+<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a>neighbors_dict <span class="op">=</span> <span class="fu">Dict</span><span class="dt">{Int, Vector{Int}}</span>();</span>
+<span id="cb105-3"><a href="#cb105-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb105-4"><a href="#cb105-4" aria-hidden="true" tabindex="-1"></a><span class="co"># convert (row, col) to linear index</span></span>
+<span id="cb105-5"><a href="#cb105-5" aria-hidden="true" tabindex="-1"></a>linear_index <span class="op">=</span> (r, c) <span class="op">-&gt;</span> (r <span class="op">-</span> <span class="fl">1</span>) <span class="op">*</span> <span class="fu">size</span>(resistance)[<span class="fl">2</span>] <span class="op">+</span> c;</span>
+<span id="cb105-6"><a href="#cb105-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb105-7"><a href="#cb105-7" aria-hidden="true" tabindex="-1"></a><span class="co"># iterate through each position in the 23 × 23 grid</span></span>
+<span id="cb105-8"><a href="#cb105-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> r <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu">size</span>(resistance)[<span class="fl">1</span>]</span>
+<span id="cb105-9"><a href="#cb105-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> c <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu">size</span>(resistance)[<span class="fl">2</span>]</span>
+<span id="cb105-10"><a href="#cb105-10" aria-hidden="true" tabindex="-1"></a>        index <span class="op">=</span> <span class="fu">linear_index</span>(r, c)</span>
+<span id="cb105-11"><a href="#cb105-11" aria-hidden="true" tabindex="-1"></a>        neighbors <span class="op">=</span> <span class="dt">Int</span>[]</span>
+<span id="cb105-12"><a href="#cb105-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb105-13"><a href="#cb105-13" aria-hidden="true" tabindex="-1"></a>        <span class="co"># add neighbors (if valid)</span></span>
+<span id="cb105-14"><a href="#cb105-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> r <span class="op">&gt;</span> <span class="fl">1</span>   <span class="fu">push!</span>(neighbors, <span class="fu">linear_index</span>(r <span class="op">-</span> <span class="fl">1</span>, c)) <span class="cf">end</span>  <span class="co"># Above</span></span>
+<span id="cb105-15"><a href="#cb105-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> r <span class="op">&lt;</span> <span class="fu">size</span>(resistance)[<span class="fl">1</span>] <span class="fu">push!</span>(neighbors, </span>
+<span id="cb105-16"><a href="#cb105-16" aria-hidden="true" tabindex="-1"></a>                                         <span class="fu">linear_index</span>(r <span class="op">+</span> <span class="fl">1</span>, c)) <span class="cf">end</span>  <span class="co"># Below</span></span>
+<span id="cb105-17"><a href="#cb105-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> c <span class="op">&gt;</span> <span class="fl">1</span>   <span class="fu">push!</span>(neighbors, <span class="fu">linear_index</span>(r, c <span class="op">-</span> <span class="fl">1</span>)) <span class="cf">end</span>  <span class="co"># Left</span></span>
+<span id="cb105-18"><a href="#cb105-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> c <span class="op">&lt;</span> <span class="fu">size</span>(resistance)[<span class="fl">2</span>] <span class="fu">push!</span>(neighbors, </span>
+<span id="cb105-19"><a href="#cb105-19" aria-hidden="true" tabindex="-1"></a>                                         <span class="fu">linear_index</span>(r, c <span class="op">+</span> <span class="fl">1</span>)) <span class="cf">end</span>  <span class="co"># Right</span></span>
+<span id="cb105-20"><a href="#cb105-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb105-21"><a href="#cb105-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># store in dictionary</span></span>
+<span id="cb105-22"><a href="#cb105-22" aria-hidden="true" tabindex="-1"></a>        neighbors_dict[index] <span class="op">=</span> neighbors</span>
+<span id="cb105-23"><a href="#cb105-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb105-24"><a href="#cb105-24" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Quickly inspect the neighbor dictionary:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(neighbors_dict)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>529</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(neighbors_dict)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a>neighbors_dict[<span class="fl">124</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>4-element Vector{Int64}:
- 101
- 147
- 123
- 125</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>neighbors_dict[<span class="fl">124</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="add-weighted-edges" class="level2">
 <h2 class="anchored" data-anchor-id="add-weighted-edges">Add weighted edges</h2>
 <p>Then we will add edges based on the neighborhood structure and set the “resistance” between nodes as the edge weight.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="co"># add weighted edges based on graph neighbors</span></span>
-<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a>ncell <span class="op">=</span> <span class="fu">size</span>(resistance)[<span class="fl">1</span>] <span class="op">*</span> <span class="fu">size</span>(resistance)[<span class="fl">2</span>];</span>
-<span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-4"><a href="#cb113-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>ncell</span>
-<span id="cb113-5"><a href="#cb113-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># get row and column of cell</span></span>
-<span id="cb113-6"><a href="#cb113-6" aria-hidden="true" tabindex="-1"></a>    row1 <span class="op">=</span> <span class="fu">ceil</span>(<span class="dt">Int</span>, i <span class="op">/</span> <span class="fu">sqrt</span>(ncell))</span>
-<span id="cb113-7"><a href="#cb113-7" aria-hidden="true" tabindex="-1"></a>    col1 <span class="op">=</span> <span class="fu">Int</span>(<span class="fu">mod</span>(i, <span class="fu">sqrt</span>(ncell)))</span>
-<span id="cb113-8"><a href="#cb113-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> col1 <span class="op">==</span> <span class="fl">0</span></span>
-<span id="cb113-9"><a href="#cb113-9" aria-hidden="true" tabindex="-1"></a>            col1 <span class="op">=</span> <span class="fu">size</span>(resistance)[<span class="fl">2</span>]</span>
-<span id="cb113-10"><a href="#cb113-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
-<span id="cb113-11"><a href="#cb113-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> neighbors_dict[i]</span>
-<span id="cb113-12"><a href="#cb113-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># get row and column of neighbor</span></span>
-<span id="cb113-13"><a href="#cb113-13" aria-hidden="true" tabindex="-1"></a>        row2 <span class="op">=</span> <span class="fu">ceil</span>(<span class="dt">Int</span>, j <span class="op">/</span> <span class="fu">sqrt</span>(ncell))</span>
-<span id="cb113-14"><a href="#cb113-14" aria-hidden="true" tabindex="-1"></a>        col2 <span class="op">=</span> <span class="fu">Int</span>(<span class="fu">mod</span>(j, <span class="fu">sqrt</span>(ncell)))</span>
-<span id="cb113-15"><a href="#cb113-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> col2 <span class="op">==</span> <span class="fl">0</span></span>
-<span id="cb113-16"><a href="#cb113-16" aria-hidden="true" tabindex="-1"></a>            col2 <span class="op">=</span> <span class="fu">size</span>(resistance)[<span class="fl">2</span>]</span>
-<span id="cb113-17"><a href="#cb113-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
-<span id="cb113-18"><a href="#cb113-18" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb113-19"><a href="#cb113-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># calculate mean resistance between two nodes</span></span>
-<span id="cb113-20"><a href="#cb113-20" aria-hidden="true" tabindex="-1"></a>        mean_resist <span class="op">=</span> <span class="fu">mean</span>([resistance[row1, col1], resistance[row2, col2]])</span>
-<span id="cb113-21"><a href="#cb113-21" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb113-22"><a href="#cb113-22" aria-hidden="true" tabindex="-1"></a>        <span class="co"># add edge and set weight</span></span>
-<span id="cb113-23"><a href="#cb113-23" aria-hidden="true" tabindex="-1"></a>        <span class="fu">add_edge!</span>(mg, i, j) <span class="co"># add edge</span></span>
-<span id="cb113-24"><a href="#cb113-24" aria-hidden="true" tabindex="-1"></a>        <span class="fu">set_prop!</span>(mg, i, j, <span class="op">:</span>weight, </span>
-<span id="cb113-25"><a href="#cb113-25" aria-hidden="true" tabindex="-1"></a>                  mean_resist) <span class="co"># add edge weight (resistance)</span></span>
-<span id="cb113-26"><a href="#cb113-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb113-27"><a href="#cb113-27" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="co"># add weighted edges based on graph neighbors</span></span>
+<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a>ncell <span class="op">=</span> <span class="fu">size</span>(resistance)[<span class="fl">1</span>] <span class="op">*</span> <span class="fu">size</span>(resistance)[<span class="fl">2</span>];</span>
+<span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-4"><a href="#cb108-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>ncell</span>
+<span id="cb108-5"><a href="#cb108-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># get row and column of cell</span></span>
+<span id="cb108-6"><a href="#cb108-6" aria-hidden="true" tabindex="-1"></a>    row1 <span class="op">=</span> <span class="fu">ceil</span>(<span class="dt">Int</span>, i <span class="op">/</span> <span class="fu">sqrt</span>(ncell))</span>
+<span id="cb108-7"><a href="#cb108-7" aria-hidden="true" tabindex="-1"></a>    col1 <span class="op">=</span> <span class="fu">Int</span>(<span class="fu">mod</span>(i, <span class="fu">sqrt</span>(ncell)))</span>
+<span id="cb108-8"><a href="#cb108-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> col1 <span class="op">==</span> <span class="fl">0</span></span>
+<span id="cb108-9"><a href="#cb108-9" aria-hidden="true" tabindex="-1"></a>            col1 <span class="op">=</span> <span class="fu">size</span>(resistance)[<span class="fl">2</span>]</span>
+<span id="cb108-10"><a href="#cb108-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb108-11"><a href="#cb108-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> neighbors_dict[i]</span>
+<span id="cb108-12"><a href="#cb108-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># get row and column of neighbor</span></span>
+<span id="cb108-13"><a href="#cb108-13" aria-hidden="true" tabindex="-1"></a>        row2 <span class="op">=</span> <span class="fu">ceil</span>(<span class="dt">Int</span>, j <span class="op">/</span> <span class="fu">sqrt</span>(ncell))</span>
+<span id="cb108-14"><a href="#cb108-14" aria-hidden="true" tabindex="-1"></a>        col2 <span class="op">=</span> <span class="fu">Int</span>(<span class="fu">mod</span>(j, <span class="fu">sqrt</span>(ncell)))</span>
+<span id="cb108-15"><a href="#cb108-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> col2 <span class="op">==</span> <span class="fl">0</span></span>
+<span id="cb108-16"><a href="#cb108-16" aria-hidden="true" tabindex="-1"></a>            col2 <span class="op">=</span> <span class="fu">size</span>(resistance)[<span class="fl">2</span>]</span>
+<span id="cb108-17"><a href="#cb108-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb108-18"><a href="#cb108-18" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb108-19"><a href="#cb108-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># calculate mean resistance between two nodes</span></span>
+<span id="cb108-20"><a href="#cb108-20" aria-hidden="true" tabindex="-1"></a>        mean_resist <span class="op">=</span> <span class="fu">mean</span>([resistance[row1, col1], resistance[row2, col2]])</span>
+<span id="cb108-21"><a href="#cb108-21" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb108-22"><a href="#cb108-22" aria-hidden="true" tabindex="-1"></a>        <span class="co"># add edge and set weight</span></span>
+<span id="cb108-23"><a href="#cb108-23" aria-hidden="true" tabindex="-1"></a>        <span class="fu">add_edge!</span>(mg, i, j) <span class="co"># add edge</span></span>
+<span id="cb108-24"><a href="#cb108-24" aria-hidden="true" tabindex="-1"></a>        <span class="fu">set_prop!</span>(mg, i, j, <span class="op">:</span>weight, </span>
+<span id="cb108-25"><a href="#cb108-25" aria-hidden="true" tabindex="-1"></a>                  mean_resist) <span class="co"># add edge weight (resistance)</span></span>
+<span id="cb108-26"><a href="#cb108-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb108-27"><a href="#cb108-27" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now the graph has edges</span></span>
-<span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ne</span>(mg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>1012</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now the graph has edges</span></span>
+<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ne</span>(mg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="graph-plotting" class="level2">
 <h2 class="anchored" data-anchor-id="graph-plotting">Graph plotting</h2>
 <p>We will use the library <code>GraphPlot</code> to create a plot of the graph, and the libraries <code>Compose</code> and <code>Cairo</code> to save to a file. Unfortunately, I couldn’t figure out how to color the edges by the weight. :(</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">GraphPlot</span>, <span class="bu">Compose</span>, <span class="bu">Cairo</span></span>
-<span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb116-3"><a href="#cb116-3" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fu">gplot</span>(mg.graph); </span>
-<span id="cb116-4"><a href="#cb116-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb116-5"><a href="#cb116-5" aria-hidden="true" tabindex="-1"></a><span class="co"># save the plot to a PNG file</span></span>
-<span id="cb116-6"><a href="#cb116-6" aria-hidden="true" tabindex="-1"></a>Compose.<span class="fu">draw</span>(<span class="fu">PNG</span>(<span class="st">"graphs/graph.png"</span>, <span class="fl">16</span>cm, <span class="fl">16</span>cm), p);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">GraphPlot</span>, <span class="bu">Compose</span>, <span class="bu">Cairo</span></span>
+<span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="fu">gplot</span>(mg.graph); </span>
+<span id="cb110-4"><a href="#cb110-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb110-5"><a href="#cb110-5" aria-hidden="true" tabindex="-1"></a><span class="co"># save the plot to a PNG file</span></span>
+<span id="cb110-6"><a href="#cb110-6" aria-hidden="true" tabindex="-1"></a>Compose.<span class="fu">draw</span>(<span class="fu">PNG</span>(<span class="st">"graphs/graph.png"</span>, <span class="fl">16</span>cm, <span class="fl">16</span>cm), p);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><img src="graphs/graph.png" class="img-fluid"></p>
 </section>
 <section id="graph-calculations" class="level2">
 <h2 class="anchored" data-anchor-id="graph-calculations">Graph calculations</h2>
 <p>We can then perform graph calculations. Calculating the <strong>least cost path</strong> between the animal populations is a relevant calculation here.</p>
-<p><img src="graphs/resistance_map.png" class="img-fluid"></p>
 <p>First I’ll create a ncell x ncell “distance matrix” to describe the weights between nodes.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create the distance matrix (distmx)</span></span>
-<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a>distmx <span class="op">=</span> <span class="fu">zeros</span>(<span class="dt">Float64</span>, ncell, ncell);</span>
-<span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>ncell</span>
-<span id="cb117-4"><a href="#cb117-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> neighbors_dict[i]</span>
-<span id="cb117-5"><a href="#cb117-5" aria-hidden="true" tabindex="-1"></a>        distmx[i, j] <span class="op">=</span> <span class="fu">get_prop</span>(mg, i, j, <span class="op">:</span>weight)</span>
-<span id="cb117-6"><a href="#cb117-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb117-7"><a href="#cb117-7" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create the distance matrix (distmx)</span></span>
+<span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a>distmx <span class="op">=</span> <span class="fu">zeros</span>(<span class="dt">Float64</span>, ncell, ncell);</span>
+<span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>ncell</span>
+<span id="cb111-4"><a href="#cb111-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> neighbors_dict[i]</span>
+<span id="cb111-5"><a href="#cb111-5" aria-hidden="true" tabindex="-1"></a>        distmx[i, j] <span class="op">=</span> <span class="fu">get_prop</span>(mg, i, j, <span class="op">:</span>weight)</span>
+<span id="cb111-6"><a href="#cb111-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb111-7"><a href="#cb111-7" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a>distmx[<span class="fl">10</span>, <span class="fl">11</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>0.26125379872148</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a>distmx[<span class="fl">10</span>, <span class="fl">11</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a>distmx[<span class="fl">10</span>, <span class="fl">12</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>0.0</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a>distmx[<span class="fl">10</span>, <span class="fl">12</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And then designate the source and target nodes:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="co"># two points</span></span>
-<span id="cb122-2"><a href="#cb122-2" aria-hidden="true" tabindex="-1"></a>pts_x <span class="op">=</span> [<span class="fl">12</span>, <span class="fl">9</span>];</span>
-<span id="cb122-3"><a href="#cb122-3" aria-hidden="true" tabindex="-1"></a>pts_y <span class="op">=</span> [<span class="fl">23</span>, <span class="fl">2</span>];</span>
-<span id="cb122-4"><a href="#cb122-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb122-5"><a href="#cb122-5" aria-hidden="true" tabindex="-1"></a><span class="co"># source</span></span>
-<span id="cb122-6"><a href="#cb122-6" aria-hidden="true" tabindex="-1"></a>source <span class="op">=</span> <span class="fu">linear_index</span>(pts_x[<span class="fl">1</span>], pts_y[<span class="fl">1</span>]);</span>
-<span id="cb122-7"><a href="#cb122-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb122-8"><a href="#cb122-8" aria-hidden="true" tabindex="-1"></a><span class="co"># destination</span></span>
-<span id="cb122-9"><a href="#cb122-9" aria-hidden="true" tabindex="-1"></a>target <span class="op">=</span> <span class="fu">linear_index</span>(pts_x[<span class="fl">2</span>], pts_y[<span class="fl">2</span>]);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="co"># two points</span></span>
+<span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a>pts_x <span class="op">=</span> [<span class="fl">12</span>, <span class="fl">9</span>];</span>
+<span id="cb114-3"><a href="#cb114-3" aria-hidden="true" tabindex="-1"></a>pts_y <span class="op">=</span> [<span class="fl">23</span>, <span class="fl">2</span>];</span>
+<span id="cb114-4"><a href="#cb114-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-5"><a href="#cb114-5" aria-hidden="true" tabindex="-1"></a><span class="co"># source</span></span>
+<span id="cb114-6"><a href="#cb114-6" aria-hidden="true" tabindex="-1"></a>source <span class="op">=</span> <span class="fu">linear_index</span>(pts_x[<span class="fl">1</span>], pts_y[<span class="fl">1</span>]);</span>
+<span id="cb114-7"><a href="#cb114-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-8"><a href="#cb114-8" aria-hidden="true" tabindex="-1"></a><span class="co"># destination</span></span>
+<span id="cb114-9"><a href="#cb114-9" aria-hidden="true" tabindex="-1"></a>target <span class="op">=</span> <span class="fu">linear_index</span>(pts_x[<span class="fl">2</span>], pts_y[<span class="fl">2</span>]);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And then finally calculate the shortest path With Astar method in the <code>Graphs</code> library.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb123"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a>shortest_path <span class="op">=</span> Graphs.<span class="fu">a_star</span>(mg.graph, source, target, distmx);</span>
-<span id="cb123-2"><a href="#cb123-2" aria-hidden="true" tabindex="-1"></a>shortest_path</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>36-element Vector{Graphs.SimpleGraphs.SimpleEdge{Int64}}:
- Edge 276 =&gt; 253
- Edge 253 =&gt; 230
- Edge 230 =&gt; 207
- Edge 207 =&gt; 184
- Edge 184 =&gt; 161
- Edge 161 =&gt; 160
- Edge 160 =&gt; 159
- Edge 159 =&gt; 158
- Edge 158 =&gt; 157
- Edge 157 =&gt; 156
- ⋮
- Edge 75 =&gt; 74
- Edge 74 =&gt; 97
- Edge 97 =&gt; 96
- Edge 96 =&gt; 119
- Edge 119 =&gt; 118
- Edge 118 =&gt; 141
- Edge 141 =&gt; 140
- Edge 140 =&gt; 163
- Edge 163 =&gt; 186</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb115"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a>shortest_path <span class="op">=</span> Graphs.<span class="fu">a_star</span>(mg.graph, source, target, distmx);</span>
+<span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a>shortest_path</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>I can then calculate the total resistance (i.e., sum of resistance across this least cost path):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb125"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb125-1"><a href="#cb125-1" aria-hidden="true" tabindex="-1"></a>total_resistance <span class="op">=</span> [];</span>
-<span id="cb125-2"><a href="#cb125-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb125-3"><a href="#cb125-3" aria-hidden="true" tabindex="-1"></a><span class="co"># iterate over the edges in the shortest path</span></span>
-<span id="cb125-4"><a href="#cb125-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="cn">e</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu">length</span>(shortest_path)</span>
-<span id="cb125-5"><a href="#cb125-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># add the resistance between the nodes from the distance matrix</span></span>
-<span id="cb125-6"><a href="#cb125-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">push!</span>(total_resistance,distmx[Graphs.<span class="fu">src</span>(shortest_path[<span class="cn">e</span>]),</span>
-<span id="cb125-7"><a href="#cb125-7" aria-hidden="true" tabindex="-1"></a>                                  Graphs.<span class="fu">dst</span>(shortest_path[<span class="cn">e</span>])])</span>
-<span id="cb125-8"><a href="#cb125-8" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
-<span id="cb125-9"><a href="#cb125-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb125-10"><a href="#cb125-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(total_resistance)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>17.49577009906619</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a>total_resistance <span class="op">=</span> [];</span>
+<span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-3"><a href="#cb116-3" aria-hidden="true" tabindex="-1"></a><span class="co"># iterate over the edges in the shortest path</span></span>
+<span id="cb116-4"><a href="#cb116-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="cn">e</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu">length</span>(shortest_path)</span>
+<span id="cb116-5"><a href="#cb116-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># add the resistance between the nodes from the distance matrix</span></span>
+<span id="cb116-6"><a href="#cb116-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">push!</span>(total_resistance,distmx[Graphs.<span class="fu">src</span>(shortest_path[<span class="cn">e</span>]),</span>
+<span id="cb116-7"><a href="#cb116-7" aria-hidden="true" tabindex="-1"></a>                                  Graphs.<span class="fu">dst</span>(shortest_path[<span class="cn">e</span>])])</span>
+<span id="cb116-8"><a href="#cb116-8" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb116-9"><a href="#cb116-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-10"><a href="#cb116-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(total_resistance)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Get the nodes in the path:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb127"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb127-1"><a href="#cb127-1" aria-hidden="true" tabindex="-1"></a>nodes_in_path <span class="op">=</span> [];</span>
-<span id="cb127-2"><a href="#cb127-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="cn">e</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu">length</span>(shortest_path)</span>
-<span id="cb127-3"><a href="#cb127-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">push!</span>(nodes_in_path, Graphs.<span class="fu">src</span>(shortest_path[<span class="cn">e</span>]))  </span>
-<span id="cb127-4"><a href="#cb127-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">push!</span>(nodes_in_path, Graphs.<span class="fu">dst</span>(shortest_path[<span class="cn">e</span>])) </span>
-<span id="cb127-5"><a href="#cb127-5" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a>nodes_in_path <span class="op">=</span> [];</span>
+<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="cn">e</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu">length</span>(shortest_path)</span>
+<span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">push!</span>(nodes_in_path, Graphs.<span class="fu">src</span>(shortest_path[<span class="cn">e</span>]))  </span>
+<span id="cb117-4"><a href="#cb117-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">push!</span>(nodes_in_path, Graphs.<span class="fu">dst</span>(shortest_path[<span class="cn">e</span>])) </span>
+<span id="cb117-5"><a href="#cb117-5" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Plot the graph and highlight the least cost path between source and target nodes:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb128"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Colors</span></span>
-<span id="cb128-2"><a href="#cb128-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-3"><a href="#cb128-3" aria-hidden="true" tabindex="-1"></a>node_colors <span class="op">=</span> <span class="fu">Vector</span><span class="dt">{Colorant}</span>(<span class="cn">undef</span>, ncell);</span>
-<span id="cb128-4"><a href="#cb128-4" aria-hidden="true" tabindex="-1"></a><span class="co"># set all nodes to green initially</span></span>
-<span id="cb128-5"><a href="#cb128-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>ncell</span>
-<span id="cb128-6"><a href="#cb128-6" aria-hidden="true" tabindex="-1"></a>    node_colors[i] <span class="op">=</span> colorant<span class="st">"lightseagreen"</span>  </span>
-<span id="cb128-7"><a href="#cb128-7" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
-<span id="cb128-8"><a href="#cb128-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-9"><a href="#cb128-9" aria-hidden="true" tabindex="-1"></a><span class="co"># highlight nodes in the shortest path by setting their color to orange</span></span>
-<span id="cb128-10"><a href="#cb128-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> nodes_in_path</span>
-<span id="cb128-11"><a href="#cb128-11" aria-hidden="true" tabindex="-1"></a>    node_colors[i] <span class="op">=</span> colorant<span class="st">"orange"</span></span>
-<span id="cb128-12"><a href="#cb128-12" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
-<span id="cb128-13"><a href="#cb128-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-14"><a href="#cb128-14" aria-hidden="true" tabindex="-1"></a>p2 <span class="op">=</span> <span class="fu">gplot</span>(mg.graph, nodefillc<span class="op">=</span>node_colors);</span>
-<span id="cb128-15"><a href="#cb128-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-16"><a href="#cb128-16" aria-hidden="true" tabindex="-1"></a><span class="co"># save the plot to a PNG file</span></span>
-<span id="cb128-17"><a href="#cb128-17" aria-hidden="true" tabindex="-1"></a>Compose.<span class="fu">draw</span>(<span class="fu">PNG</span>(<span class="st">"graphs/graph_with_shortest_path_nodes.png"</span>, </span>
-<span id="cb128-18"><a href="#cb128-18" aria-hidden="true" tabindex="-1"></a>                 <span class="fl">16</span>cm, <span class="fl">16</span>cm), p2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Colors</span></span>
+<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb118-3"><a href="#cb118-3" aria-hidden="true" tabindex="-1"></a>node_colors <span class="op">=</span> <span class="fu">Vector</span><span class="dt">{Colorant}</span>(<span class="cn">undef</span>, ncell);</span>
+<span id="cb118-4"><a href="#cb118-4" aria-hidden="true" tabindex="-1"></a><span class="co"># set all nodes to green initially</span></span>
+<span id="cb118-5"><a href="#cb118-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>ncell</span>
+<span id="cb118-6"><a href="#cb118-6" aria-hidden="true" tabindex="-1"></a>    node_colors[i] <span class="op">=</span> colorant<span class="st">"lightseagreen"</span>  </span>
+<span id="cb118-7"><a href="#cb118-7" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb118-8"><a href="#cb118-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb118-9"><a href="#cb118-9" aria-hidden="true" tabindex="-1"></a><span class="co"># highlight nodes in the shortest path by setting their color to orange</span></span>
+<span id="cb118-10"><a href="#cb118-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> nodes_in_path</span>
+<span id="cb118-11"><a href="#cb118-11" aria-hidden="true" tabindex="-1"></a>    node_colors[i] <span class="op">=</span> colorant<span class="st">"orange"</span></span>
+<span id="cb118-12"><a href="#cb118-12" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb118-13"><a href="#cb118-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb118-14"><a href="#cb118-14" aria-hidden="true" tabindex="-1"></a>p2 <span class="op">=</span> <span class="fu">gplot</span>(mg.graph, nodefillc<span class="op">=</span>node_colors);</span>
+<span id="cb118-15"><a href="#cb118-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb118-16"><a href="#cb118-16" aria-hidden="true" tabindex="-1"></a><span class="co"># save the plot to a PNG file</span></span>
+<span id="cb118-17"><a href="#cb118-17" aria-hidden="true" tabindex="-1"></a>Compose.<span class="fu">draw</span>(<span class="fu">PNG</span>(<span class="st">"graphs/graph_with_shortest_path_nodes.png"</span>, </span>
+<span id="cb118-18"><a href="#cb118-18" aria-hidden="true" tabindex="-1"></a>                 <span class="fl">16</span>cm, <span class="fl">16</span>cm), p2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><img src="graphs/graph_with_shortest_path_nodes.png" class="img-fluid"></p>
 </section>
 <section id="node-removal" class="level2">
 <h2 class="anchored" data-anchor-id="node-removal">Node removal</h2>
 <p>From a landscape management perspective, we want to figure out how removing habitat will affect connectivity.</p>
 <p>Here we can experiment with node removal:</p>
-<p><img src="graphs/node_removal.png" class="img-fluid"></p>
 <p>We can remove a few nodes/vertices from the graph:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb129"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb129-1"><a href="#cb129-1" aria-hidden="true" tabindex="-1"></a>Graphs.<span class="fu">rem_vertex!</span>(mg, <span class="fu">linear_index</span>(<span class="fl">6</span>, <span class="fl">23</span>));</span>
-<span id="cb129-2"><a href="#cb129-2" aria-hidden="true" tabindex="-1"></a>Graphs.<span class="fu">rem_vertex!</span>(mg, <span class="fu">linear_index</span>(<span class="fl">6</span>, <span class="fl">22</span>));</span>
-<span id="cb129-3"><a href="#cb129-3" aria-hidden="true" tabindex="-1"></a>Graphs.<span class="fu">rem_vertex!</span>(mg, <span class="fu">linear_index</span>(<span class="fl">7</span>, <span class="fl">23</span>));</span>
-<span id="cb129-4"><a href="#cb129-4" aria-hidden="true" tabindex="-1"></a>Graphs.<span class="fu">rem_vertex!</span>(mg, <span class="fu">linear_index</span>(<span class="fl">7</span>, <span class="fl">22</span>));</span>
-<span id="cb129-5"><a href="#cb129-5" aria-hidden="true" tabindex="-1"></a>Graphs.<span class="fu">rem_vertex!</span>(mg, <span class="fu">linear_index</span>(<span class="fl">8</span>, <span class="fl">23</span>));</span>
-<span id="cb129-6"><a href="#cb129-6" aria-hidden="true" tabindex="-1"></a>Graphs.<span class="fu">rem_vertex!</span>(mg, <span class="fu">linear_index</span>(<span class="fl">8</span>, <span class="fl">22</span>));</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a>Graphs.<span class="fu">rem_vertex!</span>(mg, <span class="fu">linear_index</span>(<span class="fl">6</span>, <span class="fl">23</span>));</span>
+<span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a>Graphs.<span class="fu">rem_vertex!</span>(mg, <span class="fu">linear_index</span>(<span class="fl">6</span>, <span class="fl">22</span>));</span>
+<span id="cb119-3"><a href="#cb119-3" aria-hidden="true" tabindex="-1"></a>Graphs.<span class="fu">rem_vertex!</span>(mg, <span class="fu">linear_index</span>(<span class="fl">7</span>, <span class="fl">23</span>));</span>
+<span id="cb119-4"><a href="#cb119-4" aria-hidden="true" tabindex="-1"></a>Graphs.<span class="fu">rem_vertex!</span>(mg, <span class="fu">linear_index</span>(<span class="fl">7</span>, <span class="fl">22</span>));</span>
+<span id="cb119-5"><a href="#cb119-5" aria-hidden="true" tabindex="-1"></a>Graphs.<span class="fu">rem_vertex!</span>(mg, <span class="fu">linear_index</span>(<span class="fl">8</span>, <span class="fl">23</span>));</span>
+<span id="cb119-6"><a href="#cb119-6" aria-hidden="true" tabindex="-1"></a>Graphs.<span class="fu">rem_vertex!</span>(mg, <span class="fu">linear_index</span>(<span class="fl">8</span>, <span class="fl">22</span>));</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Calculate the new shortest path with this new graph:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb130"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb130-1"><a href="#cb130-1" aria-hidden="true" tabindex="-1"></a>shortest_path2 <span class="op">=</span> Graphs.<span class="fu">a_star</span>(mg.graph, source, target, distmx);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a>shortest_path2 <span class="op">=</span> Graphs.<span class="fu">a_star</span>(mg.graph, source, target, distmx);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And then see how the resistance between source and target nodes changes:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb131"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb131-1"><a href="#cb131-1" aria-hidden="true" tabindex="-1"></a>total_resistance2 <span class="op">=</span> [];</span>
-<span id="cb131-2"><a href="#cb131-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb131-3"><a href="#cb131-3" aria-hidden="true" tabindex="-1"></a><span class="co"># iterate over the edges in the shortest path</span></span>
-<span id="cb131-4"><a href="#cb131-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="cn">e</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu">length</span>(shortest_path2)</span>
-<span id="cb131-5"><a href="#cb131-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># add the resistance between the nodes from the distance matrix</span></span>
-<span id="cb131-6"><a href="#cb131-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">push!</span>(total_resistance2, distmx[Graphs.<span class="fu">src</span>(shortest_path2[<span class="cn">e</span>]),</span>
-<span id="cb131-7"><a href="#cb131-7" aria-hidden="true" tabindex="-1"></a>                                    Graphs.<span class="fu">dst</span>(shortest_path2[<span class="cn">e</span>])])</span>
-<span id="cb131-8"><a href="#cb131-8" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
-<span id="cb131-9"><a href="#cb131-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb131-10"><a href="#cb131-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(total_resistance2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>18.400497829155565</code></pre>
+<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a>total_resistance2 <span class="op">=</span> [];</span>
+<span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a><span class="co"># iterate over the edges in the shortest path</span></span>
+<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="cn">e</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu">length</span>(shortest_path2)</span>
+<span id="cb121-5"><a href="#cb121-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># add the resistance between the nodes from the distance matrix</span></span>
+<span id="cb121-6"><a href="#cb121-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">push!</span>(total_resistance2, distmx[Graphs.<span class="fu">src</span>(shortest_path2[<span class="cn">e</span>]),</span>
+<span id="cb121-7"><a href="#cb121-7" aria-hidden="true" tabindex="-1"></a>                                    Graphs.<span class="fu">dst</span>(shortest_path2[<span class="cn">e</span>])])</span>
+<span id="cb121-8"><a href="#cb121-8" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb121-9"><a href="#cb121-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb121-10"><a href="#cb121-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(total_resistance2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
+
+
 </section>
 </section>
 
-</main>
-<!-- /main column -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -1348,8 +1328,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -1358,7 +1336,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
+      var filterRegex = new RegExp("https:\/\/berkeley-stat244\.github\.io\/spring-2025");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
@@ -1460,7 +1438,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
