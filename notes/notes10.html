@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Chris Paciorek">
+<meta name="dcterms.date" content="2025-02-25">
 
-<title>Accessing the SCF</title>
+<title>Notes 10: Other topics</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -38,7 +74,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-cd173fadfbc59501cc53580d670575f8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-e3c2a318547996e22cb8eadf618fd4f6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -80,7 +116,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../howtos/accessJulia.html">How tos</a></li><li class="breadcrumb-item"><a href="../howtos/accessSCF.html">Accessing the SCF</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notes/notes1.html">Course Notes</a></li><li class="breadcrumb-item"><a href="../notes/notes10.html">Notes 10: Other topics</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -200,7 +236,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notes/notes10.html" class="sidebar-item-text sidebar-link">
+  <a href="../notes/notes10.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Notes 10: Other topics</span></a>
   </div>
 </li>
@@ -258,7 +294,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../howtos/accessSCF.html" class="sidebar-item-text sidebar-link active">
+  <a href="../howtos/accessSCF.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Accessing the SCF</span></a>
   </div>
 </li>
@@ -304,25 +340,43 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#get-an-scf-account" id="toc-get-an-scf-account" class="nav-link active" data-scroll-target="#get-an-scf-account">Get an SCF account</a></li>
-  <li><a href="#access-to-the-statistical-computing-facility-scf" id="toc-access-to-the-statistical-computing-facility-scf" class="nav-link" data-scroll-target="#access-to-the-statistical-computing-facility-scf">Access to the Statistical Computing Facility (SCF)</a></li>
-  <li><a href="#software" id="toc-software" class="nav-link" data-scroll-target="#software">Software</a></li>
+  <li><a href="#interacting-with-other-languages" id="toc-interacting-with-other-languages" class="nav-link active" data-scroll-target="#interacting-with-other-languages">Interacting with other languages</a>
+  <ul class="collapse">
+  <li><a href="#calling-out-to-cc" id="toc-calling-out-to-cc" class="nav-link" data-scroll-target="#calling-out-to-cc">Calling out to C/C++</a></li>
+  </ul></li>
+  <li><a href="#meta-programming" id="toc-meta-programming" class="nav-link" data-scroll-target="#meta-programming">Meta programming</a>
+  <ul class="collapse">
+  <li><a href="#manipulating-variables" id="toc-manipulating-variables" class="nav-link" data-scroll-target="#manipulating-variables">Manipulating variables</a></li>
+  <li><a href="#manipulating-code-expressions-asts" id="toc-manipulating-code-expressions-asts" class="nav-link" data-scroll-target="#manipulating-code-expressions-asts">Manipulating code expressions / ASTs</a></li>
+  </ul></li>
   </ul>
-</nav>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="notes10.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../howtos/accessJulia.html">How tos</a></li><li class="breadcrumb-item"><a href="../howtos/accessSCF.html">Accessing the SCF</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notes/notes1.html">Course Notes</a></li><li class="breadcrumb-item"><a href="../notes/notes10.html">Notes 10: Other topics</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Accessing the SCF</h1>
+<h1 class="title">Notes 10: Other topics</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Chris Paciorek </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 25, 2025</p>
+    </div>
+  </div>
   
     
   </div>
@@ -332,25 +386,217 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>The SCF is the <a href="https://statistics.berkeley.edu/computing">Statistical Computing Facility</a>, which provides computational resources for the Department of Statistics.</p>
-<p>For our purposes, the SCF provides access to all the software and resources we will need for class. For much of what we do, it will serve as an alternative to your laptop if you run into problems. For GPU work and for some of the parallelization work it will be the primary resource.</p>
-<section id="get-an-scf-account" class="level2">
-<h2 class="anchored" data-anchor-id="get-an-scf-account">Get an SCF account</h2>
-<p>If you don’t already have an account, please <a href="https://scf.berkeley.edu/account">request one</a>, indicating you are a student in Statistics 244.</p>
+<section id="interacting-with-other-languages" class="level2">
+<h2 class="anchored" data-anchor-id="interacting-with-other-languages">Interacting with other languages</h2>
+<p>Student presentations cover interaction with Python and Julia.</p>
+<section id="calling-out-to-cc" class="level3">
+<h3 class="anchored" data-anchor-id="calling-out-to-cc">Calling out to C/C++</h3>
+<p>We can call C (and presumably C++) functions.</p>
+<p>Here’s an example in which we’ll call the <code>dnorm4</code> function in the R math library, which is the C function used by R’s <code>dnorm</code> function, which returns the log density.</p>
+<div id="ba1adfa4" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fl">0</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> <span class="fl">10</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>sd <span class="op">=</span> <span class="fl">1</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>dev <span class="op">=</span> <span class="pp">@ccall</span> <span class="st">"/usr/lib/libRmath.so"</span>.<span class="fu">dnorm4</span>(x<span class="op">::</span><span class="dt">Cdouble</span>,mu<span class="op">::</span><span class="dt">Cdouble</span>,sd<span class="op">::</span><span class="dt">Cdouble</span>)<span class="op">::</span><span class="dt">Cdouble</span>;</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(dev)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>-50.918938533204674</code></pre>
+</div>
+</div>
+<p>Perhaps the use of C code related to R is a bit confusing, but the key things here are to point <code>@ccall</code> to a shared object/dynamically linked library file (.so on Linux/MacOS, presumably .dll on Windows) that contains the compiled code for the function you want to use and to provide input and output types as indicated above.</p>
+<p>To investigate further, we’d want to look into passing pointers to allow for handling arrays.</p>
 </section>
-<section id="access-to-the-statistical-computing-facility-scf" class="level2">
-<h2 class="anchored" data-anchor-id="access-to-the-statistical-computing-facility-scf">Access to the Statistical Computing Facility (SCF)</h2>
-<p>There are two main ways to access the SCF machines.</p>
-<ol type="1">
-<li><p>You can login to our various Linux servers and access a terminal/bash shell that way. Please see <a href="http://statistics.berkeley.edu/computing/access">http://statistics.berkeley.edu/computing/access</a>.</p></li>
-<li><p>The <a href="https://jupyter.stat.berkeley.edu">SCF JupyterHub</a> provides browser-based access to a terminal/bash shell, Jupyter notebooks, and more. From a Jupyter notebook, you can select to use Julia as the kernel (the language used for processing code cells).</p></li>
-</ol>
 </section>
-<section id="software" class="level2">
-<h2 class="anchored" data-anchor-id="software">Software</h2>
-<p>Julia (possibly not with all needed packages at the moment), Python (with all needed packages), Git, and Quarto are all available from any SCF machine.</p>
+<section id="meta-programming" class="level2">
+<h2 class="anchored" data-anchor-id="meta-programming">Meta programming</h2>
+<p>Julia has <a href="https://docs.julialang.org/en/v1/manual/metaprogramming/">powerful functionality for using code to actually manipulate and run Julia code</a>. This is called meta programming (sometimes also called <em>computing on the language</em>) and is something one can also do in R. I’m not sure how much of this one can easily do in Python.</p>
+<p>We’ll just crack the surface here.</p>
+<section id="manipulating-variables" class="level3">
+<h3 class="anchored" data-anchor-id="manipulating-variables">Manipulating variables</h3>
+<div id="68327af9" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>num <span class="op">=</span> <span class="fl">3</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>varname <span class="op">=</span> <span class="st">"x"</span> <span class="op">*</span> <span class="fu">string</span>(num)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>var <span class="op">=</span> <span class="bu">Meta</span>.<span class="fu">parse</span>(varname)  <span class="co"># One way to create the variable as a `Symbol` object.</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>var</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>:x3</code></pre>
+</div>
+</div>
+<div id="c5c64548" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>var2 <span class="op">=</span> <span class="fu">Symbol</span>(varname)  <span class="co">#  Another way.</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(var)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>Symbol</code></pre>
+</div>
+</div>
+<div id="65e532f2" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> <span class="fl">7</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>mycode <span class="op">=</span> <span class="kw">quote</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">$</span>var <span class="op">=</span> <span class="op">$</span>value</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>x3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>LoadError: UndefVarError: `x3` not defined
+UndefVarError: `x3` not defined</code></pre>
+</div>
+</div>
+<div id="630d9201" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mycode</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div class="ansi-escaped-output">
+<pre>quote
+    <span class="ansi-bright-black-fg">#= In[5]:4 =#</span>
+    x3 = 7
+end</pre>
+</div>
+</div>
+</div>
+<div id="3476491f" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> <span class="fl">23</span>;</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">eval</span>(mycode);</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>x3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>7</code></pre>
+</div>
+</div>
+<div id="010d887d" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> <span class="fl">9</span>;</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>mycode <span class="op">=</span> <span class="kw">quote</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">$</span>var <span class="op">=</span> value</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>mycode</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div class="ansi-escaped-output">
+<pre>quote
+    <span class="ansi-bright-black-fg">#= In[8]:3 =#</span>
+    x3 = value
+end</pre>
+</div>
+</div>
+</div>
+<div id="af690f6b" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> <span class="fl">23</span>;</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">eval</span>(mycode);</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>x3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>23</code></pre>
+</div>
+</div>
+</section>
+<section id="manipulating-code-expressions-asts" class="level3">
+<h3 class="anchored" data-anchor-id="manipulating-code-expressions-asts">Manipulating code expressions / ASTs</h3>
+<p>We can create and manipulate code expressions.</p>
+<div id="7936823e" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>textcode <span class="op">=</span> <span class="st">"a+b"</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>expr1 <span class="op">=</span> <span class="bu">Meta</span>.<span class="fu">parse</span>(textcode)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>expr2 <span class="op">=</span> <span class="op">:</span>(a<span class="op">+</span>b)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>expr3 <span class="op">=</span> <span class="fu">Expr</span>(<span class="op">:</span>call, <span class="op">:+</span>, <span class="op">:</span>a, <span class="op">:</span>b)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(expr1 <span class="op">==</span> expr2)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(expr1 <span class="op">==</span> expr3)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(expr1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>truetrue</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>Expr</code></pre>
+</div>
+</div>
+<div id="40226dc2" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>expr1.args</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre><code>3-element Vector{Any}:
+ :+
+ :a
+ :b</code></pre>
+</div>
+</div>
+<div id="83ca5807" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>a<span class="op">=</span><span class="fl">7</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>b<span class="op">=</span><span class="fl">3</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">eval</span>(expr1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>10</code></pre>
+</div>
+</div>
+<p>Let’s modify the expression!</p>
+<div id="fe37e472" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>expr1.args[<span class="fl">1</span>] <span class="op">=</span> <span class="op">:*</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(expr1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>a * b</code></pre>
+</div>
+</div>
+<div id="2a50f549" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">eval</span>(expr1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>21</code></pre>
+</div>
+</div>
+<p>Remember ASTs (abstract syntax trees?</p>
+<div id="502ebd3f" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>expr <span class="op">=</span> <span class="op">:</span>(<span class="fu">tan</span>(x) <span class="op">+</span> <span class="fl">3</span> <span class="op">*</span> <span class="fu">sin</span>(x))</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>expr.args</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>3-element Vector{Any}:
+ :+
+ :(tan(x))
+ :(3 * sin(x))</code></pre>
+</div>
+</div>
+<div id="9a519e39" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>expr.args[<span class="fl">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>:(3 * sin(x))</code></pre>
+</div>
+</div>
+<p>We have access to the full AST!</p>
+<div id="705c94b1" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>expr.args[<span class="fl">3</span>].args[<span class="fl">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>3</code></pre>
+</div>
+</div>
+<p>And we could modify the AST as shown earlier.</p>
+<p>We can control when variables are treated as symbols versus evaluated (as already seen).</p>
+<p>Use of <code>$</code> allows us to “interpolate” values into the expression (as we’ve seen with printing in Notes 1).</p>
+<div id="b772946e" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="fl">7</span>;</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>expr2 <span class="op">=</span> <span class="op">:</span>(<span class="op">$</span>a<span class="op">+</span>b)                 <span class="co"># `$a` interpolates. `b` is code.</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>expr3 <span class="op">=</span> <span class="fu">Expr</span>(<span class="op">:</span>call, <span class="op">:+</span>, a, <span class="op">:</span>b)  <span class="co"># `a` is evaluated. `:b` is code.</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>expr2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>:(7 + b)</code></pre>
+</div>
+</div>
+<div id="3291226c" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>expr3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<pre><code>:(7 + b)</code></pre>
+</div>
+</div>
+<div id="32094d2d" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="fl">55</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="fl">999</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">eval</span>(expr2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>1006</code></pre>
+</div>
+</div>
+<div id="35476e6c" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">eval</span>(expr3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<pre><code>1006</code></pre>
+</div>
+</div>
+<p>Being able to control what is treated as code and what is treated as values is quite powerful when manipulating code expressions.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
