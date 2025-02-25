@@ -100,6 +100,11 @@ I invoked `using CUDA` on a machine without a GPU and it caused some pre-compila
 So if you're on a cluster or other system with multiple machines (such as the SCF), some with and without GPUs, it's best if you only use `CUDA` on a machine with a GPU.
 :::
 
+::: {.callout-important title="CUDA precompilation"}
+I've noticed that if I try to use the Julia CUDA package on different machines within a cluster (e.g., on the SCF), that when I move to a different machine, the CUDA package (usually) gets precompiled again. I think this is because the compilation is specific to the hardware (perhaps both GPU and CPU). It does mean there can be a delay when `using CUDA` is run. 
+:::
+
+
 There are various other Julia CUDA package functions that we can explore for checking details of the GPU, such as `CUDA.total_memory()`. 
 
 ## Basic GPU offloading
@@ -948,7 +953,82 @@ We see that the access by row here is (a bit) faster. I think this is because th
 
 We might be able to improve efficiency with the wide matrix by operating by column within the wide matrix. This would involve more work to manage the indexing because we wouldn't just have each thread manage a column (unless we used very few threads, which would presumably reduce efficiency).
 
-Clearly there's more to investigate/understand here, but I believe that PS3 will illustrate the potential benefit of using shared memory. 
+Clearly there's more to investigate/understand here, but I believe that PS3 will illustrate the potential benefit of using shared memory.
+
+## Using atomics for reduction operations
+
+One thing we haven't seen so far is being able to have different threads write to the same memory location (e.g., to a scalar or to an element of an array). One can easily imagine needing to do this to carry out reduction operations (e.g., calculating a sum or a max or min).
+
+The obvious danger is that two threads might write to the memory location at the same time and somehow cause the location not to be properly updated.
+
+Suppose we want to calculate the log-likelihood (or some other loss function) across independent observations. We'd like to do the summation on the GPU to avoid passing all the log-likelihood values from GPU to CPU and then having to do the sum on the CPU.
+
+```{julia}
+#| eval: false
+using BenchmarkTools
+using Distributions
+
+n = 100_000_000;   # Formatted for readability.
+norm_dist = Normal(0,1)
+samples = rand(norm_dist, n);
+
+function loglik_kernel(x, result)
+  i = threadIdx().x;  # What thread am I within the block?
+  j = blockIdx().x;   # What block am I in?
+  idx =  (j-1)*blockDim().x + i;
+  if idx <= length(x)
+    # logpdf(norm_dist, x[idx]) # Doesn't compile.
+    CUDA.@atomic result[1] += -0.5*x[idx]^2;            # Experimental, but nicer interface.
+    #CUDA.atomic_add!(pointer(result), -0.5*x[idx]^2);  # Stable low-level API.
+  end
+  return
+end
+
+nthreads = 1024;
+nblocks = Int(ceil(n/nthreads));
+
+samples_gpu = CuArray(samples);
+result = CUDA.zeros(typeof(samples[1]), 1);
+@btime CUDA.@sync @cuda threads=nthreads blocks=nblocks loglik_kernel(samples_gpu, result);
+# 161.352 ms (34 allocations: 944 bytes)
+Array(result)[1] -n*log(2*pi)/2  # Do t
+
+@btime sum(logpdf.(norm_dist, samples))
+# 1.410 s (5 allocations: 762.94 MiB)
+```
+
+So we got about a 12-fold speedup, which is less than we've been getting for some of our other comparisons.
+
+I was curious how much time is spent handling the reduction operation (presumably there is some loss in efficiency from having all the threads write to the same memory location). When I changed `result` to be a vector of length equal to that of `samples` and just assign the individual PDF evaluations to the corresponding elements of `result` without the atomic operation, the time was 3 milliseconds (compared to 161 above), so there is a performance degradation from the atomic operation.
+
+I haven't looked into this fully, but when I asked a ChatBot whether I could use shared memory to more efficiently do the reduction within each thread block before doing the final reduction across blocks, this is the key part of the code it suggested. It uses a tree-like operation to compute the partial sum within each thread block before using the atomic operation to compute the sum of the partial sums:
+
+```{julia}
+#| eval: false
+shmem = @cuDynamicSharedMem(Float32, blockDim().x)
+if idx <= length(input)
+    shmem[tidx] = -0.5*x[idx]^2;
+else
+    shmem[tidx] = 0.0;
+end
+
+# Tree-like partial sum within the block,
+# summing pairs until the sum within the block
+# is contained in `shmem[1]`.
+s = blockDim().x ÷ 2;
+while s > 0
+    if thread_idx <= s
+        shmem[thread_idx] += shmem[thread_idx + s]
+    end
+    sync_threads()
+    s ÷= 2
+end
+    
+# The first thread in the block writes the partial sum to global memory.
+if tidx == 1
+    CUDA.@atomic result[1] += shmem[1]
+end
+```
 
 ## Final comments - when to use the GPU
 

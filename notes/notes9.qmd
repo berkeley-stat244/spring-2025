@@ -329,6 +329,7 @@ samples = rand(normd, n);
 prod(pdf.(normd, samples))  # Log-likelihood/log-density
 ```
 ```{julia}
+#| eval: false
 sum(logpdf.(normd, samples))
 ```
 
