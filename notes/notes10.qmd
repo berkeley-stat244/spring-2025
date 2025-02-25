@@ -1,0 +1,176 @@
+---
+title: "Notes 10: Other topics"
+author: "Chris Paciorek"
+date: "2025-02-25"
+format:
+  pdf:
+    documentclass: article
+    margin-left: 30mm
+    margin-right: 30mm
+    toc: true
+  html:
+    theme: cosmo
+    css: ../assets/styles.css
+    toc: true
+    code-copy: true
+    code-block-background: true
+engine: jupyter
+ipynb-shell-interactivity: all
+execute:
+  daemon: false
+---
+
+
+## Interacting with other languages
+
+Student presentations cover interaction with Python and Julia.
+
+### Calling out to C/C++
+
+We can call C (and presumably C++) functions.
+
+Here's an example in which we'll call the `dnorm4` function in the R math library, which is the C function used by R's `dnorm` function, which returns the log density.
+
+```{julia}
+x = 0
+mu = 10
+sd = 1
+dev = @ccall "/usr/lib/libRmath.so".dnorm4(x::Cdouble,mu::Cdouble,sd::Cdouble)::Cdouble;
+print(dev)
+```
+
+Perhaps the use of C code related to R is a bit confusing, but the key things here are to point `@ccall` to a shared object/dynamically linked library file (.so on Linux/MacOS, presumably .dll on Windows) that contains the compiled code for the function you want to use and to provide input and output types as indicated above.
+
+To investigate further, we'd want to look into passing pointers to allow for handling arrays.
+
+## Meta programming
+
+Julia has [powerful functionality for using code to actually manipulate and run Julia code](https://docs.julialang.org/en/v1/manual/metaprogramming/). This is called meta programming (sometimes also called *computing on the language*) and is something one can also do in R. I'm not sure how much of this one can easily do in Python.
+
+We'll just crack the surface here.
+
+### Manipulating variables
+
+
+```{julia}
+num = 3
+varname = "x" * string(num)
+var = Meta.parse(varname)  # One way to create the variable as a `Symbol` object.
+var
+```
+```{julia}
+var2 = Symbol(varname)  #  Another way.
+typeof(var)
+```
+```{julia}
+#| error: true
+value = 7
+
+mycode = quote
+  $var = $value
+end
+
+x3
+```
+```{julia}
+mycode
+```
+```{julia}
+value = 23;
+eval(mycode);
+x3
+```
+
+```{julia}
+value = 9;
+mycode = quote
+  $var = value
+end
+
+mycode
+```
+```{julia}
+value = 23;
+eval(mycode);
+x3
+```
+
+### Manipulating code expressions / ASTs
+
+We can create and manipulate code expressions.
+
+```{julia}
+textcode = "a+b"
+expr1 = Meta.parse(textcode)
+
+expr2 = :(a+b)
+expr3 = Expr(:call, :+, :a, :b)
+
+print(expr1 == expr2)
+print(expr1 == expr3)
+typeof(expr1)
+```
+```{julia}
+expr1.args
+```
+```{julia}
+a=7
+b=3
+eval(expr1)
+```
+
+Let's modify the expression!
+
+```{julia}
+expr1.args[1] = :*
+print(expr1)
+```
+```{julia}
+eval(expr1)
+```
+
+Remember ASTs (abstract syntax trees?
+
+```{julia}
+expr = :(tan(x) + 3 * sin(x))
+expr.args
+```
+```{julia}
+expr.args[3]
+```
+
+We have access to the full AST!
+
+```{julia}
+expr.args[3].args[2]
+```
+And we could modify the AST as shown earlier.
+
+
+
+We can control when variables are treated as symbols versus evaluated (as already seen).
+
+Use of `$` allows us to "interpolate" values into the expression (as we've seen with printing in Notes 1).
+
+
+```{julia}
+a = 7;
+expr2 = :($a+b)                 # `$a` interpolates. `b` is code.
+expr3 = Expr(:call, :+, a, :b)  # `a` is evaluated. `:b` is code.
+expr2
+```
+```{julia}
+expr3
+```
+```{julia}
+a = 55
+b = 999
+eval(expr2)
+```
+```{julia}
+eval(expr3)
+```
+
+Being able to control what is treated as code and what is treated as values is quite powerful when manipulating code expressions.
+
+
