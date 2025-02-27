@@ -471,7 +471,7 @@ GPU code run separately from rendering
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$CUDA_VISIBLE_DEVICES</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>We can check in Julia. Here’s what we would see if a GPU is available (also requiring that CUDA.jl is set up to use a GPU even if one is available).</p>
-<div id="23dd81ab" class="cell" data-execution_count="1">
+<div id="68be079a" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CUDA</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>CUDA.<span class="fu">has_cuda_gpu</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -521,7 +521,7 @@ CUDA precompilation
 <h3 class="anchored" data-anchor-id="matrix-multiplication-example">Matrix multiplication example</h3>
 <p>Matrix multiplication is simple, but it’s at the heart of a lot of algorithms, including deep learning, so it’s a simple, but non-trivial example of a situation where we could offload a part of a computation to the GPU for big speedups.</p>
 <p>First we’ll set up the matrices, generating them on the host/CPU (and they’ll therefore be in CPU memory) and transferring to GPU (device) memory.</p>
-<div id="7e70efeb" class="cell" data-execution_count="2">
+<div id="1b7ddcc0" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">BenchmarkTools</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CUDA</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">LinearAlgebra</span></span>
@@ -547,7 +547,7 @@ CUDA precompilation
 <span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="co"># 784000000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now let’s compare the speed of the multiplication on CPU (host) vs.&nbsp;GPU (device). As usual we’ll put our computation into functions to allow for JIT compilation and avoid use of global variables whose type can change.</p>
-<div id="08c1929f" class="cell" data-execution_count="3">
+<div id="a0009e9a" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">LinearAlgebra</span>.BLAS.<span class="fu">set_num_threads</span>(<span class="fl">1</span>);  <span class="co"># To keep things simple but perhaps unfair to the CPU.</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">matmult</span>(x, y)</span>
@@ -609,7 +609,7 @@ Timing GPU code
 <li>avoid copying output back to the device if possible.</li>
 </ul>
 <p>Let’s see how the time of copying compares to the time of doing the matrix multiplication.</p>
-<div id="9d49bab7" class="cell" data-execution_count="4">
+<div id="fa40de2c" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fu">randn</span>(n, n);</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># To the GPU:</span></span>
@@ -629,7 +629,7 @@ Timing GPU code
 <h3 class="anchored" data-anchor-id="vs-32-bit-numbers">64- vs 32-bit numbers</h3>
 <p>In most contexts, computation on a GPU will use 32-bit real numbers for efficiency. This reduces memory use and speeds up computation because half as many bytes are being allocated, copied, and computed with. Of course we want to keep in mind the reduced precision in case that could be a problem for certain computations.</p>
 <p>Let’s first simply see if matrix multiplication on the CPU is faster with 32-bit numbers.</p>
-<div id="58231c6a" class="cell" data-execution_count="5">
+<div id="68d8b320" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">BenchmarkTools</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">matmult</span>(x, y)</span>
@@ -651,13 +651,13 @@ Timing GPU code
 <span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> <span class="fu">matmult</span>(x32, y32);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  1.575 s (2 allocations: 190.73 MiB)
-  812.090 ms (2 allocations: 95.37 MiB)</code></pre>
+<pre><code>  1.659 s (2 allocations: 190.73 MiB)
+  895.202 ms (2 allocations: 95.37 MiB)</code></pre>
 </div>
 </div>
 <p>Indeed it is quite a bit faster.</p>
 <p>Now let’s consider that on the GPU. We’ll also show random number generation directly on the GPU to avoid the cost of transferring data to the GPU.</p>
-<div id="236d6868" class="cell" data-execution_count="6">
+<div id="7b6383c3" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>x64_gpu <span class="op">=</span> CUDA.<span class="fu">randn</span>(<span class="dt">Float64</span>, n, n);</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>y64_gpu <span class="op">=</span> CUDA.<span class="fu">randn</span>(<span class="dt">Float64</span>, n, n);</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(x64_gpu)</span>
@@ -685,7 +685,7 @@ Timing GPU code
 <h3 class="anchored" data-anchor-id="interacting-with-nvidias-cuda-libraries">Interacting with NVIDIA’s CUDA libraries</h3>
 <p>Working with objects on the GPU requires interfacing with functions provided by the CUDA Toolkit and its libraries such as <code>cuBLAS</code>, <code>cuRAND</code>, <code>cuFFT</code>, etc. These are provided for Julia with the CUDA package (see <code>CUDA/&lt;version_string&gt;/lib</code>) so all that you need installed on the machine with the GPU is the NVIDIA driver software and the Julia CUDA package. You don’t actually need NVIDIA’s CUDA Toolkit.</p>
 <p>Since Julia is calling out to CUDA functions to run code on the GPU, there may be functions that won’t work on a CuArray, but the various things I tried all seem to work.</p>
-<div id="cfdbe7b1" class="cell" data-execution_count="7">
+<div id="bcc5ad48" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>y_gpu <span class="op">=</span> CUDA.<span class="fu">randn</span>(<span class="fl">3</span>);    <span class="co"># This uses cuRAND.</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>y_gpu <span class="op">+</span> y_gpu</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -693,7 +693,7 @@ Timing GPU code
  -2.3132815
   0.11570158
  -1.0381625</code></pre>
-<div id="2ad4818c" class="cell" data-execution_count="8">
+<div id="26dd0b73" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sin</span>.(y_gpu)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>3-element CuArray{Float32, 1, CUDA.DeviceMemory}:
@@ -701,7 +701,7 @@ Timing GPU code
  -0.784628
   0.7079291</code></pre>
 <p>However, we can’t work with scalar elements of the array because that tries to do a non-vectorized calculation on a GPU-based array.</p>
-<div id="62b0e4e1" class="cell" data-execution_count="9">
+<div id="7c51f952" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>y_gpu[<span class="fl">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>julia&gt; y_gpu[1]
@@ -715,7 +715,7 @@ and therefore should be avoided.</code></pre>
 <h3 class="anchored" data-anchor-id="vectorized-example">Vectorized example</h3>
 <p>Here we’ll offload a vectorized calculation to the GPU. Note that in this case we cannot set up the calculation as a for loop as one can’t loop through scalar operations on GPU in that fashion (more about how to loop on a GPU in the discussion of GPU kernels).</p>
 <p>We’ll use <code>.=</code> for in-place calculation to avoid additional memory allocation.</p>
-<div id="b49b2a37" class="cell" data-execution_count="10">
+<div id="e40d5a8f" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">vec_calc</span>(x)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  x <span class="op">.=</span> <span class="fu">tan</span>.(x) <span class="op">.+</span> <span class="fl">3</span> <span class="op">.*</span> <span class="fu">sin</span>.(x)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="fl">0</span></span>
@@ -1014,7 +1014,7 @@ Device 0: "NVIDIA A100 80GB PCIe"
 <h3 class="anchored" data-anchor-id="basic-example">Basic example</h3>
 <p>Here’s a basic example in which we’ll do a calculation in place. We run 1000 scalar calculations using 1000 threads.</p>
 <p>We use <code>@cuda</code> to compile and run the kernel.</p>
-<div id="40111709" class="cell" data-execution_count="11">
+<div id="0847f32c" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">my_kernel</span>(x)</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  idx <span class="op">=</span> <span class="fu">threadIdx</span>().x;   <span class="co"># What thread am I?</span></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> idx <span class="op">&lt;=</span> <span class="fu">length</span>(x)</span>
@@ -1032,7 +1032,7 @@ Device 0: "NVIDIA A100 80GB PCIe"
 <span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a><span class="co"># -28.875708f0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>There are limits on the number of threads we can use.</p>
-<div id="3b157959" class="cell" data-execution_count="12">
+<div id="d2eefd24" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="fl">2000</span>;</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>x_gpu <span class="op">=</span> CUDA.<span class="fu">randn</span>(n);</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@cuda</span> threads<span class="op">=</span>n <span class="fu">my_kernel</span>(x_gpu);</span>
@@ -1042,7 +1042,7 @@ Device 0: "NVIDIA A100 80GB PCIe"
 <section id="multiple-blocks" class="level3">
 <h3 class="anchored" data-anchor-id="multiple-blocks">Multiple blocks</h3>
 <p>We need to use at least as many threads as computations, and in addition to only being able to use 1024 threads in the x dimension, we can have at most 1024 threads in a block on the A100 GPU we’re using. So we’ll need multiple blocks.</p>
-<div id="c2346bab" class="cell" data-execution_count="13">
+<div id="bf350e97" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">my_kernel</span>(x)</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  i <span class="op">=</span> <span class="fu">threadIdx</span>().x;  <span class="co"># What thread am I within the block?</span></span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  j <span class="op">=</span> <span class="fu">blockIdx</span>().x;   <span class="co"># What block am I in?</span></span>
@@ -1063,7 +1063,7 @@ Device 0: "NVIDIA A100 80GB PCIe"
 <span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>(initial, <span class="fu">Array</span>(x_gpu)[n])  <span class="co"># Check that calculation was done.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s do a smaller test run in which we can check on the thread and block indexing.</p>
-<div id="e32264c3" class="cell" data-execution_count="14">
+<div id="7f0226a9" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">my_kernel_print</span>(x)</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  i <span class="op">=</span> <span class="fu">threadIdx</span>().x;  <span class="co"># What thread am I within the block?</span></span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  j <span class="op">=</span> <span class="fu">blockIdx</span>().x;   <span class="co"># What block am I in?</span></span>
@@ -1088,7 +1088,7 @@ Device 0: "NVIDIA A100 80GB PCIe"
 <p>In many cases we’ll have more tasks than the total number of GPU cores. As long as we don’t exceed the maximum size of a block or grid, we can just ask for as many threads as we have tasks and rely on the GPU to manage assigning the tasks to the GPU cores.</p>
 <p>We’d want to check that the number/dimension of the block here does not exceed the maximum block size. I didn’t do that, but it ran, so it must have been ok!</p>
 <p>Here we’ll run the computation we ran earlier when we did not write our own kernel and just relied on Julia to offload to the GPU behind the scene.</p>
-<div id="692141d0" class="cell" data-execution_count="15">
+<div id="d40c29aa" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="fl">250000000</span>;</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>x_gpu <span class="op">=</span> CUDA.<span class="fu">randn</span>(n);</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>nthreads <span class="op">=</span> <span class="fl">1024</span>;</span>
@@ -1112,58 +1112,64 @@ Device 0: "NVIDIA A100 80GB PCIe"
 <section id="coalesced-access-to-global-memory" class="level3">
 <h3 class="anchored" data-anchor-id="coalesced-access-to-global-memory">Coalesced access to global memory</h3>
 <p>If adjacent threads in a block access adjacent memory locations, a chunk of data can be obtained in a single access to global memory.</p>
-<p>Here’s a very basic example where we see that reading a matrix by column is more efficient than reading by row. From what I’ve read, I was expecting to see more of a difference, but we do get almost a 2-fold speedup working by column rather than by row.</p>
-<div id="5060f8de" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="fl">1000</span>;</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>in_gpu <span class="op">=</span> CUDA.<span class="fu">randn</span>(n,n);</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>out_gpu <span class="op">=</span> CUDA.<span class="fu">zeros</span>(n,n);</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>in_gpu_small <span class="op">=</span> CUDA.<span class="fu">randn</span>(<span class="fl">5</span>,<span class="fl">5</span>);</span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>out_gpu_small <span class="op">=</span> CUDA.<span class="fu">zeros</span>(<span class="fl">5</span>,<span class="fl">5</span>);</span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Good: Adjacent threads process same column.</span></span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">kernel_bycol!</span>(output, input)</span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    idx_x <span class="op">=</span> <span class="fu">threadIdx</span>().x    <span class="co"># Column index</span></span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>    idx_y <span class="op">=</span> <span class="fu">blockIdx</span>().x     <span class="co"># Row index</span></span>
-<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> idx_x <span class="op">&lt;=</span> <span class="fu">size</span>(input, <span class="fl">1</span>) <span class="op">&amp;&amp;</span> idx_y <span class="op">&lt;=</span> <span class="fu">size</span>(input, <span class="fl">2</span>)</span>
-<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>        output[idx_x, idx_y] <span class="op">=</span> input[idx_x, idx_y]</span>
-<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="cn">nothing</span></span>
-<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>nthreads <span class="op">=</span> n;</span>
-<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>nblocks <span class="op">=</span> n;</span>
-<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Flush out any compilation time.</span></span>
-<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>CUDA.<span class="pp">@sync</span> <span class="pp">@cuda</span> threads<span class="op">=</span>nthreads blocks<span class="op">=</span>nblocks <span class="fu">kernel_bycol!</span>(out_gpu_small, in_gpu_small);</span>
-<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>CUDA.<span class="pp">@time</span> CUDA.<span class="pp">@sync</span> <span class="pp">@cuda</span> threads<span class="op">=</span>nthreads blocks<span class="op">=</span>nblocks <span class="fu">kernel_bycol!</span>(out_gpu, in_gpu);</span>
-<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.000106 seconds (33 CPU allocations: 960 bytes)</span></span>
-<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Bad: Adjacent threads process same row.</span></span>
-<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">kernel_byrow!</span>(output, input)</span>
-<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a>    idx_x <span class="op">=</span> <span class="fu">blockIdx</span>().x     <span class="co"># Column index</span></span>
-<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a>    idx_y <span class="op">=</span> <span class="fu">threadIdx</span>().x    <span class="co"># Row index</span></span>
-<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> idx_x <span class="op">&lt;=</span> <span class="fu">size</span>(input, <span class="fl">1</span>) <span class="op">&amp;&amp;</span> idx_y <span class="op">&lt;=</span> <span class="fu">size</span>(input, <span class="fl">2</span>)</span>
-<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a>        output[idx_x, idx_y] <span class="op">=</span> input[idx_x, idx_y]</span>
-<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="cn">nothing</span></span>
-<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Flush out any compilation time.</span></span>
-<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a>CUDA.<span class="pp">@sync</span> <span class="pp">@cuda</span> threads<span class="op">=</span>nthreads blocks<span class="op">=</span>nblocks <span class="fu">kernel_byrow!</span>(out_gpu_small, in_gpu_small);</span>
-<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a>CUDA.<span class="pp">@time</span> CUDA.<span class="pp">@sync</span> <span class="pp">@cuda</span> threads<span class="op">=</span>nthreads blocks<span class="op">=</span>nblocks <span class="fu">kernel_byrow!</span>(out_gpu, in_gpu);</span>
-<span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.000254 seconds (33 CPU allocations: 960 bytes)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We’ll implement element-wise summing of two matrices. Obviously one can just do this directly with <code>CuArray</code>s in Julia, but if we implement it ourselves, it illustrates that reading a matrix by column is much more efficient than reading by row.</p>
+<div id="c3340026" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="fl">10000</span>;</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>X_gpu <span class="op">=</span> CUDA.<span class="fu">randn</span>(n,n);</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>Y_gpu <span class="op">=</span> CUDA.<span class="fu">randn</span>(n,n);</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>out_gpu <span class="op">=</span> CUDA.<span class="fu">zeros</span>(n,n);</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>X_gpu_small <span class="op">=</span> CUDA.<span class="fu">randn</span>(<span class="fl">5</span>,<span class="fl">5</span>);</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>Y_gpu_small <span class="op">=</span> CUDA.<span class="fu">randn</span>(<span class="fl">5</span>,<span class="fl">5</span>);</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>out_gpu_small <span class="op">=</span> CUDA.<span class="fu">zeros</span>(<span class="fl">5</span>,<span class="fl">5</span>);</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Good: Adjacent threads process elements in a column.</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">kernel_sum_bycol!</span>(X, Y, output)</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>    row_idx <span class="op">=</span> <span class="fu">threadIdx</span>().x <span class="op">+</span> (<span class="fu">blockIdx</span>().x <span class="op">-</span> <span class="fl">1</span>)<span class="fu">*blockDim</span>().x;</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>    col_idx <span class="op">=</span> <span class="fu">blockIdx</span>().y;</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> row_idx <span class="op">&lt;=</span> <span class="fu">size</span>(X, <span class="fl">1</span>) <span class="op">&amp;&amp;</span> col_idx <span class="op">&lt;=</span> <span class="fu">size</span>(Y, <span class="fl">2</span>)</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>        output[row_idx, col_idx] <span class="op">=</span> X[row_idx, col_idx] <span class="op">+</span> Y[row_idx, col_idx]</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="cn">nothing</span></span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>nthreads <span class="op">=</span> <span class="fl">1024</span>;</span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a><span class="co"># x dim of grid is number of thread blocks in a column.</span></span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a><span class="co"># y dim of grid is number of columns.</span></span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>nblocks <span class="op">=</span> (<span class="fu">Int</span>(<span class="fu">ceil</span>(n<span class="op">/</span>nthreads)), n);</span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Flush out any compilation time.</span></span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a>CUDA.<span class="pp">@sync</span> <span class="pp">@cuda</span> threads<span class="op">=</span>nthreads blocks<span class="op">=</span>nblocks <span class="fu">kernel_sum_bycol!</span>(X_gpu_small, Y_gpu_small, out_gpu_small);</span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> CUDA.<span class="pp">@sync</span> <span class="pp">@cuda</span> threads<span class="op">=</span>nthreads blocks<span class="op">=</span>nblocks <span class="fu">kernel_sum_bycol!</span>(X_gpu, Y_gpu, out_gpu);</span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a><span class="co"># 2.153 ms (47 allocations: 1.30 KiB)</span></span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Bad: Adjacent threads process elements in a row.</span></span>
+<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">kernel_sum_byrow!</span>(X, Y, output)</span>
+<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a>    row_idx <span class="op">=</span> <span class="fu">blockIdx</span>().y;</span>
+<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a>    col_idx <span class="op">=</span> <span class="fu">threadIdx</span>().x <span class="op">+</span> (<span class="fu">blockIdx</span>().x <span class="op">-</span> <span class="fl">1</span>)<span class="fu">*blockDim</span>().x;</span>
+<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> row_idx <span class="op">&lt;=</span> <span class="fu">size</span>(X, <span class="fl">1</span>) <span class="op">&amp;&amp;</span> col_idx <span class="op">&lt;=</span> <span class="fu">size</span>(Y, <span class="fl">2</span>)</span>
+<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a>        output[row_idx, col_idx] <span class="op">=</span> X[row_idx, col_idx] <span class="op">+</span> Y[row_idx, col_idx]</span>
+<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="cn">nothing</span></span>
+<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a><span class="co"># Flush out any compilation time.</span></span>
+<span id="cb34-46"><a href="#cb34-46" aria-hidden="true" tabindex="-1"></a>CUDA.<span class="pp">@sync</span> <span class="pp">@cuda</span> threads<span class="op">=</span>nthreads blocks<span class="op">=</span>nblocks <span class="fu">kernel_sum_byrow!</span>(X_gpu_small, Y_gpu_small, out_gpu_small);</span>
+<span id="cb34-47"><a href="#cb34-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-48"><a href="#cb34-48" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> CUDA.<span class="pp">@sync</span> <span class="pp">@cuda</span> threads<span class="op">=</span>nthreads blocks<span class="op">=</span>nblocks <span class="fu">kernel_sum_byrow!</span>(X_gpu, Y_gpu, out_gpu);</span>
+<span id="cb34-49"><a href="#cb34-49" aria-hidden="true" tabindex="-1"></a><span class="co"># 10.500 ms (47 allocations: 1.30 KiB)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="using-shared-memory" class="level3">
 <h3 class="anchored" data-anchor-id="using-shared-memory">Using shared memory</h3>
 <p>Accessing global GPU memory is much slower than doing computation on the GPU. So we’d like to avoid repeated access to global memory (e.g., a bad scenario would be a ratio of one arithmetic calculation per retrieval from global memory). One strategy is for multiple threads in a block to cooperate to load data from global memory into shared memory accessible by all the threads in the block. The computation can then be done on the data in shared memory.</p>
-<p>Here’s a simplified example that shows how to load the data into shared memory. There’s no actual computation, but if we think of the kernel density estimation problem in PS 3, one could imagine that each thread would then each do a computation that uses the entire chunk of data in shared memory.</p>
-<div id="338c98bf" class="cell" data-execution_count="17">
+<p>Here’s a simplified example that shows how to load the data into shared memory. There’s no actual computation coded here, but if we think of the kernel density estimation problem in PS 3, one could imagine that each thread would then each do a computation that uses the entire chunk of data in shared memory.</p>
+<div id="88a4e3f5" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">kernel_reader_bycol</span>(x<span class="op">::</span><span class="dt">CuDeviceArray{T}</span>) <span class="kw">where</span> T</span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  i <span class="op">=</span> <span class="fu">threadIdx</span>().x;  <span class="co"># What thread am I within the block?</span></span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  j <span class="op">=</span> <span class="fu">blockIdx</span>().x;   <span class="co"># What block am I in?</span></span>
@@ -1210,7 +1216,7 @@ Device 0: "NVIDIA A100 80GB PCIe"
 <p>If <code>m</code> gets much bigger, we get an error “ERROR: Amount of dynamic shared memory exceeds device limit (400.000 KiB &gt; 48.000 KiB).” So for larger <code>m</code> we’d need to rework how we manipulate the data.</p>
 <p>Let’s close by seeing if the memory access patterns make a difference in this example. Instead of accessing by column, we’ll access by row, but with the matrix transposed so it is very wide instead of very long.</p>
 <p>My initial thought was that accessing by row would be slower because adjacent threads are not reading from adjacent locations in global memory.</p>
-<div id="698e06e5" class="cell" data-execution_count="18">
+<div id="128c9752" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">kernel_reader_byrow</span>(x<span class="op">::</span><span class="dt">CuDeviceArray{T}</span>) <span class="kw">where</span> T</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  i <span class="op">=</span> <span class="fu">threadIdx</span>().x;  <span class="co"># What thread am I within the block?</span></span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  j <span class="op">=</span> <span class="fu">blockIdx</span>().x;   <span class="co"># What block am I in?</span></span>
@@ -1256,7 +1262,6 @@ Device 0: "NVIDIA A100 80GB PCIe"
 </div>
 <p>We see that the access by row here is (a bit) faster. I think this is because the entire chunk of data in the wide matrix lives in a small area of global memory, while in the long matrix, each column in the chunk has adjacent values but separate columns are very far apart because the matrix is so long.</p>
 <p>We might be able to improve efficiency with the wide matrix by operating by column within the wide matrix. This would involve more work to manage the indexing because we wouldn’t just have each thread manage a column (unless we used very few threads, which would presumably reduce efficiency).</p>
-<p>Clearly there’s more to investigate/understand here, but I believe that PS3 will illustrate the potential benefit of using shared memory.</p>
 </section>
 </section>
 <section id="using-atomics-for-reduction-operations" class="level2">
@@ -1264,7 +1269,7 @@ Device 0: "NVIDIA A100 80GB PCIe"
 <p>One thing we haven’t seen so far is being able to have different threads write to the same memory location (e.g., to a scalar or to an element of an array). One can easily imagine needing to do this to carry out reduction operations (e.g., calculating a sum or a max or min).</p>
 <p>The obvious danger is that two threads might write to the memory location at the same time and somehow cause the location not to be properly updated.</p>
 <p>Suppose we want to calculate the log-likelihood (or some other loss function) across independent observations. We’d like to do the summation on the GPU to avoid passing all the log-likelihood values from GPU to CPU and then having to do the sum on the CPU.</p>
-<div id="c3259206" class="cell" data-execution_count="19">
+<div id="5f79a8f3" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">BenchmarkTools</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Distributions</span></span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1302,7 +1307,7 @@ Device 0: "NVIDIA A100 80GB PCIe"
 <h3 class="anchored" data-anchor-id="using-shared-memory-to-reduce-the-cost-of-atomic-operations">Using shared memory to reduce the cost of atomic operations</h3>
 <p>One solution to the performance degradation is to not have all of the summing make use of the same location in memory to accumulate the result.</p>
 <p>Instead we can use shared memory to more efficiently do the reduction within each thread block before doing the final reduction across blocks. Here’s an approach using a tree-like operation (as suggested by a ChatBot, but requiring some debugging on my part) to compute the partial sum within each thread block before using the atomic operation to compute the sum of the partial sums:</p>
-<div id="3520ae38" class="cell" data-execution_count="20">
+<div id="8e43b898" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">loglik_kernel_shmem</span>(x<span class="op">::</span><span class="dt">CuDeviceArray{T}</span>, result<span class="op">::</span><span class="dt">CuDeviceArray{T}</span>) <span class="kw">where</span> T</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  i <span class="op">=</span> <span class="fu">threadIdx</span>().x;  <span class="co"># What thread am I within the block?</span></span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  j <span class="op">=</span> <span class="fu">blockIdx</span>().x;   <span class="co"># What block am I in?</span></span>
