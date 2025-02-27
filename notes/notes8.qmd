@@ -1051,6 +1051,13 @@ result2 = CUDA.zeros(typeof(samples[1]), 1);
 Array(result2)[1] -n*log(2*pi)/2 
 ```
 
+### Debugging kernel code
+
+It can be much harder to debug kernel code than regular Julia code. If the syntax doesn't produce valid LLVM/IR code, it may not be obvious from the error messsage what the problem is.
+
+As an example in the code in the previous section, I originally had `s = blockDim().x / 2;` and `s /= 2;`. I didn't realize that even with integer inputs, that this produced a float output type for `s` and that as a result using `s` for indexing in `shared_data[i + s];` wouldn't work. The error message said there was a problem with the LLVM/IR code produced from the kernel, but didn't say where and it took a binary search on my part to figure out that `shared_data[i + s];` was the problematic piece of code and that was caused by `s` being a float.
+
+On an only somewhat related point, the ChatBot originally gave me while `s >= 0`, which is a bug that doesn't prevent the code from running, but does give incorrect numerical results, so we still need to be careful with what we get from ChatBots. 
 
 ## Final comments - when to use the GPU
 
