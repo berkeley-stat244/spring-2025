@@ -155,18 +155,18 @@ function counter_report(f)
    return wrapper
 end
 
-function tmp()
+function tmp(x; y)
     return nothing
 end
 
 wrap_orig = counter(tmp)
 wrap_report = counter_report(tmp)
 
-wrap_orig()
-wrap_orig()
-wrap_orig()
-wrap_report()
-wrap_report()
+wrap_orig(3; y=2)
+wrap_orig(3; y=2)
+wrap_orig(3; y=2)
+wrap_report(3; y=2)
+wrap_report(3; y=2)
 wrap_report(;_report = true)
 
 ## Problem 3 (alternate; with a macro)

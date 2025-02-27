@@ -796,60 +796,66 @@ We'll explore two final topics related to efficiently accessing data in memory: 
 
 If adjacent threads in a block access adjacent memory locations,  a chunk of data can be obtained in a single access to global memory.
 
-Here's a very basic example where we see that reading a matrix by column is more efficient than reading by row. From what I've read, I was expecting to see more of a difference, but we do get almost a 2-fold speedup working by column rather than by row.
+We'll implement element-wise summing of two matrices. Obviously one can just do this directly with `CuArray`s in Julia, but if we implement it ourselves, it illustrates that reading a matrix by column is much more efficient than reading by row.
 
 ```{julia}
 #| eval: false
-n = 1000;
-in_gpu = CUDA.randn(n,n);
+n = 10000;
+X_gpu = CUDA.randn(n,n);
+Y_gpu = CUDA.randn(n,n);
 out_gpu = CUDA.zeros(n,n);
 
-in_gpu_small = CUDA.randn(5,5);
+X_gpu_small = CUDA.randn(5,5);
+Y_gpu_small = CUDA.randn(5,5);
 out_gpu_small = CUDA.zeros(5,5);
 
-# Good: Adjacent threads process same column.
-function kernel_bycol!(output, input)
-    idx_x = threadIdx().x    # Column index
-    idx_y = blockIdx().x     # Row index
+# Good: Adjacent threads process elements in a column.
+function kernel_sum_bycol!(X, Y, output)
+    row_idx = threadIdx().x + (blockIdx().x - 1)*blockDim().x;
+    col_idx = blockIdx().y;
     
-    if idx_x <= size(input, 1) && idx_y <= size(input, 2)
-        output[idx_x, idx_y] = input[idx_x, idx_y]
+    if row_idx <= size(X, 1) && col_idx <= size(Y, 2)
+        output[row_idx, col_idx] = X[row_idx, col_idx] + Y[row_idx, col_idx]
     end
     return nothing
 end
 
-nthreads = n;
-nblocks = n;
+nthreads = 1024;
+# x dim of grid is number of thread blocks in a column.
+# y dim of grid is number of columns.
+nblocks = (Int(ceil(n/nthreads)), n);
+
 
 # Flush out any compilation time.
-CUDA.@sync @cuda threads=nthreads blocks=nblocks kernel_bycol!(out_gpu_small, in_gpu_small);
+CUDA.@sync @cuda threads=nthreads blocks=nblocks kernel_sum_bycol!(X_gpu_small, Y_gpu_small, out_gpu_small);
 
-CUDA.@time CUDA.@sync @cuda threads=nthreads blocks=nblocks kernel_bycol!(out_gpu, in_gpu);
-# 0.000106 seconds (33 CPU allocations: 960 bytes)
+@btime CUDA.@sync @cuda threads=nthreads blocks=nblocks kernel_sum_bycol!(X_gpu, Y_gpu, out_gpu);
+# 2.153 ms (47 allocations: 1.30 KiB)
 
-# Bad: Adjacent threads process same row.
-function kernel_byrow!(output, input)
-    idx_x = blockIdx().x     # Column index
-    idx_y = threadIdx().x    # Row index
+# Bad: Adjacent threads process elements in a row.
+function kernel_sum_byrow!(X, Y, output)
+    row_idx = blockIdx().y;
+    col_idx = threadIdx().x + (blockIdx().x - 1)*blockDim().x;
     
-    if idx_x <= size(input, 1) && idx_y <= size(input, 2)
-        output[idx_x, idx_y] = input[idx_x, idx_y]
+    if row_idx <= size(X, 1) && col_idx <= size(Y, 2)
+        output[row_idx, col_idx] = X[row_idx, col_idx] + Y[row_idx, col_idx]
     end
     return nothing
 end
 
-# Flush out any compilation time.
-CUDA.@sync @cuda threads=nthreads blocks=nblocks kernel_byrow!(out_gpu_small, in_gpu_small);
 
-CUDA.@time CUDA.@sync @cuda threads=nthreads blocks=nblocks kernel_byrow!(out_gpu, in_gpu);
-# 0.000254 seconds (33 CPU allocations: 960 bytes)
+# Flush out any compilation time.
+CUDA.@sync @cuda threads=nthreads blocks=nblocks kernel_sum_byrow!(X_gpu_small, Y_gpu_small, out_gpu_small);
+
+@btime CUDA.@sync @cuda threads=nthreads blocks=nblocks kernel_sum_byrow!(X_gpu, Y_gpu, out_gpu);
+# 10.500 ms (47 allocations: 1.30 KiB)
 ```
 
 ### Using shared memory
 
 Accessing global GPU memory is much slower than doing computation on the GPU. So we'd like to avoid repeated access to global memory (e.g., a bad scenario would be a ratio of one arithmetic calculation per retrieval from global memory). One strategy is for multiple threads in a block to cooperate to load data from global memory into shared memory accessible by all the threads in the block. The computation can then be done on the data in shared memory.
 
-Here's a simplified example that shows how to load the data into shared memory. There's no actual computation, but if we think of the kernel density estimation problem in PS 3, one could imagine that each thread would then each do a computation that uses the entire chunk of data in shared memory.
+Here's a simplified example that shows how to load the data into shared memory. There's no actual computation coded here, but if we think of the kernel density estimation problem in PS 3, one could imagine that each thread would then each do a computation that uses the entire chunk of data in shared memory.
 
 ```{julia}
 #| eval: false
@@ -952,8 +958,6 @@ CUDA.@time CUDA.@sync @cuda threads=nthreads blocks=nblocks shmem=memsize kernel
 We see that the access by row here is (a bit) faster. I think this is because the entire chunk of data in the wide matrix lives in a small area of global memory, while in the long matrix, each column in the chunk has adjacent values but separate columns are very far apart because the matrix is so long.
 
 We might be able to improve efficiency with the wide matrix by operating by column within the wide matrix. This would involve more work to manage the indexing because we wouldn't just have each thread manage a column (unless we used very few threads, which would presumably reduce efficiency).
-
-Clearly there's more to investigate/understand here, but I believe that PS3 will illustrate the potential benefit of using shared memory.
 
 ## Using atomics for reduction operations
 
