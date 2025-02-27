@@ -146,7 +146,22 @@ expr.args[3].args[2]
 ```
 And we could modify the AST as shown earlier.
 
+Here's how assignment is captured:
 
+```{julia}
+mycode = :(c = a + b)
+
+mycode.head
+```
+```{julia}
+mycode.args[1]
+```
+```{julia}
+mycode.args[2]
+```
+
+
+#### More on interpolation/substitution
 
 We can control when variables are treated as symbols versus evaluated (as already seen).
 
@@ -172,6 +187,25 @@ eval(expr3)
 ```
 
 Being able to control what is treated as code and what is treated as values is quite powerful when manipulating code expressions.
+
+#### Use of `quote`
+
+We can use `quote` to create an object containing multiple expressions:
+
+```{julia}
+mycode = quote
+  a + b
+  tan(x) + 3 * sin(x)
+end
+
+mycode.args[2] == :(a+b)
+```
+```{julia}
+mycode.args[4] == :(tan(x) + 3 * sin(x))
+```
+
+
+
 
 ### Use cases
 
