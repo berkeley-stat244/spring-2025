@@ -991,7 +991,7 @@ samples_gpu = CuArray(samples);
 result = CUDA.zeros(typeof(samples[1]), 1);
 @btime CUDA.@sync @cuda threads=nthreads blocks=nblocks loglik_kernel(samples_gpu, result);
 # 161.352 ms (34 allocations: 944 bytes)
-Array(result)[1] -n*log(2*pi)/2  # Do t
+Array(result)[1] -n*log(2*pi)/2  # Adjust for normalizing constant as scalar computation, not on GPU.
 
 @btime sum(logpdf.(norm_dist, samples))
 # 1.410 s (5 allocations: 762.94 MiB)
@@ -1001,34 +1001,56 @@ So we got about a 12-fold speedup, which is less than we've been getting for som
 
 I was curious how much time is spent handling the reduction operation (presumably there is some loss in efficiency from having all the threads write to the same memory location). When I changed `result` to be a vector of length equal to that of `samples` and just assign the individual PDF evaluations to the corresponding elements of `result` without the atomic operation, the time was 3 milliseconds (compared to 161 above), so there is a performance degradation from the atomic operation.
 
-I haven't looked into this fully, but when I asked a ChatBot whether I could use shared memory to more efficiently do the reduction within each thread block before doing the final reduction across blocks, this is the key part of the code it suggested. It uses a tree-like operation to compute the partial sum within each thread block before using the atomic operation to compute the sum of the partial sums:
+### Using shared memory to reduce the cost of atomic operations
+
+One solution to the performance degradation is to not have all of the summing make use of the same location in memory to accumulate the result.
+
+Instead we can use shared memory to more efficiently do the reduction within each thread block before doing the final reduction across blocks. Here's an approach using a tree-like operation (as suggested by a ChatBot, but requiring some debugging on my part) to compute the partial sum within each thread block before using the atomic operation to compute the sum of the partial sums:
 
 ```{julia}
 #| eval: false
-shmem = @cuDynamicSharedMem(Float32, blockDim().x)
-if idx <= length(input)
-    shmem[tidx] = -0.5*x[idx]^2;
-else
-    shmem[tidx] = 0.0;
-end
 
-# Tree-like partial sum within the block,
-# summing pairs until the sum within the block
-# is contained in `shmem[1]`.
-s = blockDim().x ÷ 2;
-while s > 0
-    if thread_idx <= s
-        shmem[thread_idx] += shmem[thread_idx + s]
+function loglik_kernel_shmem(x::CuDeviceArray{T}, result::CuDeviceArray{T}) where T
+  i = threadIdx().x;  # What thread am I within the block?
+  j = blockIdx().x;   # What block am I in?
+  idx =  (j-1)*blockDim().x + i;
+
+  shared_data = CuDynamicSharedArray(T, (blockDim().x));
+  # First do the core calculation and store in shared memory.
+  if idx <= length(x)
+     shared_data[i] = -0.5*x[idx]^2;
+  else
+     shared_data[i] = 0.0; 
+  end
+
+  # Tree-like partial sum within the thread block,
+  # summing pairs until the sum within the block
+  # is contained in `shared_data[1]`.
+  s = blockDim().x ÷ 2;   # `÷` ensures `s` is Int.
+  while s >= 1
+    if i <= s
+      shared_data[i] += shared_data[i + s];
     end
     sync_threads()
-    s ÷= 2
-end
+    s ÷= 2;
+  end
     
-# The first thread in the block writes the partial sum to global memory.
-if tidx == 1
-    CUDA.@atomic result[1] += shmem[1]
+  # The first thread in the block writes the partial sum to global memory.
+  if i == 1
+    CUDA.@atomic result[1] += shared_data[1];
+  end
+  return
 end
+
+memsize = nthreads * sizeof(samples[1]);
+
+result2 = CUDA.zeros(typeof(samples[1]), 1);
+@btime CUDA.@sync @cuda threads=nthreads blocks=nblocks shmem=memsize loglik_kernel_shmem(samples_gpu, result2);
+# 6.317 ms (34 allocations: 944 bytes)
+
+Array(result2)[1] -n*log(2*pi)/2 
 ```
+
 
 ## Final comments - when to use the GPU
 

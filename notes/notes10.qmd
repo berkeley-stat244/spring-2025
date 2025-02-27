@@ -173,4 +173,40 @@ eval(expr3)
 
 Being able to control what is treated as code and what is treated as values is quite powerful when manipulating code expressions.
 
+### Use cases
 
+It might not be obvious where this would be useful. One situation is if you were writing some sort of code translator, such as a compiler of some sort. Another (relatedly) is in writing macros.
+
+For example here's a macro that creates a version of a function that reports how many times it has been called.
+
+```{julia}
+#| eval: false
+const CALL_COUNTS = Dict{Any, Int}()
+
+import ExprTools
+
+# Macro to create a counted version of a function
+macro counted(func)
+    def = ExprTools.splitdef(func)
+    name = def[:name]
+    body = def[:body]
+
+    # Create new function definition that increments counter.
+    def[:body] =  quote
+        CALL_COUNTS[$name] = get(CALL_COUNTS, $name, 0) + 1
+        $body
+    end
+
+    return esc(ExprTools.combinedef(def))
+end
+
+@counted function my_add(x, y)
+    return x + y
+end
+
+# Use the function
+my_add(2, 3)
+my_add(4, 5)
+
+CALL_COUNTS[my_add]
+```
