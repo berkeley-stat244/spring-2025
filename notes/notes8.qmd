@@ -788,15 +788,15 @@ Array(x_gpu)[n]
 
 The 2.0 ms is reasonably comparable to the 3.7 ms when we just had Julia run the [vectorized computation on the GPU](./#vectorized-example) (from the last time we ran it). That used 64-bit floats. When I reran the code above using 64-bit floats, the time was 5.2 ms.
 
-## Efficient memory access
+### Efficient memory access
 
 We'll explore two final topics related to efficiently accessing data in memory: first accessing global GPU memory efficiently and second making use of shared GPU memory.
 
-### Coalesced access to global memory
+#### Coalesced access to global memory
 
 If adjacent threads in a block access adjacent memory locations,  a chunk of data can be obtained in a single access to global memory.
 
-We'll implement element-wise summing of two matrices. Obviously one can just do this directly with `CuArray`s in Julia, but if we implement it ourselves, it illustrates that reading a matrix by column is much more efficient than reading by row.
+We'll implement element-wise summing of two matrices. Obviously one can just do this directly with `CuArray`s in Julia, but if we implement it ourselves, it illustrates that reading a matrix by column is much more efficient than reading by row. Here a thread block either handles part of a column (good) or part of a row (bad). The x-dimension of the blocks in the grid then handles multiple thread blocks within each column (or row; bad) and the y-dimension of the blocks in the grid handles the different columns (or rows; bad).
 
 ```{julia}
 #| eval: false
@@ -851,7 +851,7 @@ CUDA.@sync @cuda threads=nthreads blocks=nblocks kernel_sum_byrow!(X_gpu_small, 
 # 10.500 ms (47 allocations: 1.30 KiB)
 ```
 
-### Using shared memory
+#### Using shared memory
 
 Accessing global GPU memory is much slower than doing computation on the GPU. So we'd like to avoid repeated access to global memory (e.g., a bad scenario would be a ratio of one arithmetic calculation per retrieval from global memory). One strategy is for multiple threads in a block to cooperate to load data from global memory into shared memory accessible by all the threads in the block. The computation can then be done on the data in shared memory.
 
@@ -959,7 +959,7 @@ We see that the access by row here is (a bit) faster. I think this is because th
 
 We might be able to improve efficiency with the wide matrix by operating by column within the wide matrix. This would involve more work to manage the indexing because we wouldn't just have each thread manage a column (unless we used very few threads, which would presumably reduce efficiency).
 
-## Using atomics for reduction operations
+### Using atomics for reduction operations
 
 One thing we haven't seen so far is being able to have different threads write to the same memory location (e.g., to a scalar or to an element of an array). One can easily imagine needing to do this to carry out reduction operations (e.g., calculating a sum or a max or min).
 
@@ -1005,7 +1005,7 @@ So we got about a 12-fold speedup, which is less than we've been getting for som
 
 I was curious how much time is spent handling the reduction operation (presumably there is some loss in efficiency from having all the threads write to the same memory location). When I changed `result` to be a vector of length equal to that of `samples` and just assign the individual PDF evaluations to the corresponding elements of `result` without the atomic operation, the time was 3 milliseconds (compared to 161 above), so there is a performance degradation from the atomic operation.
 
-### Using shared memory to reduce the cost of atomic operations
+#### Using shared memory to reduce the cost of atomic operations
 
 One solution to the performance degradation is to not have all of the summing make use of the same location in memory to accumulate the result.
 
