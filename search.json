@@ -668,7 +668,7 @@
     "href": "presentations.html",
     "title": "Student Presentations",
     "section": "",
-    "text": "Testing (link to repository)\nPlotting (link to repository)\nJIT compilation\nR and Julia\nPython and Julia (link to repository)\nPyTorch\nDataframes and large datasets (link to repository)\nSpecial matrices",
+    "text": "Testing (link to repository)\nPlotting (link to repository)\nJIT compilation\nR and Julia\nPython and Julia (link to repository)\nPyTorch\nDataframes and large datasets (link to repository)\nSpecial matrices\nDeep Learning[presentation][repository]]\nGraphs and optimization in Julia\nWater column model in Julia [presentation][repository]",
     "crumbs": [
       "Presentations"
     ]
